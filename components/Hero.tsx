@@ -37,12 +37,12 @@ const Hero: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
             </a>
             <a 
-              href="https://www.youtube.com/"
+              href="https://youtu.be/Qej5PF5yaLQ"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-10 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-xl font-bold border border-white/10 transition-all backdrop-blur-sm text-center inline-block"
             >
-              제작 시연 영상 보기(준비중)
+              사용설명 영상 보기
             </a>
           </div>
           <p className="text-white/30 text-sm font-medium mb-24">Window용 | 유튜브 라이브 가능</p>
