@@ -204,7 +204,7 @@ const App: React.FC = () => {
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="#" className="hover:text-white transition-colors">Documentation</a>
           </div>
-          <p className="text-white/20 text-xs tracking-widest uppercase">&copy; 2026 PLYMASTER STUDIO. ALL RIGHTS RESERVED. MADE FOR CREATORS.</p>
+          <p className="text-white/20 text-xs tracking-widest uppercase">&copy; 2026 NIMO MUSIC CORP. ALL RIGHTS RESERVED. MADE FOR CREATORS.</p>
         </div>
       </footer>
     </div>
