@@ -61,7 +61,7 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
               <span className="relative z-10">스튜디오 무료 다운로드 (Windows용)</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
             </a>
-
+        
             <button 
               onClick={() => setView('manual')}
               className="w-full sm:w-auto px-8 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-xl font-bold border border-white/10 transition-all backdrop-blur-sm text-center inline-block cursor-pointer"
