@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Sparkles, Film, BookOpen, Music, Download } from 'lucide-react';
+import { MessageCircle, Sparkles, Film, BookOpen, Music } from 'lucide-react';
 import { AppViewType } from '../types';
 
 interface NavbarProps {
@@ -9,20 +9,20 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#121212]/85 backdrop-blur-md border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#121212]/85 backdrop-blur-md border-b border-white/10 isolate">
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-6 lg:gap-8">
           <div 
             className="flex items-center gap-2.5 cursor-pointer group"
             onClick={() => setView('hero')}
           >
-            <div className="w-9 h-9 bg-gradient-to-br from-[#006AFF] to-[#00B2FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#006AFF]/20 group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 bg-gradient-to-br from-[#006AFF] to-[#00B2FF] rounded-xl flex items-center justify-center shadow-lg shadow-[#006AFF]/20 group-hover:scale-105 transition-transform transform-gpu">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span className="text-lg md:text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+            <span className="text-lg md:text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5 select-none">
               Plymaster <span className="text-[#006AFF] font-black">Studio & Factory</span>
             </span>
           </div>
@@ -41,8 +41,8 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
               className={`hover:text-white transition cursor-pointer px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${currentView === 'factory' ? 'text-white bg-white/10 font-bold border-b-2 border-[#00B2FF]' : 'hover:bg-white/5'}`}
             >
               <Sparkles className="w-4 h-4 text-[#00B2FF]" />
-              <span className="bg-gradient-to-r from-[#00B2FF] to-cyan-400 bg-clip-text text-transparent font-extrabold">Factory (음악공장)</span>
-              <span className="px-1.5 py-0.5 text-[10px] rounded bg-[#00B2FF]/20 text-[#00B2FF] font-black uppercase">NEW</span>
+              <span className="bg-gradient-to-r from-[#00B2FF] to-cyan-400 bg-clip-text text-transparent font-extrabold inline-block">Factory (음악공장)</span>
+              <span className="px-1.5 py-0.5 text-[10px] rounded bg-[#00B2FF]/20 text-[#00B2FF] font-black uppercase tracking-wide shrink-0">NEW</span>
             </button>
             <button 
               onClick={() => setView('manual')}
@@ -82,7 +82,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
             target="_blank"
             rel="noopener noreferrer"
             title="카카오톡 오픈채팅 문의"
-            className="bg-[#FEE500] hover:bg-[#FADA0A] text-[#1a1a1a] p-2 rounded-xl transition inline-flex items-center justify-center cursor-pointer shadow-md"
+            className="bg-[#FEE500] hover:bg-[#FADA0A] text-[#1a1a1a] p-2 rounded-xl transition inline-flex items-center justify-center cursor-pointer shadow-md transform-gpu"
           >
             <MessageCircle className="w-5 h-5" />
           </a>
@@ -90,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
             href="https://litt.ly/plymaster"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gradient-to-r from-[#006AFF] to-[#0056cc] text-white text-xs md:text-sm font-bold py-2.5 px-4 md:px-5 rounded-xl hover:brightness-110 transition inline-flex items-center justify-center cursor-pointer shadow-lg shadow-[#006AFF]/20"
+            className="bg-gradient-to-r from-[#006AFF] to-[#0056cc] text-white text-xs md:text-sm font-bold py-2.5 px-4 md:px-5 rounded-xl hover:brightness-110 transition inline-flex items-center justify-center cursor-pointer shadow-lg shadow-[#006AFF]/20 transform-gpu"
           >
             구매하기
           </a>
