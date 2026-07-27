@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import screenshot1 from './screenshot1.jpg';
-import screenshot2 from './screenshot2.jpg';
-import screenshot3 from './screenshot3.jpg';
+import screenshot1 from '../screenshot1.jpg';
+import screenshot2 from '../screenshot2.jpg';
+import screenshot3 from '../screenshot3.jpg';
 
 interface HeroProps {
   setView: (view: 'hero' | 'pricing' | 'manual' | 'suno' | 'privacy' | 'terms' | 'refund') => void;
