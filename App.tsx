@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { AppViewType } from './types';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import PricingSection from './components/PricingSection';
 import ManualSection from './components/ManualSection';
 import { PolicyView } from './components/PolicyView';
 import { SunoLyric } from './components/sunolyric';
+import FactoryView from './components/FactoryView';
 
 const safeScrollToTop = () => {
   try {
@@ -20,15 +22,28 @@ const safeScrollToTop = () => {
 };
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'hero' | 'pricing' | 'manual' | 'suno' | 'privacy' | 'terms' | 'refund'>('hero');
+  const [view, setView] = useState<AppViewType>('hero');
+  const [manualMode, setManualMode] = useState<'studio' | 'factory'>('studio');
+  
+  const handleSetView = (newView: AppViewType, tab?: 'studio' | 'factory') => {
+    setView(newView);
+    if (tab) {
+      setManualMode(tab);
+    } else if (newView === 'manual' && view === 'factory') {
+      setManualMode('factory');
+    } else if (newView === 'manual' && view === 'hero') {
+      setManualMode('studio');
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const viewParam = params.get('view');
+    const viewParam = params.get('view') as AppViewType;
     if (
       viewParam === 'manual' ||
       viewParam === 'pricing' ||
       viewParam === 'hero' ||
+      viewParam === 'factory' ||
       viewParam === 'suno' ||
       viewParam === 'privacy' ||
       viewParam === 'terms' ||
@@ -168,10 +183,11 @@ const App: React.FC = () => {
           </>
         )}
         {view === 'pricing' && <PricingSection />}
-        {view === 'manual' && <ManualSection setView={setView} />}
-        {view === 'suno' && <SunoLyric setView={setView} />}
+        {view === 'factory' && <FactoryView setView={handleSetView} />}
+        {view === 'manual' && <ManualSection setView={handleSetView} initialMode={manualMode} />}
+        {view === 'suno' && <SunoLyric setView={handleSetView} />}
         {(view === 'privacy' || view === 'terms' || view === 'refund') && (
-          <PolicyView initialTab={view} setView={setView} />
+          <PolicyView initialTab={view as any} setView={handleSetView} />
         )}
       </main>
 
