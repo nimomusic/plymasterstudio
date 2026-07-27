@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Film, 
@@ -19,8 +19,18 @@ import {
   Clock, 
   Copy, 
   Check, 
-  Radio 
+  Radio,
+  Printer,
+  Wand2,
+  Target,
+  Bot,
+  Image as ImageIcon,
+  ShieldCheck,
+  Terminal,
+  Download,
+  Zap
 } from 'lucide-react';
+import { AppViewType } from '../types';
 
 const safeScrollToTop = () => {
   try {
@@ -36,12 +46,23 @@ const safeScrollToTop = () => {
 };
 
 interface ManualSectionProps {
-  setView: (view: 'hero' | 'pricing' | 'manual') => void;
+  setView: (view: AppViewType, manualTab?: 'studio' | 'factory') => void;
+  initialMode?: 'studio' | 'factory';
 }
 
-const ManualSection: React.FC<ManualSectionProps> = ({ setView }) => {
-  const [activeTab, setActiveTab] = useState<'part1' | 'part2' | 'part3'>('part1');
+const ManualSection: React.FC<ManualSectionProps> = ({ setView, initialMode }) => {
+  const [manualMode, setManualMode] = useState<'studio' | 'factory'>(initialMode || 'studio');
+  const [activeTab, setActiveTab] = useState<'part1' | 'part2' | 'part3' | 'fact1' | 'fact2' | 'fact3' | 'fact4'>(
+    initialMode === 'factory' ? 'fact1' : 'part1'
+  );
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialMode) {
+      setManualMode(initialMode);
+      setActiveTab(initialMode === 'factory' ? 'fact1' : 'part1');
+    }
+  }, [initialMode]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -49,55 +70,142 @@ const ManualSection: React.FC<ManualSectionProps> = ({ setView }) => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const tabs = [
+  const studioTabs = [
     { id: 'part1', label: 'Part 1. 플레이리스트 비디오 제작', icon: <Film className="w-5 h-5" /> },
     { id: 'part2', label: 'Part 2. 부록 A (다중 작업 & 가사 싱크)', icon: <Layers className="w-5 h-5" /> },
     { id: 'part3', label: 'Part 3. 부록 B (실시간 스트리밍 송출)', icon: <Tv className="w-5 h-5" /> },
   ] as const;
 
+  const factoryTabs = [
+    { id: 'fact1', label: '1. 인증 & AI 설정', icon: <ShieldCheck className="w-5 h-5" /> },
+    { id: 'fact2', label: '2. 테마(.pmtheme) 기획', icon: <Target className="w-5 h-5" /> },
+    { id: 'fact3', label: '3. Suno 자동 인식 & 생산', icon: <Bot className="w-5 h-5" /> },
+    { id: 'fact4', label: '4. 썸네일 & 영상 제목 카피', icon: <ImageIcon className="w-5 h-5" /> },
+  ] as const;
+
+  const currentTabs = manualMode === 'studio' ? studioTabs : factoryTabs;
+
   return (
     <section className="relative pt-32 pb-24 px-4 md:px-6 min-h-screen">
+      {/* Print-friendly styles */}
+      <style>{`
+        @media print {
+          body, html, main, section, div {
+            background: #ffffff !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+          }
+          nav, footer, button, .no-print {
+            display: none !important;
+          }
+          .glass-card {
+            border: 1px solid #dddddd !important;
+            background: #ffffff !important;
+            page-break-inside: avoid !important;
+            margin-bottom: 24px !important;
+            padding: 24px !important;
+          }
+          h1, h2, h3, h4, h5, p, span, strong, code {
+            color: #000000 !important;
+          }
+        }
+      `}</style>
+
       <div className="max-w-6xl mx-auto relative z-10">
         
+        {/* Top Product Mode Toggle (Studio vs Factory Manual) */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8 bg-black/40 p-2 rounded-2xl border border-white/10 no-print">
+          <button
+            onClick={() => { setManualMode('studio'); setActiveTab('part1'); }}
+            className={`flex-1 py-4 px-6 rounded-xl font-black text-base md:text-lg transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+              manualMode === 'studio'
+                ? 'bg-gradient-to-r from-[#006AFF] to-blue-600 text-white shadow-lg shadow-[#006AFF]/25'
+                : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Film className="w-5 h-5 text-[#006AFF]" />
+            <span>🎬 Plymaster Studio (영상 제작) 매뉴얼</span>
+          </button>
+          <button
+            onClick={() => { setManualMode('factory'); setActiveTab('fact1'); }}
+            className={`flex-1 py-4 px-6 rounded-xl font-black text-base md:text-lg transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+              manualMode === 'factory'
+                ? 'bg-gradient-to-r from-[#006AFF] via-[#00B2FF] to-cyan-400 text-white shadow-lg shadow-[#00B2FF]/25 scale-[1.01]'
+                : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Sparkles className="w-5 h-5 text-[#00B2FF]" />
+            <span>✨ Plymaster Factory (음악 대량공장) 매뉴얼</span>
+          </button>
+        </div>
+
         {/* Header with Back Button */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 pb-6 border-b border-white/10">
           <div className="flex items-center gap-4">
             <button 
-              onClick={() => setView('hero')}
-              className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 hover:border-white/20 text-white/70 hover:text-white transition-all group"
+              onClick={() => setView(manualMode === 'factory' ? 'factory' : 'hero')}
+              className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 hover:border-white/20 text-white/70 hover:text-white transition-all group no-print cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             </button>
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-2 rounded-full border border-[#006AFF]/30 bg-[#006AFF]/10 text-[#006AFF] text-xs font-semibold">
                 <BookOpen className="w-3.5 h-3.5" />
-                사용자 가이드북
+                {manualMode === 'studio' ? '스튜디오 공식 가이드북' : '팩토리 공식 가이드북'}
               </div>
               <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
-                Plymaster Studio <span className="gradient-text">사용자 매뉴얼</span>
+                Plymaster {manualMode === 'studio' ? 'Studio' : 'Factory'} <span className="bg-gradient-to-r from-[#006AFF] to-[#00B2FF] bg-clip-text text-transparent">사용자 매뉴얼</span>
               </h2>
             </div>
           </div>
-          <a
-            href="https://raw.githubusercontent.com/nimomusic/plymasterstudio/main/Plymaster%20Studio%20manual.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="md:self-end px-6 py-3 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 hover:border-white/20 text-white font-bold rounded-xl transition-all flex items-center gap-2 justify-center cursor-pointer"
-          >
-            <FileText className="w-5 h-5 text-[#006AFF]" />
-            매뉴얼 PDF 다운로드
-          </a>
+
+          {manualMode === 'studio' ? (
+            <a
+              href="https://raw.githubusercontent.com/nimomusic/plymasterstudio/main/Plymaster%20Studio%20manual.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="md:self-end px-6 py-3 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 hover:border-white/20 text-white font-bold rounded-xl transition-all flex items-center gap-2 justify-center cursor-pointer no-print"
+            >
+              <FileText className="w-5 h-5 text-[#006AFF]" />
+              스튜디오 PDF 다운로드
+            </a>
+          ) : (
+            <div className="flex flex-col sm:flex-row gap-3 md:self-end no-print">
+              <button
+                onClick={() => window.print()}
+                className="px-6 py-3.5 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 active:scale-95 text-white font-bold rounded-xl transition-all flex items-center gap-2 justify-center cursor-pointer shadow-lg shadow-[#006AFF]/20"
+              >
+                <Printer className="w-5 h-5" />
+                🖨️ 팩토리 PDF 저장 / 인쇄하기
+              </button>
+            </div>
+          )}
         </div>
 
+        {/* PDF Guide Notice Box for Factory */}
+        {manualMode === 'factory' && (
+          <div className="mb-8 p-5 bg-gradient-to-r from-cyan-950/40 via-[#006AFF]/15 to-purple-950/40 rounded-2xl border border-[#00B2FF]/30 flex items-start gap-4 no-print animate-[fadeIn_0.3s_ease-out]">
+            <span className="text-2xl">💡</span>
+            <div>
+              <h4 className="text-base font-bold text-cyan-300 mb-1">팩토리 고화질 PDF 설명서 저장 가이드</h4>
+              <p className="text-sm text-white/70 leading-relaxed break-keep">
+                상단의 <strong className="text-white">'🖨️ 팩토리 PDF 저장 / 인쇄하기'</strong> 버튼을 누른 후, 인쇄 창의 <strong className="text-cyan-300 underline">대상(Destination)을 'PDF로 저장(Save as PDF)'</strong>으로 변경하세요. 
+                불필요한 버튼과 테두리가 자동 제거된 A4 규격의 인쇄용 클린 PDF 설명서 파일이 즉시 컴퓨터에 저장됩니다!
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Tab Selection */}
-        <div className="flex flex-col sm:flex-row gap-2.5 p-1.5 bg-white/5 rounded-2xl border border-white/5 mb-12">
-          {tabs.map((tab) => (
+        <div className="flex flex-col sm:flex-row gap-2.5 p-1.5 bg-white/5 rounded-2xl border border-white/5 mb-12 no-print">
+          {currentTabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl font-bold transition-all text-sm md:text-base flex-1 ${
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl font-bold transition-all text-sm md:text-base flex-1 cursor-pointer ${
                 activeTab === tab.id 
-                  ? 'bg-[#006AFF] text-white shadow-lg shadow-[#006AFF]/20' 
+                  ? 'bg-gradient-to-r from-[#006AFF] to-[#00B2FF] text-white shadow-lg shadow-[#006AFF]/20' 
                   : 'text-white/60 hover:text-white hover:bg-white/5'
               }`}
             >
@@ -109,6 +217,313 @@ const ManualSection: React.FC<ManualSectionProps> = ({ setView }) => {
 
         {/* Contents Area */}
         <div className="space-y-16">
+          {/* ========================================================================= */}
+          {/* ======================= FACTORY MANUAL CHAPTERS ======================= */}
+          {/* ========================================================================= */}
+
+          {activeTab === 'fact1' && (
+            <div className="space-y-12 animate-[fadeIn_0.4s_ease-out]">
+              <div className="border-l-4 border-[#00B2FF] pl-4 mb-4">
+                <span className="text-sm font-semibold text-[#00B2FF] tracking-wider uppercase font-mono">Chapter 1</span>
+                <h3 className="text-2xl md:text-3xl font-black text-white">🚀 라이선스 인증 & 초기 AI 설정 (Setup & Auth)</h3>
+              </div>
+
+              {/* 01. 하드웨어 인증 */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#00B2FF]/10 blur-2xl rounded-full pointer-events-none" />
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    01
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                      PMCS 하드웨어 보안 인증 <span className="text-xs text-cyan-300 font-mono py-1 px-2.5 border border-cyan-500/20 rounded-full bg-cyan-500/10">32-Bit Encryption</span>
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      Plymaster Factory는 안전한 음악 기획 데이터 보호를 위해 사용자 PC의 고유 하드웨어 ID(MAC/UUID)를 기반으로 작동합니다.
+                      최초 실행 시 기기 등록 절차가 진행되며, 비인가 PC로의 무단 복제를 원천 방지하여 정품 사용자의 권리를 보호합니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6 mt-8">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <span className="text-sm font-bold text-white block mb-3">🛡️ 보안 인증 작동 순서</span>
+                    <ol className="text-sm text-white/60 space-y-2.5 leading-relaxed">
+                      <li>1. <code className="text-[#00B2FF] bg-white/10 px-1 rounded">PlyMaster.Studio.Setup.exe</code> 파일 다운로드 후 실행</li>
+                      <li>2. 프로그램 기동 시 시스템 고유 하드웨어 시리얼 자동 검증</li>
+                      <li>3. 정품 인증 완료 시 메인 대시보드 및 AI 프로듀서 엔진 활성화</li>
+                    </ol>
+                  </div>
+
+                  <div className="p-6 bg-amber-500/10 rounded-2xl border border-amber-500/20 flex flex-col justify-between">
+                    <div>
+                      <span className="text-sm font-bold text-amber-300 block mb-2">⚠️ 'Windows의 PC보호' 파란 창 해결 방법</span>
+                      <p className="text-xs md:text-sm text-amber-200/80 leading-relaxed break-keep">
+                        새로 릴리즈된 실행 파일 특성상 Windows Defender 스마트 스크린이 뜰 수 있습니다. <br />
+                        창 본문의 <strong className="underline font-bold text-white">'추가 정보'</strong> 글자를 클릭하시면 아래에 <strong className="underline font-bold text-white">'실행'</strong> 버튼이 나타나며, 클릭 즉시 안전하게 실행됩니다.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 02. Gemini API Key */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    02
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                      Gemini API Key 발급 및 입력 <span className="text-xs text-purple-300 font-mono py-1 px-2.5 border border-purple-500/20 rounded-full bg-purple-500/10">Google AI Studio</span>
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      테마별 맞춤 작사와 유튜브 마케팅 카피 생성을 위해 Google의 강력한 AI 엔진인 Gemini API가 사용됩니다. 
+                      상단의 <code className="text-[#00B2FF] bg-white/10 px-1 rounded">Gemini API Key</code> 입력란에 발급받은 키를 넣고 저장하면 로컬 PC에 AES 방식으로 암호화 저장됩니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-white/5 rounded-2xl border border-white/5 mt-6 space-y-4">
+                  <h5 className="font-bold text-base text-white">🔑 무료 API Key 1분 발급 튜토리얼:</h5>
+                  <div className="grid sm:grid-cols-3 gap-4 text-xs md:text-sm text-white/70">
+                    <div className="p-4 bg-black/40 rounded-xl border border-white/5">
+                      <strong className="text-[#00B2FF] block mb-1">Step 1. AI Studio 접속</strong>
+                      <span>aistudio.google.com 에 구글 계정으로 로그인합니다.</span>
+                    </div>
+                    <div className="p-4 bg-black/40 rounded-xl border border-white/5">
+                      <strong className="text-[#00B2FF] block mb-1">Step 2. Get API Key 클릭</strong>
+                      <span>좌측 메뉴의 'Get API Key' → 'Create API Key'를 누릅니다.</span>
+                    </div>
+                    <div className="p-4 bg-black/40 rounded-xl border border-white/5">
+                      <strong className="text-[#00B2FF] block mb-1">Step 3. 팩토리에 입력</strong>
+                      <span>복사된 문자열을 팩토리 상단 키 입력창에 붙여넣고 Enter를 칩니다.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'fact2' && (
+            <div className="space-y-12 animate-[fadeIn_0.4s_ease-out]">
+              <div className="border-l-4 border-[#00B2FF] pl-4 mb-4">
+                <span className="text-sm font-semibold text-[#00B2FF] tracking-wider uppercase font-mono">Chapter 2</span>
+                <h3 className="text-2xl md:text-3xl font-black text-white">🎨 테마 파일(.pmtheme) 등록 & 벤치마킹 설정</h3>
+              </div>
+
+              {/* 03. 테마 파일 */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    03
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                      슬롯형 테마 파일(.pmtheme) 불러오기 <span className="text-xs text-emerald-300 font-mono py-1 px-2.5 border border-emerald-500/20 rounded-full bg-emerald-500/10">Zero AI Slop Engine</span>
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      팩토리의 핵심은 음악 장르와 무드가 완벽히 정제된 <strong className="text-white">'.pmtheme' 테마 패키지</strong>입니다.
+                      상단 메뉴의 <code className="text-[#00B2FF] bg-white/10 px-1 rounded">파일 &gt; 테마 파일 불러오기</code>를 통해 원하는 테마를 로드하면 선택 목록에 자동으로 추가됩니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-gradient-to-r from-[#006AFF]/15 to-[#00B2FF]/15 border border-[#00B2FF]/30 rounded-2xl mt-6">
+                  <h5 className="font-bold text-base text-cyan-300 mb-2">🎯 벤치마킹 SOP 작사 엔진 작동 원리:</h5>
+                  <p className="text-sm text-white/80 leading-relaxed mb-4 break-keep">
+                    단순히 AI에게 "재즈 음악 만들어줘"라고 명령하지 않습니다. 각 테마 슬롯 내부에는 해당 장르를 대표하는 글로벌 아티스트 풀(Pool)과 곡 구조 규격이 내장되어 있습니다. <br />
+                    특히 <strong className="text-white">'coffee', 'neon', 'shadows', 'echo', 'whispers'</strong> 등 AI 가사에서 상투적으로 남발되는 30여 개의 클리셰 단어를 실시간 금지어 필터로 차단하여 인간 프로듀서 수준의 세련된 가사를 작성합니다.
+                  </p>
+                </div>
+              </div>
+
+              {/* 04. 곡 수 및 대기 시간 */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    04
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2">
+                      제작 곡 수 및 안전 대기 시간 설정
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      한 번에 만들고자 하는 목표 트랙 수를 지정합니다 (예: 10곡). Suno AI 서버의 429 과부하 오류(Too Many Requests)나 무료 사용량 일시 제한을 막기 위해 스마트 대기 쿨타임 로직이 탑재되어 있습니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-6 mt-6">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <span className="text-sm font-bold text-white block mb-2">⏱️ 스마트 쿨타임 시스템</span>
+                    <p className="text-xs text-white/60 leading-relaxed break-keep">
+                      기본적으로 <strong className="text-[#00B2FF]">3곡(6개 트랙) 생성 시마다 210초(3분 30초) 동안 자동 휴식</strong>합니다. 
+                      이 대기 시간을 통해 Suno 서버 차단을 피하고 밤새 100곡 이상의 대량 작업을 안전하게 완수할 수 있습니다.
+                    </p>
+                  </div>
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <span className="text-sm font-bold text-white block mb-2">⚙️ 대기 시간 설정 변경</span>
+                    <p className="text-xs text-white/60 leading-relaxed break-keep">
+                      상단 메뉴 <code className="text-white bg-white/10 px-1 rounded">도구 &gt; 자동화 설정</code>에서 본인의 Suno 유료 플랜(Pro/Premier) 환경에 맞게 대기 시간과 한계 곡 수를 자유롭게 커스텀 변경할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'fact3' && (
+            <div className="space-y-12 animate-[fadeIn_0.4s_ease-out]">
+              <div className="border-l-4 border-[#00B2FF] pl-4 mb-4">
+                <span className="text-sm font-semibold text-[#00B2FF] tracking-wider uppercase font-mono">Chapter 3</span>
+                <h3 className="text-2xl md:text-3xl font-black text-white">🤖 Suno UI 좌표 인식 & 원클릭 연동 생산</h3>
+              </div>
+
+              {/* 05. 좌표 자동 인식 */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    05
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                      Suno UI 좌표 자동 인식 (Auto Detect) <span className="text-xs text-blue-300 font-mono py-1 px-2.5 border border-blue-500/20 rounded-full bg-blue-500/10">OpenCV Vision</span>
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      웹 브라우저(크롬, 엣지 등)로 Suno AI 생성 페이지(<code className="text-[#00B2FF]">suno.com/create</code>)를 띄워둔 상태에서 
+                      팩토리 인터페이스의 <strong className="text-purple-300">'🔍 Suno 좌표 자동 인식'</strong> 버튼을 클릭하세요.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-black/50 border border-white/10 rounded-2xl mt-6 space-y-4">
+                  <div className="flex items-center justify-between text-xs font-mono text-cyan-300">
+                    <span>⚡ OpenCV 1초 초고속 매칭 프로세스:</span>
+                    <span>AUTO-CALIBRATION ACTIVE</span>
+                  </div>
+                  <div className="grid sm:grid-cols-4 gap-3 text-center text-xs">
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                      <strong className="text-white block mb-1">1. Lyrics 창</strong>
+                      <span className="text-white/40">가사 입력부 인식</span>
+                    </div>
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                      <strong className="text-white block mb-1">2. Style 창</strong>
+                      <span className="text-white/40">음악 장르/태그 인식</span>
+                    </div>
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                      <strong className="text-white block mb-1">3. Title 창</strong>
+                      <span className="text-white/40">곡 제목 입력부 인식</span>
+                    </div>
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                      <strong className="text-white block mb-1">4. Create 버튼</strong>
+                      <span className="text-white/40">최종 생성 버튼 인식</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-white/50 pt-2 break-keep">
+                    💡 만약 모니터 해상도 배율이나 다크/라이트 모드 차이로 인식이 실패할 경우, <strong className="text-white">'수동 설정(Manual Setup)'</strong> 버튼을 눌러 각 입력창을 마우스로 한 번씩 클릭해 주면 즉시 좌표가 고정됩니다.
+                  </p>
+                </div>
+              </div>
+
+              {/* 06. 통합 자동화 시작 */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    06
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2">
+                      🚀 통합 자동화 프로세스 기동 & 프로듀서 노트
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      모든 준비가 끝났다면 하단의 파란색 <strong className="text-white">'🚀 통합 자동화 프로세스 시작'</strong> 버튼을 클릭하세요!
+                      이후부터는 사용자가 마우스를 건드리지 않아도 팩토리가 알아서 다음 루프를 무한 수행합니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 mt-6 text-sm text-white/70">
+                  <div className="p-4 bg-white/5 border border-white/5 rounded-xl flex items-start gap-3">
+                    <span className="text-cyan-400 font-bold font-mono">Step 1.</span>
+                    <span>AI 프로듀서가 테마에 맞는 가사, 스타일 태그, 제목을 실시간 기획하여 프로듀서 노트 팝업으로 보여줍니다.</span>
+                  </div>
+                  <div className="p-4 bg-white/5 border border-white/5 rounded-xl flex items-start gap-3">
+                    <span className="text-cyan-400 font-bold font-mono">Step 2.</span>
+                    <span>기획된 데이터를 JSON 스크립트로 백업한 뒤, Suno 창의 입력칸을 자동 클릭하고 클립보드에 붙여넣습니다.</span>
+                  </div>
+                  <div className="p-4 bg-white/5 border border-white/5 rounded-xl flex items-start gap-3">
+                    <span className="text-cyan-400 font-bold font-mono">Step 3.</span>
+                    <span>Suno의 'Create' 버튼을 클릭하여 음원 생성을 시작하고, 안전 쿨타임 카운트다운에 들어갑니다.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'fact4' && (
+            <div className="space-y-12 animate-[fadeIn_0.4s_ease-out]">
+              <div className="border-l-4 border-[#00B2FF] pl-4 mb-4">
+                <span className="text-sm font-semibold text-[#00B2FF] tracking-wider uppercase font-mono">Chapter 4</span>
+                <h3 className="text-2xl md:text-3xl font-black text-white">📸 유튜브 썸네일 & 바이럴 영상 제목 자동 제작</h3>
+              </div>
+
+              {/* 07. 썸네일/제목 제작 도구 */}
+              <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+                <div className="flex items-start gap-5 mb-6">
+                  <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center font-mono font-black text-lg text-[#00B2FF]">
+                    07
+                  </div>
+                  <div>
+                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                      참조 이미지 분석 & 바이럴 제목 3종 추출 <span className="text-xs text-pink-300 font-mono py-1 px-2.5 border border-pink-500/20 rounded-full bg-pink-500/10">YouTube Marketing</span>
+                    </h4>
+                    <p className="text-white/60 text-sm md:text-base leading-relaxed break-keep">
+                      음악만 좋아서는 유튜브에서 조회수를 터뜨릴 수 없습니다. 상단 메뉴 <code className="text-[#00B2FF] bg-white/10 px-1 rounded">도구 &gt; 썸네일/제목 제작</code>을 실행하세요!
+                      평소 참고하고 싶었던 다른 유튜브 영상의 썸네일이나 풍경 사진을 첨부하면 AI 마케터가 즉시 분석을 시작합니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6 mt-6">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <span className="text-sm font-bold text-white block mb-2">🔥 클릭률(CTR) 극대화 제목 3종</span>
+                    <p className="text-xs text-white/60 leading-relaxed break-keep">
+                      이미지 속 장소(카페, 드라이브, 새벽방), 계절감, 색감을 음악 장르와 결합하여 시청자의 감성을 자극하는 제목 3가지를 제시합니다. 각 제목 오른쪽의 <strong className="text-[#00B2FF]">'복사'</strong> 버튼을 눌러 바로 유튜브 업로드에 쓰세요!
+                    </p>
+                  </div>
+
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <span className="text-sm font-bold text-white block mb-2">🎨 나노 바나나(Nano Banana) 프롬프트</span>
+                    <p className="text-xs text-white/60 leading-relaxed break-keep">
+                      미드저니(Midjourney)나 스테이블 디퓨전에서 고화질 16:9 썸네일을 뽑을 수 있는 최상급 영어 프롬프트를 자동 작성합니다. 
+                      특히 이미지 내에 글자가 깨져서 출력되는 현상을 막기 위해 <code className="text-pink-300">No typography, No letters</code> 제어 명령을 자동으로 삽입합니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tips for Youtube Growth */}
+              <div className="p-8 bg-gradient-to-r from-purple-900/30 via-black to-[#006AFF]/20 rounded-[2.5rem] border border-white/10">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div>
+                    <h5 className="font-bold text-lg text-white mb-2 flex items-center gap-2">
+                      🌟 유튜브 채널 급성장을 위한 Plymaster 워크플로우 팁
+                    </h5>
+                    <p className="text-sm text-white/70 leading-relaxed break-keep">
+                      1. <strong className="text-cyan-300">Factory</strong>로 테마 곡 10~15곡(약 45분~1시간 분량)을 취침 시간에 원클릭 자동 생산합니다. <br />
+                      2. 다음날 아침 <strong className="text-cyan-300">Studio</strong>에서 생성된 음원 폴더를 드래그 앤 드롭하고, 자동 LUFS 평준화(-14 LUFS) 및 1080p 마스터 영상을 렌더링합니다. <br />
+                      3. 마지막으로 Factory의 <strong className="text-pink-300">썸네일/제목 도구</strong>로 추출한 바이럴 제목과 타임스탬프를 유튜브 설명란에 붙여넣으면 고퀄리티 플레이리스트 업로드가 10분 만에 끝납니다!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+
           {activeTab === 'part1' && (
             <div className="space-y-12">
               <div className="border-l-4 border-[#006AFF] pl-4 mb-4">
@@ -571,16 +986,16 @@ const ManualSection: React.FC<ManualSectionProps> = ({ setView }) => {
         </div>
 
         {/* Floating Return Button */}
-        <div className="mt-16 text-center">
+        <div className="mt-16 text-center no-print">
           <button 
             onClick={() => {
-              setView('hero');
+              setView(manualMode === 'factory' ? 'factory' : 'hero');
               safeScrollToTop();
             }}
-            className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 hover:border-white/20 transition-all font-sans text-sm inline-flex items-center gap-2 group"
+            className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 hover:border-white/20 transition-all font-sans text-sm inline-flex items-center gap-2 group cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            메인 페이지로 돌아가기
+            {manualMode === 'factory' ? '팩토리 메인 페이지로 돌아가기' : '스튜디오 메인 페이지로 돌아가기'}
           </button>
         </div>
 
