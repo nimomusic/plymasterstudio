@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Download } from 'lucide-react';
 import { AppViewType } from '../types';
 import screenshot1 from '../screenshot1.jpg';
 import screenshot2 from '../screenshot2.jpg';
