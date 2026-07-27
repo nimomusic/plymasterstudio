@@ -197,7 +197,7 @@ export const SunoLyric: React.FC<SunoLyricProps> = ({ setView }) => {
           <p className="text-lg text-white/60 mb-10 leading-relaxed max-w-2xl mx-auto">
             Suno AI로 만든 노래에 자동으로 가사 싱크(SRT)를 입혀보세요. 
             크롬 확장 프로그램을 사용해 클릭 한 번으로 Suno로부터 가사와 싱크를 추출하고 다운로드할 수 있습니다.<br></br>
-          <span className="text-red-500 text-sm font-medium mb-2">※Suno에서 만든 싱크가 간혹 맞지 않는 경우가 있습니다. <br></br>그럴때는 다운로드시 싱크오류 의심 문구가 뜨는데 스튜디오의 '도구-자막 싱크 메이커'에서 해당부분만 싱크를 수정하여 사용하세요.</span>
+          <span className="text-red-500 text-sm font-medium mb-2">※Suno에서 만든 싱크가 간혹 맞지 않는 경우가 있습니다. <br></br>그럴때는 다운로드시 싱크오류 의심 문구가 뜨는데 스튜디오의 '도구-자막 싱크 메이커'에서 <br></br>해당부분만 싱크를 수정하여 사용하세요.</span>
           </p>
           
           {/* Core Feature Program Download Button */}
@@ -206,7 +206,7 @@ export const SunoLyric: React.FC<SunoLyricProps> = ({ setView }) => {
             <span className="text-xs font-bold tracking-wider text-[#006AFF] uppercase mb-3">Suno Extension Package</span>
             <h3 className="text-xl font-bold mb-5">플리마스터 스튜디오 전용 수노 가사 추출기</h3>
             <a 
-              href="https://github.com/nimomusic/plymasterstudio/releases/download/plymasterstudio/sunolyric.zip"
+              href="https://github.com/nimomusic/plymasterstudio/releases/download/plymaster/sunolyric.zip"
               className="inline-flex items-center gap-3 px-8 py-4 bg-[#006AFF] hover:bg-[#0052cc] text-white font-bold text-lg rounded-2xl transition-all transform hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-lg shadow-[#006AFF]/30"
             >
               <Download className="w-5 h-5" /> 프로그램 다운로드
