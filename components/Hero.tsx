@@ -54,7 +54,7 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
               rel="noopener noreferrer"
               className="group relative w-full sm:w-auto px-8 py-5 bg-[#006AFF] hover:bg-[#0056cc] rounded-2xl text-xl font-bold transition-all transform hover:scale-105 electric-shadow overflow-hidden text-center inline-block"
             >
-              <span className="relative z-10">스튜디오 무료 다운로드</span>
+              <span className="relative z-10">스튜디오 무료 다운로드 (Windows용)</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
             </a>
 
