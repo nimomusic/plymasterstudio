@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { AppViewType } from '../types';
 import screenshot1 from '../screenshot1.jpg';
 import screenshot2 from '../screenshot2.jpg';
 import screenshot3 from '../screenshot3.jpg';
 
 interface HeroProps {
-  setView: (view: 'hero' | 'pricing' | 'manual' | 'suno' | 'privacy' | 'terms' | 'refund') => void;
+  setView: (view: AppViewType, manualTab?: 'studio' | 'factory') => void;
 }
 
 const Hero: React.FC<HeroProps> = ({ setView }) => {
