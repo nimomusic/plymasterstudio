@@ -145,8 +145,8 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
   return (
     <div className="min-h-screen bg-[#121212] text-white pt-24 pb-20 overflow-hidden relative isolate">
       {/* Background Ambient Blurs - GPU 하드웨어 가속 강제화로 테두리 박스 깨짐 차단 */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-[#006AFF]/20 via-[#00B2FF]/15 to-purple-600/15 blur-[140px] rounded-full pointer-events-none transform-gpu will-change-transform" />
-      <div className="absolute bottom-1/3 right-10 w-[500px] h-[500px] bg-[#00B2FF]/10 blur-[130px] rounded-full pointer-events-none transform-gpu will-change-transform" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[radial-gradient(ellipse_at_center,rgba(0,106,255,0.18)_0%,rgba(0,178,255,0.1)_40%,rgba(147,51,234,0.08)_70%,transparent_100%)] pointer-events-none z-0" />
+      <div className="absolute bottom-1/3 right-10 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(0,178,255,0.12)_0%,transparent_70%)] pointer-events-none z-0" />
 
       {/* 1. FACTORY HERO SECTION - isolate로 내부 텍스트 클리핑 레이어 완전 격리 */}
       <section className="relative px-4 md:px-6 pt-12 pb-24 text-center max-w-6xl mx-auto z-10 isolate">
