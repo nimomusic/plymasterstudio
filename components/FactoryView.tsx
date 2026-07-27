@@ -200,44 +200,6 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
           </div>
         </div>
       </section>
-
-      {/* [요청 반영] 3. INTERACTIVE FACTORY DEMO SECTION (유튜브 썸네일 & 제목 자동 생성기) 완벽 제거 완료 */}
-
-      {/* 4. FACTORY CLOSING SECTION */}
-      <section className="py-28 px-4 md:px-6 relative z-10 text-center max-w-5xl mx-auto">
-        <div className="p-10 md:p-16 rounded-[3rem] bg-gradient-to-b from-[#006AFF]/10 via-black/40 to-white/[0.02] border border-white/10 relative overflow-hidden">
-          <h2 className="text-3xl md:text-5xl font-black mb-6 text-white leading-tight">
-            이제 음악과 유튜브 마케팅을 <br />
-            <span className="text-[#00B2FF] font-black italic">클릭 한 번으로 자동화</span>하세요!
-          </h2>
-          <p className="text-base md:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed">
-            더 이상 Suno 앞에서 어떤 프롬프트를 써야 할지 막막해하지 마세요. <br />
-            Base인 Plymaster Factory가 당신만의 24시간 무인 음악 프로덕션이 되어드립니다.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://github.com/nimomusic/plymasterstudio/releases/download/plymasterstudio/PlyMaster.Studio.Setup.exe"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-10 py-5 bg-[#006AFF] hover:bg-[#0052cc] text-white font-black rounded-2xl text-lg md:text-xl transition-all flex items-center justify-center gap-3"
-            >
-              <Download className="w-6 h-6" />
-              <span>팩토리 무료 다운로드 시작</span>
-            </a>
-            <button
-              onClick={() => {
-                setView('manual', 'factory');
-                safeScrollToTop();
-              }}
-              className="w-full sm:w-auto px-8 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl text-lg md:text-xl transition-all border border-white/20 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <BookOpen className="w-5 h-5 text-[#00B2FF]" />
-              <span>팩토리 가이드북 열람</span>
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
