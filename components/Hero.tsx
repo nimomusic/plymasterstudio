@@ -49,7 +49,7 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
         <div className="flex flex-col items-center">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <a 
-              href="https://github.com/nimomusic/plymasterstudio/releases/download/plymasterstudio/Plymaster.Studio.Setup.exe"
+              href="https://github.com/nimomusic/plymasterstudio/releases/download/plymaster/PlyMaster.Studio.Setup.exe"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative w-full sm:w-auto px-8 py-5 bg-[#006AFF] hover:bg-[#0056cc] rounded-2xl text-xl font-bold transition-all transform hover:scale-105 electric-shadow overflow-hidden text-center inline-block"
