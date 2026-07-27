@@ -3,7 +3,7 @@ import { ArrowLeft, Globe, Shield, FileText, RotateCcw, Mail } from 'lucide-reac
 
 interface PolicyViewProps {
   initialTab: 'privacy' | 'terms' | 'refund';
-  setView: (view: 'hero' | 'pricing' | 'manual' | 'privacy' | 'terms' | 'refund') => void;
+  setView: (view: any, manualTab?: 'studio' | 'factory') => void;
 }
 
 type LangType = 'ko' | 'en';
