@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+export type AppViewType = 'hero' | 'factory' | 'pricing' | 'manual' | 'suno' | 'privacy' | 'terms' | 'refund';
+
 export interface Feature {
   id: string;
   title: string;
