@@ -160,9 +160,9 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-8 leading-[1.18] tracking-tight break-keep">
-          Suno와 음악을 전혀 몰라도 <br className="hidden md:block" />
+          음악을 전혀 몰라도 <br className="hidden md:block" />
           <span className="bg-gradient-to-r from-[#006AFF] via-[#00B2FF] to-cyan-300 bg-clip-text text-transparent italic font-black">
-            단 한 번의 클릭으로 고퀄리티 명곡 대량 생산!
+            고퀄리티 음악 대량 생산!
           </span>
         </h1>
 
@@ -179,13 +179,13 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
           <a
-            href="https://github.com/nimomusic/plymasterstudio/releases/download/plymasterstudio/PlyMaster.Studio.Setup.exe"
+            href="https://github.com/nimomusic/plymasterstudio/releases/download/plymaster/PlyMaster.Factory.Setup.exe"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative w-full sm:w-auto px-8 py-5 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 rounded-2xl text-lg md:text-xl font-black transition-all transform hover:scale-105 shadow-xl shadow-[#006AFF]/25 overflow-hidden text-center inline-flex items-center justify-center gap-3"
           >
             <Download className="w-6 h-6 text-white animate-bounce" />
-            <span className="relative z-10 text-white">팩토리 무료 다운로드 (Windows용)</span>
+            <span className="relative z-10 text-white">팩토리 다운로드 (Windows용)</span>
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
           </a>
 
