@@ -5,14 +5,11 @@ import {
   Target, 
   Image as ImageIcon, 
   ShieldCheck, 
-  Layers, 
   Download, 
   BookOpen, 
   Copy, 
   Check, 
-  Play, 
   Zap, 
-  Music2, 
   TrendingUp, 
   Bot, 
   Terminal 
@@ -34,7 +31,6 @@ const safeScrollToTop = () => {
 };
 
 export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
-  // Demo State for Thumbnail & Title Generator
   const [demoTheme, setDemoTheme] = useState('봄날 햇살 아래 한가로운 테라스 카페 재즈 플레이리스트');
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedType, setCopiedType] = useState<string | null>(null);
@@ -147,21 +143,22 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white pt-24 pb-20 overflow-hidden relative">
-      {/* Background Ambient Blurs */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-[#006AFF]/20 via-[#00B2FF]/15 to-purple-600/15 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/3 right-10 w-[500px] h-[500px] bg-[#00B2FF]/10 blur-[130px] rounded-full pointer-events-none" />
+    <div className="min-h-screen bg-[#121212] text-white pt-24 pb-20 overflow-hidden relative isolate">
+      {/* Background Ambient Blurs - GPU 하드웨어 가속 강제화로 테두리 박스 깨짐 차단 */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-[#006AFF]/20 via-[#00B2FF]/15 to-purple-600/15 blur-[140px] rounded-full pointer-events-none transform-gpu will-change-transform" />
+      <div className="absolute bottom-1/3 right-10 w-[500px] h-[500px] bg-[#00B2FF]/10 blur-[130px] rounded-full pointer-events-none transform-gpu will-change-transform" />
 
-      {/* 1. FACTORY HERO SECTION */}
-      <section className="relative px-4 md:px-6 pt-12 pb-24 text-center max-w-6xl mx-auto z-10">
-        <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-8 rounded-full border border-[#00B2FF]/30 bg-gradient-to-r from-[#006AFF]/15 to-[#00B2FF]/15 backdrop-blur-md text-[#00B2FF] text-xs md:text-sm font-bold shadow-lg shadow-[#006AFF]/10 animate-[fadeIn_0.5s_ease-out]">
+      {/* 1. FACTORY HERO SECTION - isolate로 내부 텍스트 클리핑 레이어 완전 격리 */}
+      <section className="relative px-4 md:px-6 pt-12 pb-24 text-center max-w-6xl mx-auto z-10 isolate">
+        <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-8 rounded-full border border-[#00B2FF]/30 bg-gradient-to-r from-[#006AFF]/15 to-[#00B2FF]/15 backdrop-blur-md text-[#00B2FF] text-xs md:text-sm font-bold shadow-lg shadow-[#006AFF]/10 transform-gpu">
           <Sparkles className="w-4 h-4 text-[#00B2FF] animate-spin" style={{ animationDuration: '4s' }} />
           Plymaster Factory : AI 음악 대량 생산 & 유튜브 마케팅 자동화 솔루션
         </div>
 
-        <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-8 leading-[1.18] tracking-tight break-keep">
+        {/* bg-clip-text 가 깨져 복사본 잔상이 생기던 오류를 방지하기 위해 렌더링 방식 단일화 */}
+        <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-8 leading-[1.2] tracking-tight break-keep select-none text-white">
           음악을 전혀 몰라도 <br className="hidden md:block" />
-          <span className="bg-gradient-to-r from-[#006AFF] via-[#00B2FF] to-cyan-300 bg-clip-text text-transparent italic font-black">
+          <span className="bg-gradient-to-r from-[#006AFF] via-[#00B2FF] to-cyan-300 bg-clip-text text-transparent font-black block mt-2">
             고퀄리티 음악 대량 생산!
           </span>
         </h1>
@@ -176,13 +173,13 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
           </p>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - 그림자 테두리가 사각형으로 박스치던 버그 수정 */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
           <a
             href="https://github.com/nimomusic/plymasterstudio/releases/download/plymaster/PlyMaster.Factory.Setup.exe"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative w-full sm:w-auto px-8 py-5 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 rounded-2xl text-lg md:text-xl font-black transition-all transform hover:scale-105 shadow-xl shadow-[#006AFF]/25 overflow-hidden text-center inline-flex items-center justify-center gap-3"
+            className="group relative w-full sm:w-auto px-8 py-5 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 rounded-2xl text-lg md:text-xl font-black transition-all transform hover:scale-105 shadow-xl shadow-[#006AFF]/25 overflow-hidden text-center inline-flex items-center justify-center gap-3 transform-gpu"
           >
             <Download className="w-6 h-6 text-white animate-bounce" />
             <span className="relative z-10 text-white">팩토리 다운로드 (Windows용)</span>
@@ -194,7 +191,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
               setView('manual', 'factory');
               safeScrollToTop();
             }}
-            className="w-full sm:w-auto px-8 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-lg md:text-xl font-bold border border-white/15 transition-all backdrop-blur-md text-center inline-flex items-center justify-center gap-2.5 text-white/90 hover:text-white cursor-pointer"
+            className="w-full sm:w-auto px-8 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-lg md:text-xl font-bold border border-white/15 transition-all backdrop-blur-md text-center inline-flex items-center justify-center gap-2.5 text-white/90 hover:text-white cursor-pointer transform-gpu"
           >
             <BookOpen className="w-5 h-5 text-[#00B2FF]" />
             팩토리 설명서 & PDF 가이드
@@ -235,11 +232,11 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
             {factoryFeatures.map((feat, idx) => (
               <div 
                 key={idx} 
-                className="group relative bg-gradient-to-b from-white/[0.07] to-white/[0.02] hover:from-white/[0.12] hover:to-white/[0.04] p-8 md:p-10 rounded-3xl border border-white/10 hover:border-[#00B2FF]/50 transition-all duration-300 flex flex-col justify-between shadow-xl hover:-translate-y-2"
+                className="group relative bg-gradient-to-b from-white/[0.07] to-white/[0.02] hover:from-white/[0.12] hover:to-white/[0.04] p-8 md:p-10 rounded-3xl border border-white/10 hover:border-[#00B2FF]/50 transition-all duration-300 flex flex-col justify-between shadow-xl hover:-translate-y-2 transform-gpu"
               >
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <div className="w-16 h-16 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:border-[#00B2FF]/40 transition-all">
+                    <div className="w-16 h-16 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:border-[#00B2FF]/40 transition-all transform-gpu">
                       {feat.icon}
                     </div>
                     <span className="text-3xl font-black text-white/15 font-mono group-hover:text-[#00B2FF]/40 transition-colors">
@@ -285,7 +282,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
           </p>
         </div>
 
-        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl backdrop-blur-xl">
+        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl backdrop-blur-xl transform-gpu">
           {/* Preset Buttons */}
           <div className="mb-8">
             <label className="block text-xs font-extrabold uppercase tracking-widest text-white/50 mb-3">
@@ -302,7 +299,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
                   key={idx}
                   type="button"
                   onClick={() => setDemoTheme(preset)}
-                  className={`px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all border ${
+                  className={`px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all border transform-gpu ${
                     demoTheme === preset
                       ? 'bg-gradient-to-r from-[#006AFF] to-[#00B2FF] text-white border-transparent shadow-lg shadow-[#006AFF]/20 scale-105'
                       : 'bg-white/5 hover:bg-white/10 text-white/80 border-white/10'
@@ -328,7 +325,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
             <button
               type="submit"
               disabled={isGenerating}
-              className="px-8 py-4 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 disabled:opacity-50 text-white font-black rounded-2xl text-base md:text-lg transition-all flex items-center justify-center gap-2.5 shadow-lg shadow-[#006AFF]/20 cursor-pointer whitespace-nowrap"
+              className="px-8 py-4 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 disabled:opacity-50 text-white font-black rounded-2xl text-base md:text-lg transition-all flex items-center justify-center gap-2.5 shadow-lg shadow-[#006AFF]/20 cursor-pointer whitespace-nowrap transform-gpu"
             >
               {isGenerating ? (
                 <>
@@ -361,7 +358,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
                     <div
                       key={i}
                       onClick={() => handleCopy(title, `title-${i}`)}
-                      className="group p-3.5 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5 hover:border-[#00B2FF]/40 transition-all cursor-pointer flex items-center justify-between gap-4"
+                      className="group p-3.5 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5 hover:border-[#00B2FF]/40 transition-all cursor-pointer flex items-center justify-between gap-4 transform-gpu"
                       title="클릭하여 복사"
                     >
                       <span className="font-bold text-white/90 text-sm md:text-base group-hover:text-white transition-colors">
@@ -394,7 +391,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
                   </h3>
                   <button
                     onClick={() => handleCopy(demoResult.prompt, 'prompt')}
-                    className="self-start sm:self-auto px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white text-xs md:text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-md cursor-pointer"
+                    className="self-start sm:self-auto px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white text-xs md:text-sm font-bold rounded-xl transition-all flex items-center gap-2 shadow-md cursor-pointer transform-gpu"
                   >
                     {copiedType === 'prompt' ? (
                       <>
@@ -428,8 +425,8 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
 
       {/* 4. FACTORY CLOSING SECTION */}
       <section className="py-28 px-4 md:px-6 relative z-10 text-center max-w-5xl mx-auto">
-        <div className="p-10 md:p-16 rounded-[3rem] bg-gradient-to-b from-[#006AFF]/20 via-black/60 to-[#00B2FF]/10 border border-[#00B2FF]/30 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#00B2FF]/15 blur-[120px] rounded-full pointer-events-none" />
+        <div className="p-10 md:p-16 rounded-[3rem] bg-gradient-to-b from-[#006AFF]/20 via-black/60 to-[#00B2FF]/10 border border-[#00B2FF]/30 shadow-2xl relative overflow-hidden isolate">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#00B2FF]/15 blur-[120px] rounded-full pointer-events-none transform-gpu will-change-transform" />
           
           <h2 className="text-3xl md:text-5xl font-black mb-6 text-white leading-tight">
             이제 음악과 유튜브 마케팅을 <br />
@@ -437,7 +434,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
           </h2>
           <p className="text-base md:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed">
             더 이상 Suno 앞에서 어떤 프롬프트를 써야 할지 막막해하지 마세요. <br />
-            Plymaster Factory가 당신만의 24시간 무인 음악 프로덕션이 되어드립니다.
+            Base인 Plymaster Factory가 당신만의 24시간 무인 음악 프로덕션이 되어드립니다.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -445,7 +442,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
               href="https://github.com/nimomusic/plymasterstudio/releases/download/plymasterstudio/PlyMaster.Studio.Setup.exe"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 text-white font-black rounded-2xl text-lg md:text-xl transition-all shadow-xl shadow-[#006AFF]/30 flex items-center justify-center gap-3"
+              className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-[#006AFF] to-[#00B2FF] hover:brightness-110 text-white font-black rounded-2xl text-lg md:text-xl transition-all shadow-xl shadow-[#006AFF]/30 flex items-center justify-center gap-3 transform-gpu"
             >
               <Download className="w-6 h-6 animate-bounce" />
               <span>팩토리 무료 다운로드 시작</span>
@@ -455,7 +452,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
                 setView('manual', 'factory');
                 safeScrollToTop();
               }}
-              className="w-full sm:w-auto px-8 py-5 bg-white/10 hover:bg-white/15 text-white font-bold rounded-2xl text-lg md:text-xl transition-all border border-white/20 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-5 bg-white/10 hover:bg-white/15 text-white font-bold rounded-2xl text-lg md:text-xl transition-all border border-white/20 flex items-center justify-center gap-2 cursor-pointer transform-gpu"
             >
               <BookOpen className="w-5 h-5 text-[#00B2FF]" />
               <span>팩토리 가이드북 열람</span>
