@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView, currentView }) => {
               className={`hover:text-white transition cursor-pointer px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${currentView === 'factory' ? 'text-white bg-white/10 font-bold border-b-2 border-[#00B2FF]' : 'hover:bg-white/5'}`}
             >
               <Sparkles className="w-4 h-4 text-[#00B2FF]" />
-              <span className="bg-gradient-to-r from-[#00B2FF] to-cyan-400 bg-clip-text text-transparent font-extrabold inline-block">Factory (음악공장)</span>
+              <span className="text-[#00B2FF] font-extrabold inline-block">Factory (음악공장)</span>
               <span className="px-1.5 py-0.5 text-[10px] rounded bg-[#00B2FF]/20 text-[#00B2FF] font-black uppercase tracking-wide shrink-0">NEW</span>
             </button>
             <button 
