@@ -160,7 +160,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
         {/* 글자 겹침 및 알파 채널 유실을 막기 위해 텍스트 렌더링을 완전히 깔끔하게 정돈 */}
         <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-8 leading-[1.2] tracking-tight text-white select-none">
           음악을 전혀 몰라도 <br className="hidden md:block" />
-          <span className="bg-gradient-to-r from-[#006AFF] via-[#00B2FF] to-cyan-300 bg-clip-text text-transparent font-black block mt-2">
+          <span className="text-[#00B2FF] font-black block mt-2">
             고퀄리티 음악 대량 생산!
           </span>
         </h1>
