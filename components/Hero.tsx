@@ -53,10 +53,8 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
               href="https://github.com/nimomusic/plymasterstudio/releases/download/plymaster/PlyMaster.Studio.Setup.exe"
               target="_blank"
               rel="noopener noreferrer"
-              {/* 정렬을 위해 inline-block 대신 inline-flex items-center justify-center gap-2.5 적용 */}
               className="group relative w-full sm:w-auto px-8 py-5 bg-[#006AFF] hover:bg-[#0056cc] rounded-2xl text-xl font-bold transition-all transform hover:scale-105 electric-shadow overflow-hidden text-center inline-flex items-center justify-center gap-2.5 text-white"
             >
-              {/* 글자 앞에 다운로드 아이콘 추가 */}
               <Download className="w-5 h-5 text-white relative z-10" />
               <span className="relative z-10">스튜디오 무료 다운로드 (Windows용)</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
