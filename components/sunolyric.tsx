@@ -34,7 +34,7 @@ const safeScrollToTop = () => {
 };
 
 interface SunoLyricProps {
-  setView: (view: 'hero' | 'pricing' | 'manual' | 'suno' | 'privacy' | 'terms' | 'refund') => void;
+  setView: (view: any, manualTab?: 'studio' | 'factory') => void;
 }
 
 export const SunoLyric: React.FC<SunoLyricProps> = ({ setView }) => {
