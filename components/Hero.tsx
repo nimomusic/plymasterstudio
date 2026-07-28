@@ -110,7 +110,7 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
               </div>
 
               {/* Center Image: Preview & Spectrum */}
-              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden group hover:border-[#006AFF]/50 transition-all hover:scale-[1.50] duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden group hover:border-[#006AFF]/50 transition-all hover:scale-[1.20] duration-300">
                 <div className={`relative bg-neutral-950 flex items-center justify-center overflow-hidden ${(!loaded.img2 || error.img2) ? 'aspect-[16/10]' : ''}`}>
                   <img
                     src={screenshot2}
@@ -146,7 +146,7 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
               </div>
 
               {/* Right Image: EQ & Sound */}
-              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden group hover:border-[#006AFF]/50 transition-all hover:scale-[1.50] duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden group hover:border-[#006AFF]/50 transition-all hover:scale-[1.20] duration-300">
                 <div className={`relative bg-neutral-950 flex items-center justify-center overflow-hidden ${(!loaded.img3 || error.img3) ? 'aspect-[16/10]' : ''}`}>
                   <img
                     src={screenshot3}
