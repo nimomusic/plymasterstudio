@@ -74,7 +74,7 @@ const Hero: React.FC<HeroProps> = ({ setView }) => {
           <div className="w-full max-w-[1400px] mx-auto mt-2 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
               {/* Left Image: Settings 1 */}
-              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden group hover:border-[#006AFF]/50 transition-all hover:scale-[1.50] duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden group hover:border-[#006AFF]/50 transition-all hover:scale-[1.20] duration-300">
                 <div className={`relative bg-neutral-950 flex items-center justify-center overflow-hidden ${(!loaded.img1 || error.img1) ? 'aspect-[16/10]' : ''}`}>
                   <img
                     src={screenshot1}
