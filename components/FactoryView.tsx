@@ -133,7 +133,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
 
           <button 
                   onClick={() => setView('themepack')}
-                  className="w-full sm:w-auto px-8 py-8 bg-gradient-to-r from-[#006AFF]/20 to-[#00B2FF]/20 hover:from-[#006AFF]/30 hover:to-[#00B2FF]/30 text-white rounded-2xl text-lg font-bold border border-[#006AFF]/50 hover:border-[#00B2FF] transition-all transform hover:scale-105 shadow-lg shadow-[#006AFF]/20 text-center inline-flex items-center justify-center gap-2.5 cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-5 bg-gradient-to-r from-[#006AFF]/20 to-[#00B2FF]/20 hover:from-[#006AFF]/30 hover:to-[#00B2FF]/30 text-white rounded-2xl text-lg font-bold border border-[#006AFF]/50 hover:border-[#00B2FF] transition-all transform hover:scale-105 shadow-lg shadow-[#006AFF]/20 text-center inline-flex items-center justify-center gap-2.5 cursor-pointer"
                 >
                   <Headphones className="w-5 h-5 flex-shrink-0 text-[#00B2FF]" />
                   <span className="whitespace-nowrap">테마팩 음악 둘러보기</span>
