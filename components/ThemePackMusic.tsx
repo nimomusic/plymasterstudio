@@ -59,21 +59,21 @@ export const THEME_PACKS: ThemeCategory[] = [
     badge: '감성 플레이리스트 인기 1위',
     icon: '☕',
     accentColor: '#006AFF',
-    description: '새벽 감성을 자극하는 따뜻한 피아노 선율, 감각적인 붐뱁 비트와 칠한 멜로디의 감성 힙합 테마팩입니다.',
+    description: '감성힙합, 인스타 느좋 R&B Hip-Hop, 청량 R&B Hip-Hop - 세가지로 구성되어 있는 새벽 감성을 자극하는 따뜻한 피아노 선율, 감각적인 붐뱁 비트와 칠한 멜로디의 감성 힙합 테마팩입니다.',
     keywords: ['#새벽감성', '#로파이', '#피아노루프', '#붐뱁', '#카페BGM'],
     tracks: [
       {
         id: 'hiphop-1',
-        title: '비 내리는 새벽 2시의 골목길 (Midnight Drizzle)',
+        title: '미련의 흔적',
         artist: 'Plymaster AI Producer',
-        duration: '02:48',
-        genreTag: 'Lofi Chill Hop',
-        description: '부드러운 빗소리와 감미로운 일렉 피아노가 어우러진 칠한 감성 비트',
-        bpm: 84,
-        key: 'Eb Maj',
+        duration: '02:40',
+        genreTag: 'Emotional trap',
+        description: '감미로운 일렉 피아노로 시작하여 멜로디컬한 보컬 훅이 어우러진  감성 힙합',
+        bpm: 85,
+        key: 'Mid-tempo',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_01.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/3705bdad-3386-4f5f-b04c-057a868f2f11_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_01.mp3' */
         // =========================================================
       },
       {
@@ -426,8 +426,8 @@ export const ThemePackMusic: React.FC<ThemePackMusicProps> = ({ setView }) => {
             테마팩 <span className="text-[#006AFF]">음악 둘러보기</span>
           </h1>
           <p className="text-base md:text-lg text-white/60 leading-relaxed break-keep">
-            Plymaster Factory AI 프로듀서가 기획·제작한 고퀄리티 음원을 직접 청음해보세요.<br />
-            원하는 테마팩을 선택하고 플레이 버튼을 누르면 실시간 사운드를 확인하실 수 있습니다.
+            각 테마팩의 AI 프로듀서가 기획·제작한 고퀄리티 음원을 직접 청음해보세요.<br />
+            원하는 테마팩의 곡에 '재생하기' 버튼을 누르면 음악을 들으실 수 있습니다.
           </p>
         </div>
 
@@ -438,9 +438,9 @@ export const ThemePackMusic: React.FC<ThemePackMusicProps> = ({ setView }) => {
               <Info className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white mb-0.5">음원 하이퍼링크 입력 가이드</h4>
+              <h4 className="text-sm font-bold text-white mb-0.5">테마팩 사용 가이드</h4>
               <p className="text-xs text-white/60 leading-relaxed">
-                소스 코드 파일 내 <code className="bg-white/10 px-1.5 py-0.5 rounded text-[#00B2FF] font-mono font-bold">/* 하이퍼링크넣는 곳 */</code> 주석 위치에 음원 mp3 파일 URL을 입력하시면 실제 파일이 즉시 스트리밍 재생됩니다.
+                구매후 파일을 다운로드 받고 <code className="bg-white/10 px-1.5 py-0.5 rounded text-[#00B2FF] font-mono font-bold">/* 팩토리의 파일-테마파일 불러오기 */</code> 를 통해 파일을 불러오면 팩토리에 장착이 됩니다.
               </p>
             </div>
           </div>
