@@ -123,8 +123,8 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '04:55',
         genreTag: '몽환적인 수면음악',
         description: '극도의 몽환감을 주며 깊은 심연으로 빠져드는 것 같은 분위기의 앰비언트 사운드',
-        bpm: ,
-        key: '',
+        bpm: exetrem slow,
+        key: 'meditative',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/1c11a04f-ceff-4160-a47e-e457c1b7a7d2.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_01.mp3' */
@@ -137,8 +137,8 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:28',
         genreTag: '오르골 수면음악',
         description: '남녀노소 누구에게나 편안한 오르골 악기를 통해 집중과 명상, 편안한 수면 트랙',
-        bpm: ,
-        key: '',
+        bpm: slow,
+        key: 'purely dry sound',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/3bb7f34b-dbf0-42fe-a531-0f0c60308533.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_02.mp3' */
@@ -151,8 +151,8 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:19',
         genreTag: '재즈 수면음악',
         description: '편안한 재지 피아노 멜로디에 편안하게 휴식과 숙면 트랙',
-        bpm: ,
-        key: '',
+        bpm: slow,
+        key: 'cozy ambiance',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/cd273de6-f3a3-4ccb-8f83-de423475bb29.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
@@ -165,8 +165,8 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:35',
         genreTag: '피아노 수면음악',
         description: '느리고 몽환적인 피아노 멜로디와 따스한 공명음의 힐링 및 숙면 트랙',
-        bpm: ,
-        key: '',
+        bpm: slow,
+        key: 'deeply introspective',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/354a3dfd-4ff3-4044-8b43-77420e282d9b.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
