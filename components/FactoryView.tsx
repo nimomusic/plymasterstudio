@@ -74,7 +74,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
       step: "06",
       title: "PMCS 하드웨어 보안 & 슬롯형 테마 관리",
       subtitle: "안전한 암호화 마스터키 보호",
-      description: "기기 고유 ID(MAC/UUID) 기반 32비트 암호화 보안 시스템과 슬롯형 테마 로더(.pmtheme)를 탑재하여 소중한 기획 테마와 라이선스 데이터를 외부 유출로부터 완벽하게 보호합니다.",
+      description: "기기 고유 ID 기반 32비트 암호화 보안 시스템과 슬롯형 테마 로더(.pmtheme)를 탑재하여 소중한 기획 테마와 라이선스 데이터를 외부 유출로부터 완벽하게 보호합니다.",
       icon: <Terminal className="w-8 h-8 text-amber-400" />,
       badge: "PMCS Security"
     }
@@ -105,6 +105,8 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
           </p>
           <p className="text-white/50 text-sm md:text-base">
             ✨ 유튜브 알고리즘을 겨냥한 매력적인 <strong className="text-white">썸네일 이미지 프롬프트 & 바이럴 영상 제목 카피 자동 생성 기능</strong>까지 한 번에 누리세요!
+          </p>
+          <p className="text-red/50 text-sm md:text-base">
             📢 <strong className="text-red">테마팩은 팩토리에 장착하여 사용하는 것으로 테마별로 별도 구매입니다. 아래 테마팩 음악 둘러기보를 클릭 해 보세요.</strong>
           </p>
         </div>
