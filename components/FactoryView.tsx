@@ -88,7 +88,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
       <section className="relative px-4 md:px-6 pt-12 pb-24 text-center max-w-6xl mx-auto z-10">
         <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-8 rounded-full border border-[#00B2FF]/30 bg-[#1e1e1e] text-[#00B2FF] text-xs md:text-sm font-bold">
           <Sparkles className="w-4 h-4 text-[#00B2FF]" />
-          Plymaster Factory : AI 음악 대량 생산 & 유튜브 마케팅 자동화 솔루션
+          Plymaster Factory : AI 음악 제작 맞춤형 자동화 솔루션
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-8 leading-[1.2] tracking-tight text-white select-none">
@@ -105,6 +105,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
           </p>
           <p className="text-white/50 text-sm md:text-base">
             ✨ 유튜브 알고리즘을 겨냥한 매력적인 <strong className="text-white">썸네일 이미지 프롬프트 & 바이럴 영상 제목 카피 자동 생성 기능</strong>까지 한 번에 누리세요!
+            📢 <strong className="text-red">테마팩은 팩토리에 장착하여 사용하는 것으로 테마별로 별도 구매입니다. 아래 테마팩 음악 둘러기보를 클릭 해 보세요.</strong>
           </p>
         </div>
 
