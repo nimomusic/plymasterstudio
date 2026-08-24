@@ -7,6 +7,7 @@ import ManualSection from './components/ManualSection';
 import { PolicyView } from './components/PolicyView';
 import { SunoLyric } from './components/sunolyric';
 import FactoryView from './components/FactoryView';
+import { ThemePackMusic } from './components/ThemePackMusic';
 
 const safeScrollToTop = () => {
   try {
