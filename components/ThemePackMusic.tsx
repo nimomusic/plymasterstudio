@@ -123,7 +123,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '04:55',
         genreTag: '몽환적인 수면음악',
         description: '극도의 몽환감을 주며 깊은 심연으로 빠져드는 것 같은 분위기의 앰비언트 사운드',
-        bpm: exetrem slow,
+        bpm: 45,
         key: 'meditative',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
@@ -137,7 +137,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:28',
         genreTag: '오르골 수면음악',
         description: '남녀노소 누구에게나 편안한 오르골 악기를 통해 집중과 명상, 편안한 수면 트랙',
-        bpm: slow,
+        bpm: 55,
         key: 'purely dry sound',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
@@ -151,7 +151,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:19',
         genreTag: '재즈 수면음악',
         description: '편안한 재지 피아노 멜로디에 편안하게 휴식과 숙면 트랙',
-        bpm: slow,
+        bpm: 50,
         key: 'cozy ambiance',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
@@ -165,7 +165,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:35',
         genreTag: '피아노 수면음악',
         description: '느리고 몽환적인 피아노 멜로디와 따스한 공명음의 힐링 및 숙면 트랙',
-        bpm: slow,
+        bpm: 50,
         key: 'deeply introspective',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
