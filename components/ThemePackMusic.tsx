@@ -60,7 +60,7 @@ export const THEME_PACKS: ThemeCategory[] = [
     icon: '☕',
     accentColor: '#006AFF',
     description: '감성힙합, 인스타 느좋 R&B Hip-Hop, 청량 R&B Hip-Hop - 세가지로 구성되어 있는 새벽 감성을 자극하는 따뜻한 피아노 선율, 감각적인 붐뱁 비트와 칠한 멜로디의 감성 힙합 테마팩입니다.',
-    keywords: ['#새벽감성', '#로파이', '#피아노루프', '#붐뱁', '#카페BGM'],
+    keywords: ['#새벽감성', '#로파이', '#공부', '#붐뱁', '#카페BGM'],
     tracks: [
       {
         id: 'hiphop-1',
@@ -122,9 +122,9 @@ export const THEME_PACKS: ThemeCategory[] = [
         artist: 'Plymaster Sleep Lab',
         duration: '04:55',
         genreTag: '몽환적인 수면음악',
-        description: '마음을 편안하게 가라앉혀주는 앰비언트 신스 패드 사운드',
-        bpm: 60,
-        key: 'D Maj',
+        description: '극도의 몽환감을 주며 깊은 심연으로 빠져드는 것 같은 분위기의 앰비언트 사운드',
+        bpm: ,
+        key: '',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/1c11a04f-ceff-4160-a47e-e457c1b7a7d2.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_01.mp3' */
@@ -137,8 +137,8 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:28',
         genreTag: '오르골 수면음악',
         description: '남녀노소 누구에게나 편안한 오르골 악기를 통해 집중과 명상, 편안한 수면 트랙',
-        bpm: 55,
-        key: 'G Maj',
+        bpm: ,
+        key: '',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/3bb7f34b-dbf0-42fe-a531-0f0c60308533.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_02.mp3' */
@@ -150,9 +150,9 @@ export const THEME_PACKS: ThemeCategory[] = [
         artist: 'Plymaster Sleep Lab',
         duration: '03:19',
         genreTag: '재즈 수면음악',
-        description: '느리고 편안한 재지 피아노 멜로디에 편안하게 휴식과 숙면 트랙',
-        bpm: 58,
-        key: 'A Maj',
+        description: '편안한 재지 피아노 멜로디에 편안하게 휴식과 숙면 트랙',
+        bpm: ,
+        key: '',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/cd273de6-f3a3-4ccb-8f83-de423475bb29.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
@@ -165,8 +165,8 @@ export const THEME_PACKS: ThemeCategory[] = [
         duration: '03:35',
         genreTag: '피아노 수면음악',
         description: '느리고 몽환적인 피아노 멜로디와 따스한 공명음의 힐링 및 숙면 트랙',
-        bpm: 58,
-        key: 'A Maj',
+        bpm: ,
+        key: '',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/354a3dfd-4ff3-4044-8b43-77420e282d9b.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
@@ -181,8 +181,8 @@ export const THEME_PACKS: ThemeCategory[] = [
     badge: '글로벌 차트 스타일 & 바이럴',
     icon: '⚡',
     accentColor: '#EC4899',
-    description: '귀에 감기는 강렬한 훅과 현대적인 신스 사운드로 유튜브 쇼츠 및 플레이리스트 바이럴을 유도하는 트렌디 팝 테마팩입니다.',
-    keywords: ['#빌보드팝', '#신스웨이브', '#쇼츠바이럴', '#드라이브', '#트렌디'],
+    description: '귀에 감기는 강렬한 훅과 트렌디한 구성으로 카페BGM, 드라이브, 운동, 플레이리스트 바이럴을 유도하는 트렌디 팝 테마팩입니다.',
+    keywords: ['#빌보드팝', '#신나는', '#트렌디한,' '#운동', '#드라이브', '#카페BGM' ],
     tracks: [
       {
         id: 'pop-1',
@@ -190,9 +190,9 @@ export const THEME_PACKS: ThemeCategory[] = [
         artist: 'Plymaster Hit Factory',
         duration: '02:13',
         genreTag: '빌보드 트렌디 팝',
-        description: '신나는 누디스코가 가미된 중독적인 탑라인 댄스 팝',
-        bpm: 122,
-        key: 'A Min',
+        description: '신나는 누디스코가 가미된 중독적인 탑라인의 댄스 팝',
+        bpm: 124,
+        key: 'Dance-pop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
@@ -204,9 +204,9 @@ export const THEME_PACKS: ThemeCategory[] = [
         artist: 'Plymaster Hit Factory',
         duration: '03:06',
         genreTag: '빌보드 트렌디 팝',
-        description: '청량한 날씨, 기분 전환에 최적화된 인디 펑크 팝',
+        description: '청량한 날씨, 기분 전환에 딱 좋은 인디 팝',
         bpm: 100,
-        key: 'C Maj',
+        key: 'Indie-pop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/009ce87e-aea8-45a8-b47b-aae9496c88f4_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
@@ -220,7 +220,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         genreTag: '빌보드 트렌디 팝',
         description: '그루비한 드럼 비트와 매력적인 여성 보컬이 잘 어우러진 알트 팝',
         bpm: 120,
-        key: 'E Min',
+        key: 'Alt-Pop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
@@ -460,7 +460,7 @@ export const ThemePackMusic: React.FC<ThemePackMusicProps> = ({ setView }) => {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 font-mono">
-              총 3개 테마 / 9개 트랙
+              총 3개 테마 / 10개 트랙
             </span>
           </div>
         </div>
