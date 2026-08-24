@@ -9,7 +9,8 @@ import {
   BookOpen, 
   Zap, 
   Bot, 
-  Terminal 
+  Headphones,
+  Terminal
 } from 'lucide-react';
 import { AppViewType } from '../types';
 
