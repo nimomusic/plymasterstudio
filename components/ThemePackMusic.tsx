@@ -746,13 +746,13 @@ export const ThemePackMusic: React.FC<ThemePackMusicProps> = ({ setView }) => {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://github.com/nimomusic/plymasterstudio/releases/download/plymasterstudio/Plymaster.Factory.For.Pop.Setup.exe"
+            href="https://litt.ly/plymaster"
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 bg-[#006AFF] hover:bg-[#0056cc] text-white rounded-2xl font-bold text-base transition-all transform hover:scale-105 shadow-xl shadow-[#006AFF]/25 inline-flex items-center gap-2"
           >
             <Download className="w-5 h-5" />
-            <span>팩토리 다운로드 (Windows용)</span>
+            <span>테마팩 구매하기</span>
           </a>
           <button
             onClick={() => setView('manual')}
