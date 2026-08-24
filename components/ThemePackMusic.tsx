@@ -67,10 +67,10 @@ export const THEME_PACKS: ThemeCategory[] = [
         title: '미련의 흔적',
         artist: 'Plymaster AI Producer',
         duration: '02:40',
-        genreTag: 'Emotional trap',
+        genreTag: 'K감성힙합',
         description: '감미로운 일렉 피아노로 시작하여 멜로디컬한 보컬 훅이 어우러진  감성 힙합',
         bpm: 85,
-        key: 'Mid-tempo',
+        key: 'Emotional trap',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
         audioUrl: 'https://cdn1.suno.ai/3705bdad-3386-4f5f-b04c-057a868f2f11_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_01.mp3' */
@@ -78,30 +78,30 @@ export const THEME_PACKS: ThemeCategory[] = [
       },
       {
         id: 'hiphop-2',
-        title: '따뜻한 라떼와 창가에 비친 기억 (Coffee & Nostalgia)',
+        title: '환상통',
         artist: 'Plymaster AI Producer',
         duration: '03:12',
-        genreTag: 'Jazz Lofi Beat',
-        description: '따스한 재즈 코드 진행과 빈티지 비닐 크랙클 질감의 로파이 트랙',
-        bpm: 78,
-        key: 'F Maj',
+        genreTag: '인스타 느좋 R&B Hip-Hop',
+        description: '몽환적인 신스 멜로디가 돋보이는 알앤비 힙합',
+        bpm: 95,
+        key: 'Dark Trap R&B',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_02.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/34c49a87-8f59-42b0-8af9-8d4c0a0e7a68_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_02.mp3' */
         // =========================================================
       },
       {
         id: 'hiphop-3',
-        title: '도심 속 홀로 걷는 밤 (City Lights Walk)',
+        title: 'Zero Zone',
         artist: 'Plymaster AI Producer',
-        duration: '02:55',
-        genreTag: 'Melodic Emotional Hip-Hop',
-        description: '서정적인 기타 아르페지오와 묵직한 808 베이스가 돋보이는 멜로디 힙합',
-        bpm: 90,
-        key: 'C Min',
+        duration: '02:04',
+        genreTag: '청량 R&B Hip-Hop',
+        description: '드라이브 가고싶은 청량하고 신나는 무드의 알앤비 힙합',
+        bpm: 110,
+        key: 'Tropical Hip-hop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_03.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/138c893f-5f59-4397-9add-931caecd0e56_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_03.mp3' */
         // =========================================================
       },
     ],
@@ -109,53 +109,67 @@ export const THEME_PACKS: ThemeCategory[] = [
   {
     id: 'sleep',
     title: '수면음악',
-    subtitle: 'Deep Sleep & Healing Ambient (432Hz)',
+    subtitle: 'Deep Sleep & Healing Ambient',
     badge: '숙면 유도 & 힐링 앰비언트',
     icon: '🌙',
     accentColor: '#8B5CF6',
-    description: '뇌파를 안정시키고 깊은 수면 상태로 인도하는 432Hz 튜닝 앰비언트와 평온한 자연의 소리 테마팩입니다.',
-    keywords: ['#깊은수면', '#432Hz', '#스트레스완화', '#명상', '#자연의소리'],
+    description: '뇌파를 안정시키고 깊은 수면 상태로 인도하는 앰비언트의 평온한 수면 테마팩입니다.',
+    keywords: ['#깊은수면', '#뇌파안정', '#스트레스완화', '#명상', '#휴식'],
     tracks: [
       {
         id: 'sleep-1',
-        title: '깊은 밤 은하수의 자장가 (Galaxy Lullaby - 432Hz)',
+        title: 'Subaquatic Rest',
         artist: 'Plymaster Sleep Lab',
-        duration: '04:20',
-        genreTag: 'Deep Delta Ambient',
-        description: '마음을 편안하게 가라앉혀주는 432Hz 앰비언트 신스 패드 사운드',
+        duration: '04:55',
+        genreTag: '몽환적인 수면음악',
+        description: '마음을 편안하게 가라앉혀주는 앰비언트 신스 패드 사운드',
         bpm: 60,
         key: 'D Maj',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_01.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/1c11a04f-ceff-4160-a47e-e457c1b7a7d2.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_01.mp3' */
         // =========================================================
       },
       {
         id: 'sleep-2',
-        title: '잔잔한 숲속 빗소리와 명상 (Forest Rain Slumber)',
+        title: 'Coil Dream',
         artist: 'Plymaster Sleep Lab',
-        duration: '03:50',
-        genreTag: 'Nature Healing Sound',
-        description: '숲속 나뭇잎에 떨어지는 부드러운 빗소리와 따뜻한 드론 사운드',
+        duration: '03:28',
+        genreTag: '오르골 수면음악',
+        description: '남녀노소 누구에게나 편안한 오르골 악기를 통해 집중과 명상, 편안한 수면 트랙',
         bpm: 55,
         key: 'G Maj',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_02.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/3bb7f34b-dbf0-42fe-a531-0f0c60308533.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_02.mp3' */
         // =========================================================
       },
       {
         id: 'sleep-3',
-        title: '포근한 구름 위 수면 여행 (Cozy Cloud Slumber)',
+        title: 'Quietude Cadence',
         artist: 'Plymaster Sleep Lab',
-        duration: '04:05',
-        genreTag: 'Dreaming Piano Ambient',
-        description: '느리고 몽환적인 피아노 멜로디와 따스한 공명음의 숙면 트랙',
+        duration: '03:19',
+        genreTag: '재즈 수면음악',
+        description: '느리고 편안한 재지 피아노 멜로디에 편안하게 휴식과 숙면 트랙',
         bpm: 58,
         key: 'A Maj',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/cd273de6-f3a3-4ccb-8f83-de423475bb29.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
+        // =========================================================
+      },
+      {
+        id: 'sleep-4',
+        title: 'Misty Veil',
+        artist: 'Plymaster Sleep Lab',
+        duration: '03:35',
+        genreTag: '피아노 수면음악',
+        description: '느리고 몽환적인 피아노 멜로디와 따스한 공명음의 힐링 및 숙면 트랙',
+        bpm: 58,
+        key: 'A Maj',
+        // =========================================================
+        // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
+        audioUrl: 'https://cdn1.suno.ai/354a3dfd-4ff3-4044-8b43-77420e282d9b.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
         // =========================================================
       },
     ],
@@ -172,44 +186,44 @@ export const THEME_PACKS: ThemeCategory[] = [
     tracks: [
       {
         id: 'pop-1',
-        title: 'Drive Me Crazy (feat. Neon Sunset)',
+        title: 'Lose My Number',
         artist: 'Plymaster Hit Factory',
-        duration: '02:40',
-        genreTag: 'Synthpop & Dance',
-        description: '신나는 80년대 레트로 신스웨이브 베이스라인과 중독적인 탑라인 팝',
+        duration: '02:13',
+        genreTag: '빌보드 트렌디 팝',
+        description: '신나는 누디스코가 가미된 중독적인 탑라인 댄스 팝',
         bpm: 122,
         key: 'A Min',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
         // =========================================================
       },
       {
         id: 'pop-2',
-        title: 'Summer Heartbeat (Tropical Breeze)',
+        title: 'Sweet Tide',
         artist: 'Plymaster Hit Factory',
-        duration: '03:05',
-        genreTag: 'Tropical House Pop',
-        description: '청량한 플럭 사운드와 산뜻한 리듬감으로 기분 전환에 최적화된 트로피컬 팝',
-        bpm: 116,
+        duration: '03:06',
+        genreTag: '빌보드 트렌디 팝',
+        description: '청량한 날씨, 기분 전환에 최적화된 인디 펑크 팝',
+        bpm: 100,
         key: 'C Maj',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/009ce87e-aea8-45a8-b47b-aae9496c88f4_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
         // =========================================================
       },
       {
         id: 'pop-3',
-        title: 'Catch Me If You Can (Night Fever)',
+        title: 'Same Script',
         artist: 'Plymaster Hit Factory',
-        duration: '02:50',
-        genreTag: 'Nu-Disco Pop',
-        description: '그루비한 베이스와 화려한 스트링 사운드가 어우러진 뉴디스코 댄스팝',
-        bpm: 124,
+        duration: '02:35',
+        genreTag: '빌보드 트렌디 팝',
+        description: '그루비한 드럼 비트와 매력적인 여성 보컬이 잘 어우러진 알트 팝',
+        bpm: 120,
         key: 'E Min',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
+        audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
         // =========================================================
       },
     ],
