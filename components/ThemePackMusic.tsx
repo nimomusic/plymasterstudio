@@ -182,7 +182,7 @@ export const THEME_PACKS: ThemeCategory[] = [
     icon: '⚡',
     accentColor: '#EC4899',
     description: '귀에 감기는 강렬한 훅과 트렌디한 구성으로 카페BGM, 드라이브, 운동, 플레이리스트 바이럴을 유도하는 트렌디 팝 테마팩입니다.',
-    keywords: ['#빌보드팝', '#신나는', '#트렌디한,' '#운동', '#드라이브', '#카페BGM' ],
+    keywords: ['#빌보드팝', '#신나는', '#트렌디한, '#운동', '#드라이브', '#카페BGM'],
     tracks: [
       {
         id: 'pop-1',
