@@ -753,14 +753,7 @@ export const ThemePackMusic: React.FC<ThemePackMusicProps> = ({ setView }) => {
           >
             <Download className="w-5 h-5" />
             <span>테마팩 구매하기</span>
-          </a>
-          <button
-            onClick={() => setView('manual')}
-            className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/15 rounded-2xl font-bold text-base transition-all cursor-pointer inline-flex items-center gap-2"
-          >
-            <Info className="w-5 h-5" />
-            <span>팩토리 사용 설명서 보기</span>
-          </button>
+          </a>          
         </div>
       </div>
     </div>
