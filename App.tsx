@@ -190,6 +190,7 @@ const App: React.FC = () => {
         {(view === 'privacy' || view === 'terms' || view === 'refund') && (
           <PolicyView initialTab={view as any} setView={handleSetView} />
         )}
+        {view === 'themepack' && <ThemePackMusic setView={handleSetView} />}
       </main>
 
       <footer className="py-20 px-6 bg-black border-t border-white/5 text-center">
