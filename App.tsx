@@ -8,6 +8,7 @@ import { PolicyView } from './components/PolicyView';
 import { SunoLyric } from './components/sunolyric';
 import FactoryView from './components/FactoryView';
 import { ThemePackMusic } from './components/ThemePackMusic';
+import { BillboardPopView } from './components/BillboardPopView';
 
 const safeScrollToTop = () => {
   try {
@@ -48,11 +49,17 @@ const App: React.FC = () => {
       viewParam === 'suno' ||
       viewParam === 'privacy' ||
       viewParam === 'terms' ||
-      viewParam === 'refund'
+      viewParam === 'refund' ||
+      viewParam === 'pop' ||
+      viewParam === 'billboard'
     ) {
-      setView(viewParam);
+      setView(viewParam as any);
     }
   }, []);
+  if (view === 'pop' || view === 'billboard') {
+    return <BillboardPopView setView={setView} standalone={true} />;
+  }
+
   const features = [
     {
       title: "\"자동 자막 기능(PRO)\"",
