@@ -94,7 +94,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
         <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-8 leading-[1.2] tracking-tight text-white select-none">
           음악을 전혀 몰라도 <br className="hidden md:block" />
           <span className="text-[#00B2FF] font-black block mt-2">
-            고퀄리티 음악 대량 생산!
+            고퀄리티 음악 맞춤 생산!
           </span>
         </h1>
 
