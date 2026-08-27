@@ -21,12 +21,8 @@ export interface PopTrackItem {
   id: string;
   number: string;
   title: string;
-  artist: string;
   duration: string;
   genreTag: string;
-  description: string;
-  bpm: number;
-  key: string;
   /* 하이퍼링크넣는 곳: 실제 mp3 파일 또는 스트리밍 링크 URL */
   audioUrl: string;
 }
@@ -39,46 +35,56 @@ export const POP_TRACKS: PopTrackItem[] = [
   {
     id: 'pop-1',
     number: '01',
-    title: 'Drive Me Crazy (feat. Neon Sunset)',
-    artist: 'Plymaster Hit Factory',
-    duration: '02:40',
-    genreTag: 'Synthpop & Dance',
-    description: '신나는 80년대 레트로 신스웨이브 베이스라인과 중독적인 탑라인 팝',
-    bpm: 122,
-    key: 'A Min',
+    title: 'Mood drip',
+    duration: '03:08',
+    genreTag: '느좋 인스타 알앤비 힙합',
     // =========================================================
     // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-    audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
+    audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
     // =========================================================
   },
   {
     id: 'pop-2',
     number: '02',
-    title: 'Summer Heartbeat (Tropical Breeze)',
-    artist: 'Plymaster Hit Factory',
+    title: 'Daydream',
     duration: '03:05',
-    genreTag: 'Tropical House Pop',
-    description: '청량한 플럭 사운드와 산뜻한 리듬감으로 기분 전환에 최적화된 트로피컬 팝',
-    bpm: 116,
-    key: 'C Maj',
+    genreTag: '느좋 인스타 알앤비 힙합',
     // =========================================================
     // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-    audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
+    audioUrl: 'https://cdn1.suno.ai/bb01c0ca-06df-4fab-95aa-1d75daad899c.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
     // =========================================================
   },
   {
     id: 'pop-3',
     number: '03',
-    title: 'Catch Me If You Can (Night Fever)',
-    artist: 'Plymaster Hit Factory',
+    title: 'Soft Drizzle',
     duration: '02:50',
-    genreTag: 'Nu-Disco Pop',
-    description: '그루비한 베이스와 화려한 스트링 사운드가 어우러진 뉴디스코 댄스팝',
-    bpm: 124,
-    key: 'E Min',
+    genreTag: '느좋 인스타 알앤비 힙합',
     // =========================================================
     // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-    audioUrl: '', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
+    audioUrl: 'https://cdn1.suno.ai/b924b122-3bd1-4ba5-b833-854168b90b99.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
+    // =========================================================
+  },
+  {
+    id: 'pop-4',
+    number: '04',
+    title: '우산 없는 밤',
+    duration: '04:02',
+    genreTag: '느좋 인스타 알앤비 힙합',
+    // =========================================================
+    // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
+    audioUrl: 'https://cdn1.suno.ai/c4142110-476a-4b75-867d-6a5dc3b65ee2.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
+    // =========================================================
+  },
+  {
+    id: 'pop-5',
+    number: '05',
+    title: '읽히지 않아',
+    duration: '03:03',
+    genreTag: '느좋 인스타 알앤비 힙합',
+    // =========================================================
+    // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
+    audioUrl: 'https://cdn1.suno.ai/7ad30ed2-3112-4a85-a54d-797340f35c29.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
     // =========================================================
   },
 ];
@@ -273,14 +279,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       {setView && (
         <div className="w-full max-w-5xl flex items-center justify-between gap-4 mb-5">
           <button
-            onClick={() => setView('themepack')}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>전체 테마팩으로 가기</span>
-          </button>
-
-          <button
             onClick={handleCopyLink}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer"
             title="이 페이지 전용 링크 복사"
@@ -305,27 +303,27 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <div className="flex items-center gap-3 mb-2.5 flex-wrap">
               <span className="text-2xl text-yellow-400 select-none">⚡</span>
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                빌보드 트렌디팝
+                플리마스터 플레이리스트
               </h1>
               <span className="text-xs font-bold px-3 py-1 rounded-full border bg-[#EC4899]/15 border-[#EC4899]/40 text-[#EC4899]">
-                글로벌 차트 스타일 & 바이럴
+                오마카세 모음
               </span>
             </div>
             <p className="text-xs sm:text-sm text-white/60 leading-relaxed break-keep">
-              Billboard Trendy Pop &amp; Viral Beats • 귀에 감기는 강렬한 훅과 현대적인 신스 사운드로 유튜브 쇼츠 및 플레이리스트 바이럴을 유도하는 트렌디 팝 테마팩입니다.
+              플리마스터에서 테마팩을 사용하여 만든 곡들 중 엄선하여 모은 플레이리스트 입니다.
             </p>
           </div>
 
           {/* Right: Hashtag Badges */}
           <div className="flex flex-col items-start lg:items-end gap-2 flex-shrink-0">
             <div className="flex flex-wrap gap-1.5">
-              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#빌보드팝</span>
-              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#신스웨이브</span>
-              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#쇼츠바이럴</span>
+              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#이것저것</span>
+              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#주인장맘</span>
+              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#노동요</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#드라이브</span>
-              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#트렌디</span>
+              <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#카페</span>
             </div>
           </div>
         </div>
@@ -375,8 +373,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       <span className="text-xs font-mono font-bold text-[#38bdf8] bg-[#0284c7]/20 px-2 py-0.5 rounded">
                         {track.genreTag}
                       </span>
-                      <span className="text-xs text-white/40 font-mono">BPM {track.bpm}</span>
-                      <span className="text-xs text-white/40 font-mono">• {track.key}</span>
                     </div>
                     <h3 className="text-base sm:text-lg font-bold text-white truncate">
                       {track.title}
