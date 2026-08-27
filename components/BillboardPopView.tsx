@@ -406,7 +406,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>전체 테마팩으로 가기</span>
+            <span>테마팩 보러가기</span>
           </button>
         )}
 
