@@ -742,7 +742,7 @@ export const ThemePackMusic: React.FC<ThemePackMusicProps> = ({ setView }) => {
         </h3>
         <p className="text-white/60 text-sm md:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
           Plymaster Factory를 사용하면 별도의 음악 지식 없이도 마우스 클릭 몇 번만으로<br />
-          감성 힙합, 수면 음악, 빌보드 팝을 비롯한 수십 가지 테마의 음원과 썸네일을 100% 자동 생성합니다.
+          감성 힙합, 수면 음악, 빌보드 팝을 비롯한 다양한 테마의 음원을 100% 자동 생성합니다.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
