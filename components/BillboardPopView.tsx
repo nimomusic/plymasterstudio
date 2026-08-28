@@ -457,6 +457,13 @@ export interface CustomNewTrack {
 
 export const NEW_TRACKS: CustomNewTrack[] = [
   {
+    title: '내 속의 엑셀',
+    audioUrl: 'https://cdn1.suno.ai/f707e945-14ab-495a-9b92-7e470915ace6.mp3',
+    genreTag: '제작자: 홍트',
+    description: 'Korean Hip-hop Trot',
+    duration: '03:04',
+  },
+  {
     title: 'Unbound Notion',
     audioUrl: 'https://cdn1.suno.ai/ca941d08-0abf-4644-803f-023300df4a61.mp3',
     genreTag: '트렌디 팝',
