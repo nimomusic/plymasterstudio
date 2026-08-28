@@ -1051,7 +1051,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               {/* Play / Pause Main Button */}
               <button
                 onClick={() => currentTrack && handlePlayTrack(currentTrack)}
-                className="p-4.5 rounded-2xl text-white shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center"
+                className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/80 hover:text-white transition cursor-pointer hover:scale-105 active:scale-95"
                 style={{
                   background: `linear-gradient(135deg, ${currentAlbum.accentColor}, #db2777)`,
                   boxShadow: `0 10px 25px -5px ${currentAlbum.accentColor}40`
