@@ -884,8 +884,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         backgroundImage: `url('${(currentAlbum as any).bgImage || ''}')`
       }}
     >
-      {/* 💡 배경 이미지가 은은하게 비치고 글자가 또렷하게 보이도록 하는 어두운 오버레이 레이어 */}
-      <div className="absolute inset-0 bg-[#0a0c14]/85 backdrop-blur-[2px] pointer-events-none -z-0" />
   
       {/* Hidden Real HTML5 Audio Element */}
       <audio 
