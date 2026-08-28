@@ -54,7 +54,7 @@ export const ALBUMS: AlbumCategory[] = [
     bgGlow: 'from-[#EC4899]/20 to-[#8B5CF6]/10',
     tags: ['#인스타감성', '#칠힙합', '#알앤비', '#새벽감성', '#릴스음악'],
     // 👇 감성 힙합 앨범용 배경 이미지 URL
-    bgImage: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80',
+    bgImage: '/hiphop.jpeg',
   },
   {
     id: 'jazz',
@@ -66,7 +66,7 @@ export const ALBUMS: AlbumCategory[] = [
     bgGlow: 'from-[#F59E0B]/20 to-[#D97706]/10',
     tags: ['#빈티지재즈', '#카페음악', '#스윙', '#보사노바', '#LP감성'],
     // 👇 빈티지 재즈 앨범용 배경 이미지 URL
-    bgImage: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=1920&q=80',
+    bgImage: '/jazz.jpeg',
   },
   {
     id: 'pop',
@@ -78,7 +78,7 @@ export const ALBUMS: AlbumCategory[] = [
     bgGlow: 'from-[#06B6D4]/20 to-[#3B82F6]/10',
     tags: ['#트렌디팝', '#신스웨이브', '#쇼츠바이럴', '#드라이브', '#댄스'],
     // 👇 트렌디 팝송 앨범용 배경 이미지 URL
-    bgImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1920&q=80',
+    bgImage: '/pop.jpeg',
   },
 ];
 
