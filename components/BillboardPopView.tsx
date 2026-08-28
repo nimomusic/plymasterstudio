@@ -478,6 +478,13 @@ export const NEW_TRACKS: CustomNewTrack[] = [
     duration: '02:10',
   },
   {
+    title: 'Sweet Observance',
+    audioUrl: 'https://cdn1.suno.ai/9aae0af6-7ad3-4c0c-91d3-e25d934a654d.mp3',
+    genreTag: 'Chill R&B',
+    description: 'Neo-Soul R&B',
+    duration: '03:09',
+  },
+  {
     title: '掠れた約束-갈라진 약속',
     audioUrl: 'https://cdn1.suno.ai/745032ff-514f-48b1-98f2-b8a6901653bd.mp3',
     genreTag: 'JPOP',
