@@ -222,66 +222,157 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     {
       id: 'jazz-1',
       number: '01',
-      title: 'Midnight in Seoul (비 내리는 심야 카페)',
-      duration: '03:18',
-      genreTag: '빈티지 로맨틱 재즈',
-      description: '따뜻한 콘트라베이스와 벨벳 피아노 선율의 클래식 재즈',
+      title: 'A Soft Surrender',
+      duration: '04:28',
+      genreTag: '빈티지 재즈',
       albumId: 'jazz',
       // =========================================================
       // [하이퍼링크넣는 곳] 재즈 1번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
       // =========================================================
     },
     {
       id: 'jazz-2',
       number: '02',
-      title: 'Coffee & Cigarette (레트로 브루클린 바)',
-      duration: '02:45',
-      genreTag: '뉴욕 레트로 스윙 재즈',
-      description: '브러쉬 드럼과 브라스의 경쾌한 핑거스냅 스윙 리듬',
+      title: 'Soft Drift',
+      duration: '03:27',
+      genreTag: '빈티지 재즈',
       albumId: 'jazz',
       // =========================================================
       // [하이퍼링크넣는 곳] 재즈 2번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/c6dca2e7-5311-4119-9869-f39efd74955a.mp3',
       // =========================================================
     },
     {
       id: 'jazz-3',
       number: '03',
-      title: 'Sunset Boulevard (노을빛 해변)',
-      duration: '03:32',
-      genreTag: '감미로운 보사노바 재즈',
-      description: '어쿠스틱 기타와 부드러운 색소폰이 빚어내는 로맨틱 선율',
+      title: 'Where Thoughts Linger',
+      duration: '03:53',
+      genreTag: '빈티지 재즈',
       albumId: 'jazz',
       // =========================================================
       // [하이퍼링크넣는 곳] 재즈 3번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/def4da68-b80f-40b4-af7b-51ad8f5207cb.mp3',
       // =========================================================
     },
     {
       id: 'jazz-4',
       number: '04',
-      title: 'Rainy Day Waltz (창밖의 빗방울)',
-      duration: '03:04',
-      genreTag: '스모키 피아노 재즈',
-      description: 'LP 특유의 노이즈 질감과 깊이 있는 피아노 솔로',
+      title: 'A Soft Place to Be',
+      duration: '03:23',
+      genreTag: '빈티지 재즈',
       albumId: 'jazz',
       // =========================================================
       // [하이퍼링크넣는 곳] 재즈 4번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/5c60a6bc-0f9d-4114-96cf-3e3b2f2dc915.mp3',
       // =========================================================
     },
     {
       id: 'jazz-5',
       number: '05',
-      title: 'Velvet Moonlight (달빛 아래 재즈 트리오)',
-      duration: '03:20',
-      genreTag: '미드나잇 라운지 재즈',
-      description: '와인 한 잔과 함께 편안하게 녹아드는 힐링 재즈',
+      title: 'Softest Hours',
+      duration: '04:14',
+      genreTag: '빈티지 재즈',
       albumId: 'jazz',
       // =========================================================
       // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-5',
+      number: '05',
+      title: 'Softest Hours',
+      duration: '04:14',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-6',
+      number: '06',
+      title: 'Soft Exhale',
+      duration: '03:43',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/d4f49773-9714-4ced-87c5-93031381ea99.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-7',
+      number: '07',
+      title: 'Deepening Sigh',
+      duration: '02:31',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/10c9cc6b-6b5c-4f46-ad1f-90ddb28efe6f.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-8',
+      number: '08',
+      title: 'Somnus',
+      duration: '03:43',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/3da806b5-4712-4e09-b5b9-a1ae040bb8e3.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-9',
+      number: '09',
+      title: 'Softest Hours',
+      duration: '04:14',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-10',
+      number: '10',
+      title: 'A Gentle Murmur',
+      duration: '03:58',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/8a3b599a-a161-4372-833f-9720ea0691db.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-11',
+      number: '11',
+      title: 'Hush',
+      duration: '04:16',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/5edc5fbe-68e6-4913-85c0-789f7f9d21b3.mp3',
+      // =========================================================
+    },
+    {
+      id: 'jazz-12',
+      number: '12',
+      title: 'Sanctuary',
+      duration: '03:43',
+      genreTag: '빈티지 재즈',
+      albumId: 'jazz',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/39f7675a-497a-43ac-8225-7e1c80827525.mp3',
       // =========================================================
     },
   ],
@@ -291,66 +382,157 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     {
       id: 'pop-1',
       number: '01',
-      title: 'Drive Me Crazy (feat. Neon Sunset)',
-      duration: '02:40',
-      genreTag: '신스팝 & 댄스',
-      description: '80년대 레트로 신스웨이브 베이스라인과 중독적인 탑라인 팝',
+      title: 'Same Script',
+      duration: '02:35',
+      genreTag: '트렌디 팝송',
       albumId: 'pop',
       // =========================================================
       // [하이퍼링크넣는 곳] 팝 1번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
       // =========================================================
     },
     {
       id: 'pop-2',
       number: '02',
-      title: 'Summer Heartbeat (Tropical Breeze)',
-      duration: '03:05',
-      genreTag: '트로피컬 하우스 팝',
-      description: '청량한 플럭 사운드와 산뜻한 리듬감의 페스티벌 팝',
+      title: 'Sweet Tide',
+      duration: '03:06',
+      genreTag: '트렌디 팝송',
       albumId: 'pop',
       // =========================================================
       // [하이퍼링크넣는 곳] 팝 2번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/009ce87e-aea8-45a8-b47b-aae9496c88f4.mp3',
       // =========================================================
     },
     {
       id: 'pop-3',
       number: '03',
-      title: 'Catch Me If You Can (Night Fever)',
-      duration: '02:50',
-      genreTag: '뉴디스코 댄스팝',
-      description: '그루비한 베이스와 화려한 스트링 사운드가 어우러진 디스코',
+      title: 'Sweet Fix',
+      duration: '03:01',
+      genreTag: '트렌디 팝송',
       albumId: 'pop',
       // =========================================================
       // [하이퍼링크넣는 곳] 팝 3번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/1a4006fb-32d6-4e9c-870d-a20e9dd13b6d.mp3',
       // =========================================================
     },
     {
       id: 'pop-4',
       number: '04',
-      title: 'Starlight Mirage (쇼츠 바이럴 믹스)',
-      duration: '02:55',
-      genreTag: '일렉트로 퓨처 팝',
-      description: '귀에 꽂히는 훅과 트렌디한 보코더 이펙트',
+      title: 'Lose My Number',
+      duration: '02:13',
+      genreTag: '트렌디 팝송',
       albumId: 'pop',
       // =========================================================
       // [하이퍼링크넣는 곳] 팝 4번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a.mp3',
       // =========================================================
     },
     {
       id: 'pop-5',
       number: '05',
-      title: 'Golden Hour Drive (선셋 하이웨이)',
-      duration: '03:15',
-      genreTag: '에너제틱 드라이브 팝',
-      description: '탁 트인 고속도로에서 듣는 시원한 팝 사운드',
+      title: 'Heated Silence',
+      duration: '03:07',
+      genreTag: '트렌디 팝송',
       albumId: 'pop',
       // =========================================================
       // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
-      audioUrl: '',
+      audioUrl: 'https://cdn1.suno.ai/dfe7344f-51e0-4369-8536-78594a70f514.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-6',
+      number: '06',
+      title: 'Say It First',
+      duration: '02:59',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 1번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/5287ae16-8e99-4f17-ae54-c1d1d388204d.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-7',
+      number: '07',
+      title: 'I Hate Your New Girl',
+      duration: '02:42',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 2번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/c9ff40ae-14d9-4334-96e6-b46acab554cd.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-8',
+      number: '08',
+      title: 'Call Me Back',
+      duration: '02:15',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 3번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/75f65fb6-8460-41b9-92f8-931348f551ec.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-9',
+      number: '09',
+      title: 'Lose My Number',
+      duration: '02:13',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 4번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-10',
+      number: '10',
+      title: 'I Heard You Breathe',
+      duration: '03:07',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/dfe7344f-51e0-4369-8536-78594a70f514.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-11',
+      number: '11',
+      title: 'Blindside',
+      duration: '02:28',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 4번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/904b00f8-76ed-465c-a3e4-96b700a890d8.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-12',
+      number: '12',
+      title: 'Cold Radius',
+      duration: '02:27',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/b21eca7d-4dd4-4bcc-bfd4-3cec9623bbbc.mp3',
+      // =========================================================
+    },
+    {
+      id: 'pop-13',
+      number: '13',
+      title: 'V.I.P. Zone',
+      duration: '02:21',
+      genreTag: '트렌디 팝송',
+      albumId: 'pop',
+      // =========================================================
+      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
+      audioUrl: 'https://cdn1.suno.ai/d6d00917-5520-451e-8541-627ca509e4bd.mp3',
       // =========================================================
     },
   ],
