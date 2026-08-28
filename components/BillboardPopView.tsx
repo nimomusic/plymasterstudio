@@ -877,20 +877,13 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   }, []);
 
   return (
-    <div 
-      className="min-h-screen text-white flex flex-col justify-start items-center py-8 px-4 sm:px-6 lg:px-8 relative bg-cover bg-center bg-fixed bg-no-repeat transition-all duration-700"
-      style={{
-        /* 앨범 선택에 따라 해당 앨범의 배경 이미지가 자동 적용됩니다 */
-        backgroundImage: `url('${(currentAlbum as any).bgImage || ''}')`
-      }}
-    >
-  
-      {/* Hidden Real HTML5 Audio Element */}
-      <audio 
-        ref={audioRef}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={handleAudioEnded}
-      />
+    <div className="min-h-screen bg-[#0a0c14] text-white flex flex-col justify-start items-center py-8 px-4 sm:px-6 lg:px-8">
+    {/* Hidden Real HTML5 Audio Element */}
+    <audio 
+      ref={audioRef}
+      onTimeUpdate={handleTimeUpdate}
+      onEnded={handleAudioEnded}
+    />
 
       {/* Top Header Helper Bar */}
       <div className="w-full max-w-7xl flex items-center justify-between gap-4 mb-4">
