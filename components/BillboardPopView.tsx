@@ -559,6 +559,42 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [isAutoRepeat, setIsAutoRepeat] = useState<boolean>(true);
+  
+  // 1. 방문자 카운트 (localStorage 연동)
+  const [visitCount, setVisitCount] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('plymaster_visit_count');
+      const count = saved ? parseInt(saved, 10) : 0;
+      const newCount = count + 1;
+      localStorage.setItem('plymaster_visit_count', newCount.toString());
+      return newCount;
+    } catch (e) {
+      return 1;
+    }
+  });
+
+  // 2. 각 곡별 재생 횟수 (localStorage 연동)
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('plymaster_play_counts');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+
+  // 곡 재생 횟수 증가 함수
+  const incrementPlayCount = (trackId: string) => {
+    setPlayCounts(prev => {
+      const updated = { ...prev, [trackId]: (prev[trackId] || 0) + 1 };
+      try {
+        localStorage.setItem('plymaster_play_counts', JSON.stringify(updated));
+      } catch (e) {
+        console.warn('Failed to save play counts', e);
+      }
+      return updated;
+    });
+  };
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthCtxRef = useRef<AudioContext | null>(null);
@@ -896,15 +932,29 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <span>전체 테마팩으로 가기</span>
           </button>
         )}
-
-        <button
-          onClick={handleCopyLink}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer ml-auto"
-          title="이 페이지 전용 링크 복사"
-        >
-          <Share2 className="w-3.5 h-3.5 text-[#EC4899]" />
-          <span>{copied ? '링크 복사 완료!' : '페이지 링크 공유'}</span>
-        </button>
+      
+        <div className="flex items-center gap-2 ml-auto">
+          {/* ✨ [추가] 방문자 수 카운터 (VISIT) */}
+          <div 
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium"
+            title="누적 방문 횟수"
+          >
+            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 tracking-wider">
+              VISIT
+            </span>
+            <span className="font-mono text-white font-bold">{visitCount.toLocaleString()}</span>
+          </div>
+      
+          {/* 페이지 링크 공유 */}
+          <button
+            onClick={handleCopyLink}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer"
+            title="이 페이지 전용 링크 복사"
+          >
+            <Share2 className="w-3.5 h-3.5 text-[#EC4899]" />
+            <span>{copied ? '링크 복사 완료!' : '페이지 링크 공유'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Main 2-Column Studio Grid Layout (Left: Tall Audio Player Rack, Right: Album Selector & Playlist Table) */}
@@ -1484,52 +1534,65 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       </div>
                     </div>
 
-                    {/* Play & Stop Buttons */}
-                    <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-                      {/* Play / Pause Button */}
-                      <button
-                        onClick={() => handlePlayTrack(track)}
-                        className={`flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${
-                          isThisTrackPlaying
-                            ? 'text-white shadow-lg'
-                            : 'bg-white/10 hover:bg-white/20 text-white border border-white/15 hover:border-white/30'
-                        }`}
-                        style={
-                          isThisTrackPlaying
-                            ? {
-                                backgroundColor: currentAlbum.accentColor,
-                                boxShadow: `0 8px 20px -4px ${currentAlbum.accentColor}40`
-                              }
-                            : {}
-                        }
-                        title={isThisTrackPlaying ? '일시정지' : '음악 재생'}
-                      >
-                        {isThisTrackPlaying ? (
-                          <>
-                            <Pause className="w-4 h-4 fill-current" />
-                            <span>일시정지</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-4 h-4 fill-current text-white" />
-                            <span>재생하기</span>
-                          </>
-                        )}
-                      </button>
-
-                      {/* Stop Button */}
-                      <button
-                        onClick={handleStopTrack}
-                        disabled={!isThisTrackSelected}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                          isThisTrackSelected
-                            ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30'
-                            : 'bg-white/5 text-white/30 border-white/5 cursor-not-allowed opacity-50'
-                        }`}
-                        title="재생 정지"
-                      >
-                        <Square className="w-4 h-4 fill-current" />
-                      </button>
+                    {/* ✨ [수정] Play & Stop Buttons와 하단 재생 횟수 카운터 래퍼 */}
+                    <div className="flex flex-col items-end gap-1.5 w-full md:w-auto">
+                      <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                        {/* Play / Pause Button */}
+                        <button
+                          onClick={() => handlePlayTrack(track)}
+                          className={`flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${
+                            isThisTrackPlaying
+                              ? 'text-white shadow-lg'
+                              : 'bg-white/10 hover:bg-white/20 text-white border border-white/15 hover:border-white/30'
+                          }`}
+                          style={
+                            isThisTrackPlaying
+                              ? {
+                                  backgroundColor: currentAlbum.accentColor,
+                                  boxShadow: `0 8px 20px -4px ${currentAlbum.accentColor}40`
+                                }
+                              : {}
+                          }
+                          title={isThisTrackPlaying ? '일시정지' : '음악 재생'}
+                        >
+                          {isThisTrackPlaying ? (
+                            <>
+                              <Pause className="w-4 h-4 fill-current" />
+                              <span>일시정지</span>
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-4 h-4 fill-current text-white" />
+                              <span>재생하기</span>
+                            </>
+                          )}
+                        </button>
+                    
+                        {/* Stop Button */}
+                        <button
+                          onClick={handleStopTrack}
+                          disabled={!isThisTrackSelected}
+                          className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+                            isThisTrackSelected
+                              ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30'
+                              : 'bg-white/5 text-white/30 border-white/5 cursor-not-allowed opacity-50'
+                          }`}
+                          title="재생 정지"
+                        >
+                          <Square className="w-4 h-4 fill-current" />
+                        </button>
+                      </div>
+                    
+                      {/* ✨ [추가] 재생 횟수 카운터 라벨 */}
+                      <div className="text-[11px] font-mono text-white/50 pr-1 flex items-center gap-1 select-none">
+                        <span 
+                          className="font-bold transition-colors"
+                          style={{ color: isThisTrackPlaying ? currentAlbum.accentColor : 'rgba(255, 255, 255, 0.75)' }}
+                        >
+                          {(playCounts[track.id] || 0).toLocaleString()}회
+                        </span>
+                        <span>회 재생</span>
+                      </div>
                     </div>
                   </div>
                 </div>
