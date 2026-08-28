@@ -354,7 +354,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
   ],
-];
+};
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
   // 현재 선택된 앨범 ID ('hiphop' | 'jazz' | 'pop')
