@@ -1248,6 +1248,115 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               </p>
             </div>
 
+            {/* 🔥 [녹색 박스: Hot & New 신곡 가로 스크롤 섹션] */}
+            <div className="mb-6 pb-6 border-b border-white/10 relative z-10">
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                    <Flame className="w-4 h-4 fill-current" />
+                  </span>
+                  <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+                    Hot & New
+                  </h2>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                    신곡 추천
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 text-xs text-white/40 font-mono">
+                  <span className="hidden sm:inline">오른쪽으로 스크롤하여 더보기</span>
+                  <ChevronRight className="w-4 h-4 text-rose-400 animate-pulse" />
+                </div>
+              </div>
+            
+              {/* 3곡이 기본 노출되며 우측으로 스크롤되는 가로 컨테이너 */}
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent snap-x">
+                {HOT_AND_NEW_TRACKS.map((track) => {
+                  const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
+                  const isThisTrackSelected = currentTrack?.id === track.id;
+                  const trackAlbum = ALBUMS.find(a => a.id === track.albumId) || currentAlbum;
+            
+                  return (
+                    <div
+                      key={`hot-${track.id}`}
+                      onClick={() => handlePlayTrack(track)}
+                      className={`flex-1 min-w-[220px] sm:min-w-[250px] md:min-w-[260px] p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer snap-start relative overflow-hidden group flex flex-col justify-between ${
+                        isThisTrackPlaying
+                          ? 'bg-white/15 border-rose-500/60 shadow-xl'
+                          : isThisTrackSelected
+                          ? 'bg-white/10 border-white/25'
+                          : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20'
+                      }`}
+                      style={
+                        isThisTrackPlaying
+                          ? {
+                              boxShadow: `0 10px 25px -8px ${trackAlbum.accentColor}40`,
+                              borderColor: trackAlbum.accentColor,
+                            }
+                          : {}
+                      }
+                    >
+                      {/* 상단: 장르 뱃지 및 재생 카운트 */}
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span 
+                          className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border"
+                          style={{
+                            backgroundColor: `${trackAlbum.accentColor}20`,
+                            borderColor: `${trackAlbum.accentColor}40`,
+                            color: trackAlbum.accentColor,
+                          }}
+                        >
+                          {track.genreTag}
+                        </span>
+                        <span className="text-[10px] font-mono text-white/40">
+                          {(playCounts[track.id] || 0).toLocaleString()}회 재생
+                        </span>
+                      </div>
+            
+                      {/* 중단: 곡 제목 및 부가 설명 */}
+                      <div className="mb-3">
+                        <h4 
+                          className="text-sm font-bold text-white truncate transition-colors"
+                          style={isThisTrackPlaying ? { color: trackAlbum.accentColor } : {}}
+                        >
+                          {track.title}
+                        </h4>
+                        <p className="text-[11px] text-white/50 truncate mt-0.5">
+                          {track.description || trackAlbum.title}
+                        </p>
+                      </div>
+            
+                      {/* 하단: 곡 재생시간 & 재생 버튼 */}
+                      <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                        <div className="flex items-center gap-1.5 text-xs text-white/60 font-mono">
+                          <span>{track.duration}</span>
+                        </div>
+            
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePlayTrack(track);
+                          }}
+                          className={`p-2 rounded-xl flex items-center justify-center transition-all ${
+                            isThisTrackPlaying
+                              ? 'text-white shadow-md'
+                              : 'bg-white/10 hover:bg-white/20 text-white'
+                          }`}
+                          style={isThisTrackPlaying ? { backgroundColor: trackAlbum.accentColor } : {}}
+                          title={isThisTrackPlaying ? '일시정지' : '재생'}
+                        >
+                          {isThisTrackPlaying ? (
+                            <Pause className="w-3.5 h-3.5 fill-current" />
+                          ) : (
+                            <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            
             {/* Right: Hashtag Badges */}
             <div className="flex flex-col items-start lg:items-end gap-2 flex-shrink-0">
               <div className="flex flex-wrap gap-1.5">
