@@ -1591,7 +1591,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         >
                           {(playCounts[track.id] || 0).toLocaleString()}회
                         </span>
-                        <span>회 재생</span>
+                        <span>재생</span>
                       </div>
                     </div>
                   </div>
