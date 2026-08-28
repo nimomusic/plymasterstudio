@@ -532,6 +532,51 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
   ],
 };
 
+export interface CustomNewTrack {
+    title: string;           // 곡 제목 (필수)
+    audioUrl: string;        // mp3 음원 링크 URL (필수)
+    genreTag?: string;       // (선택) 장르 태그 - 기본값: 'NEW'
+    description?: string;    // (선택) 곡 설명
+    duration?: string;       // (선택) 재생 시간 - 기본값: '03:00'
+  }
+
+  export const NEW_TRACKS: CustomNewTrack[] = [
+    {
+      title: '신곡 1번 - Mood Drip',
+      audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3',
+      genreTag: '감성 알앤비',
+      description: '부드러운 기타 루프와 감각적인 808 베이스',
+      duration: '03:08',
+    },
+    {
+      title: '신곡 2번 - Same Script',
+      audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
+      genreTag: '트렌디 팝',
+      description: '80년대 레트로 신스웨이브 베이스',
+      duration: '02:35',
+    },
+    {
+      title: '신곡 3번 - A Soft Surrender',
+      audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
+      genreTag: '빈티지 재즈',
+      description: '따뜻한 콘트라베이스와 피아노 선율',
+      duration: '04:28',
+    },
+    // 💡 곡을 더 추가하고 싶으시면 여기에 계속 이어서 넣으시면 됩니다.
+  ];
+
+  // 뷰어용 자동 포맷 변환기
+  export const FORMATTED_NEW_TRACKS: PopTrackItem[] = NEW_TRACKS.map((item, idx) => ({
+    id: `custom-new-${idx + 1}`,
+    number: String(idx + 1).padStart(2, '0'),
+    title: item.title,
+    audioUrl: item.audioUrl,
+    genreTag: item.genreTag || 'NEW',
+    description: item.description || '새롭게 등록된 신곡',
+    duration: item.duration || '03:00',
+    albumId: 'hiphop',
+  }));
+
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
   // 현재 선택된 앨범 ID ('hiphop' | 'jazz' | 'pop')
   const [selectedAlbumId, setSelectedAlbumId] = useState<string>('hiphop');
@@ -1213,6 +1258,139 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
         </div>
 
+        <div className="mb-6 pb-6 border-b border-white/10 relative z-10">
+          <div className="flex items-center justify-between mb-3.5">
+            <div className="flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 shadow-inner">
+                <Flame className="w-4 h-4 fill-current" />
+              </span>
+              <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+                Hot & New
+              </h2>
+              {/* 등록된 신곡 개수 표시 */}
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                신곡 {FORMATTED_NEW_TRACKS.length}곡
+              </span>
+            </div>
+
+            {/* 좌우 스크롤 화살표 버튼 */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-white/40 font-mono hidden sm:inline mr-1">
+                화살표 클릭 또는 좌우 스크롤
+              </span>
+              <button
+                type="button"
+                onClick={() => scrollHotTracks('left')}
+                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer"
+                title="이전 곡 보기"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollHotTracks('right')}
+                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer"
+                title="다음 곡 보기"
+              >
+                <ChevronRight className="w-4 h-4 text-rose-400" />
+              </button>
+            </div>
+          </div>
+
+          {/* 등록된 신곡 리스트를 map으로 순회하여 출력 */}
+          <div 
+            ref={hotScrollRef}
+            className="flex gap-3 overflow-x-auto pb-2 select-none scroll-smooth snap-x snap-mandatory"
+            style={{
+              scrollbarWidth: 'thin',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            {FORMATTED_NEW_TRACKS.map((track) => {
+              const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
+              const isThisTrackSelected = currentTrack?.id === track.id;
+              const trackAlbum = ALBUMS.find(a => a.id === track.albumId) || currentAlbum;
+
+              return (
+                <div
+                  key={`hot-${track.id}`}
+                  onClick={() => handlePlayTrack(track)}
+                  className={`flex-none w-[calc(100%-20px)] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-8px)] min-w-[220px] p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer snap-start relative overflow-hidden group flex flex-col justify-between ${
+                    isThisTrackPlaying
+                      ? 'bg-white/15 border-rose-500/60 shadow-xl'
+                      : isThisTrackSelected
+                      ? 'bg-white/10 border-white/25'
+                      : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20'
+                  }`}
+                  style={
+                    isThisTrackPlaying
+                      ? {
+                          boxShadow: `0 10px 25px -8px ${trackAlbum.accentColor}40`,
+                          borderColor: trackAlbum.accentColor,
+                        }
+                      : {}
+                  }
+                >
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span 
+                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border"
+                      style={{
+                        backgroundColor: `${trackAlbum.accentColor}20`,
+                        borderColor: `${trackAlbum.accentColor}40`,
+                        color: trackAlbum.accentColor,
+                      }}
+                    >
+                      {track.genreTag}
+                    </span>
+                    <span className="text-[10px] font-mono text-white/40">
+                      {(playCounts[track.id] || 0).toLocaleString()}회 재생
+                    </span>
+                  </div>
+
+                  <div className="mb-3">
+                    <h4 
+                      className="text-sm font-bold text-white truncate transition-colors"
+                      style={isThisTrackPlaying ? { color: trackAlbum.accentColor } : {}}
+                    >
+                      {track.title}
+                    </h4>
+                    <p className="text-[11px] text-white/50 truncate mt-0.5">
+                      {track.description || trackAlbum.title}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                    <div className="flex items-center gap-1.5 text-xs text-white/60 font-mono">
+                      <span>{track.duration}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlayTrack(track);
+                      }}
+                      className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+                        isThisTrackPlaying
+                          ? 'text-white shadow-md'
+                          : 'bg-white/10 hover:bg-white/20 text-white'
+                      }`}
+                      style={isThisTrackPlaying ? { backgroundColor: trackAlbum.accentColor } : {}}
+                      title={isThisTrackPlaying ? '일시정지' : '재생'}
+                    >
+                      {isThisTrackPlaying ? (
+                        <Pause className="w-3.5 h-3.5 fill-current" />
+                      ) : (
+                        <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
         {/* ========================================================================= */}
         {/* [RIGHT COLUMN: 플리마스터 앨범 탭 선택 & 플레이리스트 목록] */}
         {/* ========================================================================= */}
@@ -1247,115 +1425,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 플리마스터에서 테마팩을 사용하여 만든 곡들 중 엄선하여 모은 플레이리스트 입니다.
               </p>
             </div>
-
-          {/* 🔥 [녹색 박스: Hot & New 신곡 가로 스크롤 섹션] */}
-          <div className="mb-6 pb-6 border-b border-white/10 relative z-10">
-            <div className="flex items-center justify-between mb-3.5">
-              <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                  <Flame className="w-4 h-4 fill-current" />
-                </span>
-                <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  Hot & New
-                </h2>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                  신곡 추천
-                </span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-white/40 font-mono">
-                <span className="hidden sm:inline">오른쪽으로 스크롤하여 더보기</span>
-                <ChevronRight className="w-4 h-4 text-rose-400 animate-pulse" />
-              </div>
-            </div>
-          
-            {/* 3곡이 기본 노출되며 우측으로 스크롤되는 가로 컨테이너 */}
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent snap-x">
-              {HOT_AND_NEW_TRACKS.map((track) => {
-                const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
-                const isThisTrackSelected = currentTrack?.id === track.id;
-                const trackAlbum = ALBUMS.find(a => a.id === track.albumId) || currentAlbum;
-          
-                return (
-                  <div
-                    key={`hot-${track.id}`}
-                    onClick={() => handlePlayTrack(track)}
-                    className={`flex-1 min-w-[220px] sm:min-w-[250px] md:min-w-[260px] p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer snap-start relative overflow-hidden group flex flex-col justify-between ${
-                      isThisTrackPlaying
-                        ? 'bg-white/15 border-rose-500/60 shadow-xl'
-                        : isThisTrackSelected
-                        ? 'bg-white/10 border-white/25'
-                        : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20'
-                    }`}
-                    style={
-                      isThisTrackPlaying
-                        ? {
-                            boxShadow: `0 10px 25px -8px ${trackAlbum.accentColor}40`,
-                            borderColor: trackAlbum.accentColor,
-                          }
-                        : {}
-                    }
-                  >
-                    {/* 상단: 장르 뱃지 및 재생 카운트 */}
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span 
-                        className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border"
-                        style={{
-                          backgroundColor: `${trackAlbum.accentColor}20`,
-                          borderColor: `${trackAlbum.accentColor}40`,
-                          color: trackAlbum.accentColor,
-                        }}
-                      >
-                        {track.genreTag}
-                      </span>
-                      <span className="text-[10px] font-mono text-white/40">
-                        {(playCounts[track.id] || 0).toLocaleString()}회 재생
-                      </span>
-                    </div>
-          
-                    {/* 중단: 곡 제목 및 부가 설명 */}
-                    <div className="mb-3">
-                      <h4 
-                        className="text-sm font-bold text-white truncate transition-colors"
-                        style={isThisTrackPlaying ? { color: trackAlbum.accentColor } : {}}
-                      >
-                        {track.title}
-                      </h4>
-                      <p className="text-[11px] text-white/50 truncate mt-0.5">
-                        {track.description || trackAlbum.title}
-                      </p>
-                    </div>
-          
-                    {/* 하단: 곡 재생시간 & 재생 버튼 */}
-                    <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                      <div className="flex items-center gap-1.5 text-xs text-white/60 font-mono">
-                        <span>{track.duration}</span>
-                      </div>
-          
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlayTrack(track);
-                        }}
-                        className={`p-2 rounded-xl flex items-center justify-center transition-all ${
-                          isThisTrackPlaying
-                            ? 'text-white shadow-md'
-                            : 'bg-white/10 hover:bg-white/20 text-white'
-                        }`}
-                        style={isThisTrackPlaying ? { backgroundColor: trackAlbum.accentColor } : {}}
-                        title={isThisTrackPlaying ? '일시정지' : '재생'}
-                      >
-                        {isThisTrackPlaying ? (
-                          <Pause className="w-3.5 h-3.5 fill-current" />
-                        ) : (
-                          <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
             
             {/* Right: Hashtag Badges */}
             <div className="flex flex-col items-start lg:items-end gap-2 flex-shrink-0">
