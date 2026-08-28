@@ -3,20 +3,23 @@ import {
   Play, 
   Pause, 
   Square, 
-  SkipForward,
-  SkipBack,
+  SkipForward, 
+  SkipBack, 
   Volume2, 
   VolumeX, 
   Music, 
-  Zap,
-  ArrowLeft,
-  Share2,
-  CheckSquare,
-  Square as EmptySquare,
-  ListMusic,
-  Disc3,
-  Sparkles,
-  Repeat
+  Zap, 
+  ArrowLeft, 
+  Share2, 
+  ListMusic, 
+  Disc3, 
+  Sparkles, 
+  Repeat,
+  Radio,
+  Layers,
+  Flame,
+  Coffee,
+  Headphones
 } from 'lucide-react';
 
 interface BillboardPopViewProps {
@@ -35,10 +38,51 @@ export interface PopTrackItem {
 }
 
 // ==================================================================================
-// 🎵 [하이퍼링크넣는 곳] 플리마스터 플레이리스트 트랙 리스트 & 음원 링크 데이터
+// 💽 기본 3대 앨범 정의
+// 1. 느좋 인스타 감성힙합
+// 2. 빈티지 재즈
+// 3. 트렌디 팝송
+// ==================================================================================
+export const ALBUMS: AlbumCategory[] = [
+  {
+    id: 'hiphop',
+    title: '느좋 인스타 감성힙합',
+    subtitle: '감성 알앤비 & 칠한 인스타 릴스 힙합',
+    badge: '인스타 릴스 추천',
+    iconType: 'hiphop',
+    accentColor: '#EC4899',
+    bgGlow: 'from-[#EC4899]/20 to-[#8B5CF6]/10',
+    tags: ['#인스타감성', '#칠힙합', '#알앤비', '#새벽감성', '#릴스음악'],
+  },
+  {
+    id: 'jazz',
+    title: '빈티지 재즈',
+    subtitle: '비 오는 날 카페 & 고급스러운 레트로 라운지',
+    badge: '카페 & 힐링',
+    iconType: 'jazz',
+    accentColor: '#F59E0B',
+    bgGlow: 'from-[#F59E0B]/20 to-[#D97706]/10',
+    tags: ['#빈티지재즈', '#카페음악', '#스윙', '#보사노바', '#LP감성'],
+  },
+  {
+    id: 'pop',
+    title: '트렌디 팝송',
+    subtitle: '글로벌 빌보드 차트 & 쇼츠 바이럴 비트',
+    badge: '빌보드 핫차트',
+    iconType: 'pop',
+    accentColor: '#06B6D4',
+    bgGlow: 'from-[#06B6D4]/20 to-[#3B82F6]/10',
+    tags: ['#트렌디팝', '#신스웨이브', '#쇼츠바이럴', '#드라이브', '#댄스'],
+  },
+];
+
+// ==================================================================================
+// 🎵 [하이퍼링크넣는 곳] 앨범별 트랙 리스트 & 음원 링크 데이터
 // 각 곡의 audioUrl 항목에 실제 호스팅된 음원 파일 URL(mp3, wav 등)을 입력하시면 됩니다.
 // ==================================================================================
-export const POP_TRACKS: PopTrackItem[] = [
+export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
+  // 1. 느좋 인스타 감성힙합 앨범 트랙
+  hiphop: [
   {
     id: 'pop-1',
     number: '01',
@@ -174,9 +218,23 @@ export const POP_TRACKS: PopTrackItem[] = [
 ];
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
-  // 선택된 곡 ID 목록 (초기값: 전체 선택)
-  const [selectedIds, setSelectedIds] = useState<string[]>(POP_TRACKS.map(t => t.id));
-  const [currentTrack, setCurrentTrack] = useState<PopTrackItem | null>(POP_TRACKS[0]);
+  // 현재 선택된 앨범 ID ('hiphop' | 'jazz' | 'pop')
+  const [selectedAlbumId, setSelectedAlbumId] = useState<string>('hiphop');
+
+  // 현재 선택된 앨범 객체 및 트랙 목록
+  const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
+  const currentAlbumTracks = ALBUM_TRACKS[selectedAlbumId] || [];
+
+  // 선택된 곡 ID 목록 (초기값: 현재 앨범의 전곡 선택)
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => {
+    return ALBUM_TRACKS['hiphop'].map(t => t.id);
+  });
+
+  // 현재 재생 중인 트랙 정보
+  const [currentTrack, setCurrentTrack] = useState<PopTrackItem | null>(() => {
+    return ALBUM_TRACKS['hiphop'][0] || null;
+  });
+
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.85);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -191,19 +249,39 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const synthCtxRef = useRef<AudioContext | null>(null);
   const synthIntervalRef = useRef<number | null>(null);
 
-  // 현재 재생 대기열 (체크된 곡들 중 유효한 목록)
-  const activePlaylist = POP_TRACKS.filter(t => selectedIds.includes(t.id));
+  // 현재 활성화된 재생 큐 (선택된 곡들 중 현재 앨범에 속한 곡 목록)
+  const activePlaylist = currentAlbumTracks.filter(t => selectedIds.includes(t.id));
 
-  // 전체 선택 여부 확인
-  const isAllSelected = POP_TRACKS.length > 0 && selectedIds.length === POP_TRACKS.length;
-  const isPartiallySelected = selectedIds.length > 0 && selectedIds.length < POP_TRACKS.length;
+  // 현재 앨범 내 전체 선택 여부
+  const isAllSelected = currentAlbumTracks.length > 0 && 
+    currentAlbumTracks.every(t => selectedIds.includes(t.id));
+  
+  const selectedCountInCurrentAlbum = currentAlbumTracks.filter(t => selectedIds.includes(t.id)).length;
+  const isPartiallySelected = selectedCountInCurrentAlbum > 0 && !isAllSelected;
+
+  // 앨범 변경 핸들러
+  const handleSelectAlbum = (albumId: string) => {
+    setSelectedAlbumId(albumId);
+    const newTracks = ALBUM_TRACKS[albumId] || [];
+    
+    // 새 앨범의 곡들을 기본 선택 목록으로 업데이트
+    setSelectedIds(newTracks.map(t => t.id));
+    
+    // 만약 현재 재생 중인 곡이 없거나 앨범이 바뀌면 첫 번째 곡을 대기 상태로 설정
+    if (!isPlaying && newTracks.length > 0) {
+      setCurrentTrack(newTracks[0]);
+    }
+  };
 
   // 전체 선택 토글
   const handleToggleSelectAll = () => {
     if (isAllSelected) {
-      setSelectedIds([]);
+      // 현재 앨범의 곡들만 선택 해제
+      setSelectedIds(prev => prev.filter(id => !currentAlbumTracks.some(t => t.id === id)));
     } else {
-      setSelectedIds(POP_TRACKS.map(t => t.id));
+      // 현재 앨범의 전곡을 선택에 추가
+      const newIds = new Set([...selectedIds, ...currentAlbumTracks.map(t => t.id)]);
+      setSelectedIds(Array.from(newIds));
     }
   };
 
@@ -235,41 +313,48 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   };
 
-  // Web Audio Synth 데모 미리듣기
-  const playSynthPreview = () => {
+  // 장르별 Web Audio Synth 데모 미리듣기
+  const playSynthPreview = (albumType?: string) => {
     stopSynthAudio();
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
       synthCtxRef.current = ctx;
 
-      const popFrequencies = [293.66, 349.23, 440.00, 523.25, 659.25];
+      const type = albumType || selectedAlbumId;
+      // 앨범별 톤 설정
+      const freqs = type === 'jazz' 
+        ? [261.63, 311.13, 392.00, 466.16, 523.25] // Jazz chords (C minor 7th)
+        : type === 'pop'
+        ? [329.63, 392.00, 493.88, 587.33, 659.25] // Pop Synth
+        : [220.00, 261.63, 329.63, 392.00, 440.00]; // Lofi HipHop
+
       let step = 0;
 
-      const playPopChord = () => {
+      const playChord = () => {
         if (!ctx || ctx.state === 'closed') return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        const freq = popFrequencies[step % popFrequencies.length];
+        const freq = freqs[step % freqs.length];
 
-        osc.type = 'sine';
+        osc.type = type === 'jazz' ? 'triangle' : type === 'pop' ? 'sawtooth' : 'sine';
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
         const masterVol = isMuted ? 0 : volume * 0.12;
         gain.gain.setValueAtTime(0.01, ctx.currentTime);
         gain.gain.linearRampToValueAtTime(masterVol, ctx.currentTime + 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (type === 'jazz' ? 1.5 : 1.2));
 
         osc.connect(gain);
         gain.connect(ctx.destination);
 
         osc.start();
-        osc.stop(ctx.currentTime + 1.3);
+        osc.stop(ctx.currentTime + (type === 'jazz' ? 1.6 : 1.3));
         step++;
       };
 
-      playPopChord();
-      synthIntervalRef.current = window.setInterval(playPopChord, 600);
+      playChord();
+      synthIntervalRef.current = window.setInterval(playChord, type === 'jazz' ? 750 : 600);
     } catch (e) {
       console.warn("Web Audio synth not supported", e);
     }
@@ -282,7 +367,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     setProgress(0);
     setCurrentTime('00:00');
 
-    // 만약 현재 곡이 선택 목록에 없다면 자동으로 선택 목록에 추가
+    // 재생하려는 곡이 현재 앨범과 다르면 앨범 탭도 자동 동기화
+    if (track.albumId && track.albumId !== selectedAlbumId) {
+      setSelectedAlbumId(track.albumId);
+    }
+
+    // 재생하는 곡을 선택 목록에 포함
     if (!selectedIds.includes(track.id)) {
       setSelectedIds(prev => [...prev, track.id]);
     }
@@ -296,7 +386,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         audioRef.current.play().catch((err) => {
           console.warn("Audio playback fallback:", err);
           setIsDemoMode(true);
-          playSynthPreview();
+          playSynthPreview(track.albumId);
         });
       }
     } else {
@@ -304,7 +394,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       if (audioRef.current) {
         audioRef.current.pause();
       }
-      playSynthPreview();
+      playSynthPreview(track.albumId);
     }
   };
 
@@ -325,9 +415,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 상단 '선택된 곡 재생하기' 버튼 클릭 시
   const handlePlaySelectedQueue = () => {
     if (activePlaylist.length === 0) {
-      // 선택된 곡이 없으면 전체 선택 후 첫 곡부터 재생
-      setSelectedIds(POP_TRACKS.map(t => t.id));
-      startPlayingTrack(POP_TRACKS[0]);
+      // 선택된 곡이 없으면 현재 앨범 전곡 선택 후 첫 곡부터 재생
+      const allIds = currentAlbumTracks.map(t => t.id);
+      setSelectedIds(allIds);
+      if (currentAlbumTracks.length > 0) {
+        startPlayingTrack(currentAlbumTracks[0]);
+      }
       return;
     }
 
@@ -346,9 +439,9 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   };
 
-  // 다음 곡으로 이동 (자동 재생 포함)
+  // 다음 곡으로 이동 (순차 자동 재생)
   const handleNextTrack = () => {
-    const queue = activePlaylist.length > 0 ? activePlaylist : POP_TRACKS;
+    const queue = activePlaylist.length > 0 ? activePlaylist : currentAlbumTracks;
     if (queue.length === 0) return;
 
     const currentIndex = queue.findIndex(t => t.id === currentTrack?.id);
@@ -356,7 +449,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
     if (nextIndex >= queue.length) {
       if (isAutoRepeat) {
-        nextIndex = 0; // 처음으로 반복
+        nextIndex = 0; // 반복
       } else {
         handleStopTrack();
         return;
@@ -368,7 +461,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
   // 이전 곡으로 이동
   const handlePrevTrack = () => {
-    const queue = activePlaylist.length > 0 ? activePlaylist : POP_TRACKS;
+    const queue = activePlaylist.length > 0 ? activePlaylist : currentAlbumTracks;
     if (queue.length === 0) return;
 
     const currentIndex = queue.findIndex(t => t.id === currentTrack?.id);
@@ -448,7 +541,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 링크 복사
   const handleCopyLink = () => {
     try {
-      const url = window.location.origin + window.location.pathname + '?view=pop';
+      const url = window.location.origin + window.location.pathname + `?view=pop&album=${selectedAlbumId}`;
       navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -483,7 +576,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>테마팩 보러가기</span>
+            <span>전체 테마팩으로 가기</span>
           </button>
         )}
 
@@ -497,23 +590,32 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         </button>
       </div>
 
-      {/* Main 2-Column Studio Grid Layout (Left: Tall Audio Player Rack, Right: Playlist Table) */}
+      {/* Main 2-Column Studio Grid Layout (Left: Tall Audio Player Rack, Right: Album Selector & Playlist Table) */}
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* ========================================================================= */}
-        {/* [LEFT COLUMN: 위아래로 긴 세로형 오디오 플레이어 랙 (빨간색 영역)] */}
+        {/* [LEFT COLUMN: 위아래로 긴 세로형 오디오 플레이어 랙] */}
         {/* ========================================================================= */}
         <div className="lg:col-span-4 w-full bg-[#121420]/95 border border-white/15 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden flex flex-col justify-between sticky top-6">
           {/* Ambient Glow */}
-          <div className="absolute -top-16 -left-16 w-56 h-56 bg-[#EC4899]/15 rounded-full blur-3xl pointer-events-none" />
+          <div 
+            className="absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl pointer-events-none opacity-20 transition-all duration-500" 
+            style={{ backgroundColor: currentAlbum.accentColor }}
+          />
           <div className="absolute -bottom-16 -right-16 w-56 h-56 bg-[#8B5CF6]/15 rounded-full blur-3xl pointer-events-none" />
 
           <div>
             {/* Player Rack Header */}
             <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5 relative z-10">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#EC4899] animate-pulse" />
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#EC4899]">
+                <div 
+                  className="w-2.5 h-2.5 rounded-full animate-pulse transition-colors" 
+                  style={{ backgroundColor: currentAlbum.accentColor }}
+                />
+                <span 
+                  className="text-xs font-mono font-bold uppercase tracking-widest transition-colors"
+                  style={{ color: currentAlbum.accentColor }}
+                >
                   STUDIO AUDIO RACK
                 </span>
               </div>
@@ -521,7 +623,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 onClick={() => setIsAutoRepeat(!isAutoRepeat)}
                 className={`p-1.5 rounded-lg text-xs font-mono flex items-center gap-1 transition cursor-pointer border ${
                   isAutoRepeat 
-                    ? 'bg-[#EC4899]/20 text-[#EC4899] border-[#EC4899]/40' 
+                    ? 'bg-white/10 text-white border-white/30' 
                     : 'bg-white/5 text-white/40 border-white/10'
                 }`}
                 title="연속 자동 반복 재생 토글"
@@ -544,7 +646,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <div className="absolute inset-10 rounded-full border border-white/5" />
                 
                 {/* Center Label */}
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#EC4899] to-[#9333EA] p-1 flex flex-col items-center justify-center text-center shadow-lg">
+                <div 
+                  className="w-16 h-16 rounded-full p-1 flex flex-col items-center justify-center text-center shadow-lg transition-all duration-500"
+                  style={{
+                    background: `linear-gradient(135deg, ${currentAlbum.accentColor}, #8B5CF6)`
+                  }}
+                >
                   <Music className="w-6 h-6 text-white" />
                   <span className="text-[8px] font-bold text-white uppercase tracking-tighter mt-0.5">PLYMASTER</span>
                 </div>
@@ -553,11 +660,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               {/* Real-time Visualizer Waves Bar at bottom of art */}
               {isPlaying && (
                 <div className="absolute bottom-3 left-4 right-4 flex items-end justify-center gap-1 h-8 bg-black/40 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/10">
-                  <span className="w-1 bg-[#EC4899] rounded-full animate-[bounce_0.5s_infinite_100ms] h-4" />
+                  <span className="w-1 rounded-full animate-[bounce_0.5s_infinite_100ms] h-4" style={{ backgroundColor: currentAlbum.accentColor }} />
                   <span className="w-1 bg-[#F43F5E] rounded-full animate-[bounce_0.5s_infinite_300ms] h-6" />
                   <span className="w-1 bg-[#A855F7] rounded-full animate-[bounce_0.5s_infinite_200ms] h-3" />
                   <span className="w-1 bg-[#38BDF8] rounded-full animate-[bounce_0.5s_infinite_450ms] h-5" />
-                  <span className="w-1 bg-[#EC4899] rounded-full animate-[bounce_0.5s_infinite_150ms] h-7" />
+                  <span className="w-1 rounded-full animate-[bounce_0.5s_infinite_150ms] h-7" style={{ backgroundColor: currentAlbum.accentColor }} />
                   <span className="w-1 bg-[#F43F5E] rounded-full animate-[bounce_0.5s_infinite_350ms] h-4" />
                   <span className="w-1 bg-[#A855F7] rounded-full animate-[bounce_0.5s_infinite_250ms] h-5" />
                 </div>
@@ -566,8 +673,15 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
             {/* Currently Playing Track Meta */}
             <div className="mb-4 text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1.5">
-                <span className="text-[11px] font-mono font-bold text-[#EC4899] bg-[#EC4899]/15 border border-[#EC4899]/30 px-2 py-0.5 rounded-md">
+              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1.5 flex-wrap">
+                <span 
+                  className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border"
+                  style={{
+                    backgroundColor: `${currentAlbum.accentColor}20`,
+                    borderColor: `${currentAlbum.accentColor}50`,
+                    color: currentAlbum.accentColor
+                  }}
+                >
                   {isPlaying ? 'NOW PLAYING' : 'READY TO PLAY'}
                 </span>
                 {currentTrack && (
@@ -580,7 +694,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 {currentTrack ? currentTrack.title : '선택된 곡 없음'}
               </h2>
               <p className="text-xs text-white/50 mt-0.5">
-                플리마스터 엄선 플레이리스트 • 트랙 {currentTrack ? currentTrack.number : '00'}
+                {currentAlbum.title} • 트랙 {currentTrack ? currentTrack.number : '00'}
               </p>
             </div>
 
@@ -591,8 +705,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 className="w-full bg-white/10 hover:bg-white/20 h-2 rounded-full cursor-pointer relative overflow-hidden transition-all group"
               >
                 <div 
-                  className="bg-gradient-to-r from-[#EC4899] to-[#A855F7] h-full rounded-full relative transition-all duration-100"
-                  style={{ width: `${progress}%` }}
+                  className="h-full rounded-full relative transition-all duration-100"
+                  style={{ 
+                    width: `${progress}%`,
+                    background: `linear-gradient(to right, ${currentAlbum.accentColor}, #A855F7)`
+                  }}
                 >
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
@@ -617,7 +734,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               {/* Play / Pause Main Button */}
               <button
                 onClick={() => currentTrack && handlePlayTrack(currentTrack)}
-                className="p-4.5 rounded-2xl bg-gradient-to-r from-[#EC4899] to-[#db2777] hover:from-[#f43f5e] hover:to-[#be185d] text-white shadow-xl shadow-[#EC4899]/30 transition-all cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center"
+                className="p-4.5 rounded-2xl text-white shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center"
+                style={{
+                  background: `linear-gradient(135deg, ${currentAlbum.accentColor}, #db2777)`,
+                  boxShadow: `0 10px 25px -5px ${currentAlbum.accentColor}40`
+                }}
                 title={isPlaying ? '일시정지' : '재생'}
               >
                 {isPlaying ? (
@@ -656,7 +777,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 {isMuted || volume === 0 ? (
                   <VolumeX className="w-4 h-4 text-red-400" />
                 ) : (
-                  <Volume2 className="w-4 h-4 text-[#EC4899]" />
+                  <Volume2 className="w-4 h-4" style={{ color: currentAlbum.accentColor }} />
                 )}
               </button>
               <input
@@ -666,7 +787,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 step="0.05"
                 value={isMuted ? 0 : volume}
                 onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                className="w-full accent-[#EC4899] cursor-pointer h-1.5 bg-white/20 rounded-lg"
+                className="w-full cursor-pointer h-1.5 bg-white/20 rounded-lg"
+                style={{ accentColor: currentAlbum.accentColor }}
               />
               <span className="text-[11px] font-mono text-white/50 w-8 text-right">
                 {isMuted ? '0%' : `${Math.round(volume * 100)}%`}
@@ -678,8 +800,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           <div className="pt-4 border-t border-white/10">
             <div className="flex items-center justify-between text-xs text-white/60 mb-2.5">
               <div className="flex items-center gap-1.5 font-bold">
-                <ListMusic className="w-4 h-4 text-[#EC4899]" />
-                <span>재생 대기열 ({activePlaylist.length}곡 선택됨)</span>
+                <ListMusic className="w-4 h-4" style={{ color: currentAlbum.accentColor }} />
+                <span>재생 대기열 ({activePlaylist.length}곡)</span>
               </div>
               <span className="text-[11px] font-mono text-white/40">순차 자동 재생</span>
             </div>
@@ -698,9 +820,10 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       onClick={() => startPlayingTrack(t)}
                       className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition ${
                         isCur 
-                          ? 'bg-[#EC4899]/20 text-white font-bold border border-[#EC4899]/40' 
+                          ? 'bg-white/15 text-white font-bold border' 
                           : 'bg-white/5 hover:bg-white/10 text-white/70'
                       }`}
+                      style={isCur ? { borderColor: `${currentAlbum.accentColor}60` } : {}}
                     >
                       <div className="flex items-center gap-2 truncate">
                         <span className="font-mono text-[10px] text-white/40">{idx + 1}</span>
@@ -708,7 +831,10 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         {isCur && isPlaying && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#EC4899] animate-ping" />
+                          <span 
+                            className="w-1.5 h-1.5 rounded-full animate-ping" 
+                            style={{ backgroundColor: currentAlbum.accentColor }}
+                          />
                         )}
                         <span className="font-mono text-[10px] text-white/40">{t.duration}</span>
                       </div>
@@ -721,16 +847,17 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         </div>
 
         {/* ========================================================================= */}
-        {/* [RIGHT COLUMN: 플리마스터 플레이리스트 목록 및 전체선택/재생 툴바] */}
+        {/* [RIGHT COLUMN: 플리마스터 앨범 탭 선택 & 플레이리스트 목록] */}
         {/* ========================================================================= */}
         <div className="lg:col-span-8 w-full bg-[#141622]/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden backdrop-blur-xl">
-          {/* Subtle Pink Ambient Glow */}
+          {/* Subtle Dynamic Ambient Glow */}
           <div 
-            className="absolute -top-24 -right-24 w-96 h-96 rounded-full blur-[120px] opacity-15 pointer-events-none bg-[#EC4899]" 
+            className="absolute -top-24 -right-24 w-96 h-96 rounded-full blur-[120px] opacity-15 pointer-events-none transition-all duration-500" 
+            style={{ backgroundColor: currentAlbum.accentColor }}
           />
 
           {/* Card Header Section */}
-          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 pb-6 mb-6 border-b border-white/10 relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 pb-5 mb-5 border-b border-white/10 relative z-10">
             {/* Left: Title, Badge, Description */}
             <div className="max-w-2xl">
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
@@ -738,7 +865,14 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                   플리마스터 플레이리스트
                 </h1>
-                <span className="text-xs font-bold px-3 py-1 rounded-full border bg-[#EC4899]/15 border-[#EC4899]/40 text-[#EC4899]">
+                <span 
+                  className="text-xs font-bold px-3 py-1 rounded-full border transition-all"
+                  style={{
+                    backgroundColor: `${currentAlbum.accentColor}20`,
+                    borderColor: `${currentAlbum.accentColor}50`,
+                    color: currentAlbum.accentColor
+                  }}
+                >
                   오마카세 모음
                 </span>
               </div>
@@ -750,14 +884,110 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             {/* Right: Hashtag Badges */}
             <div className="flex flex-col items-start lg:items-end gap-2 flex-shrink-0">
               <div className="flex flex-wrap gap-1.5">
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#이것저것</span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#주인장맘</span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#노동요</span>
+                {currentAlbum.tags.slice(0, 3).map((tag, i) => (
+                  <span key={i} className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">
+                    {tag}
+                  </span>
+                ))}
               </div>
               <div className="flex flex-wrap gap-1.5">
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#드라이브</span>
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">#카페</span>
+                {currentAlbum.tags.slice(3).map((tag, i) => (
+                  <span key={i} className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/60 font-mono">
+                    {tag}
+                  </span>
+                ))}
               </div>
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* 💽 [붉은색 박스 영역: 앨범 선택 탭 (3대 앨범)] */}
+          {/* ========================================================================= */}
+          <div className="mb-6 relative z-10">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-white/80">
+                <Disc3 className="w-4 h-4 text-[#EC4899]" />
+                <span>앨범 선택 ({ALBUMS.length}개 앨범)</span>
+              </div>
+              <span className="text-[11px] text-white/40 font-mono">앨범을 클릭하면 해당 곡 목록으로 전환됩니다</span>
+            </div>
+
+            {/* 3대 앨범 카드 탭 그리드 */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {ALBUMS.map((album) => {
+                const isSelected = selectedAlbumId === album.id;
+                const trackCount = ALBUM_TRACKS[album.id]?.length || 0;
+
+                return (
+                  <button
+                    key={album.id}
+                    onClick={() => handleSelectAlbum(album.id)}
+                    className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer relative overflow-hidden group ${
+                      isSelected
+                        ? 'bg-white/10 shadow-xl'
+                        : 'bg-white/5 hover:bg-white/[0.08] border-white/10 hover:border-white/20'
+                    }`}
+                    style={
+                      isSelected
+                        ? {
+                            borderColor: album.accentColor,
+                            boxShadow: `0 10px 25px -8px ${album.accentColor}30`,
+                          }
+                        : {}
+                    }
+                  >
+                    {/* Active Accent Top Indicator Bar */}
+                    {isSelected && (
+                      <div 
+                        className="absolute top-0 left-0 right-0 h-1"
+                        style={{ backgroundColor: album.accentColor }}
+                      />
+                    )}
+
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        {album.iconType === 'hiphop' && (
+                          <Headphones 
+                            className="w-4 h-4 flex-shrink-0" 
+                            style={{ color: album.accentColor }} 
+                          />
+                        )}
+                        {album.iconType === 'jazz' && (
+                          <Coffee 
+                            className="w-4 h-4 flex-shrink-0" 
+                            style={{ color: album.accentColor }} 
+                          />
+                        )}
+                        {album.iconType === 'pop' && (
+                          <Zap 
+                            className="w-4 h-4 flex-shrink-0" 
+                            style={{ color: album.accentColor }} 
+                          />
+                        )}
+                        <span className={`text-sm font-black tracking-tight ${isSelected ? 'text-white' : 'text-white/80 group-hover:text-white'}`}>
+                          {album.title}
+                        </span>
+                      </div>
+
+                      {/* Track Count Badge */}
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/70 flex-shrink-0">
+                        {trackCount}곡
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-white/50 line-clamp-1 group-hover:text-white/70 transition-colors">
+                      {album.subtitle}
+                    </p>
+
+                    {isSelected && (
+                      <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold font-mono" style={{ color: album.accentColor }}>
+                        <span className="w-1.5 h-1.5 rounded-full animate-ping" style={{ backgroundColor: album.accentColor }} />
+                        <span>선택된 앨범</span>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -766,31 +996,44 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           {/* ========================================================================= */}
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10 relative z-10">
             {/* Left: 전체 선택 체크박스 & 선택 곡 재생하기 버튼 */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {/* 전체 선택 체크박스 */}
               <button
                 onClick={handleToggleSelectAll}
                 className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white font-medium text-sm transition cursor-pointer group"
               >
-                <div className={`w-4 h-4 rounded flex items-center justify-center transition ${
-                  isAllSelected 
-                    ? 'bg-[#EC4899] text-white' 
-                    : isPartiallySelected
-                    ? 'bg-[#EC4899]/40 text-white'
-                    : 'border border-white/40 group-hover:border-white'
-                }`}>
-                  {isAllSelected && <span className="text-xs leading-none">✓</span>}
-                  {isPartiallySelected && <span className="text-[10px] leading-none">-</span>}
+                <div 
+                  className={`w-4 h-4 rounded flex items-center justify-center transition ${
+                    isAllSelected 
+                      ? 'text-white' 
+                      : isPartiallySelected
+                      ? 'text-white'
+                      : 'border border-white/40 group-hover:border-white'
+                  }`}
+                  style={
+                    isAllSelected
+                      ? { backgroundColor: currentAlbum.accentColor }
+                      : isPartiallySelected
+                      ? { backgroundColor: `${currentAlbum.accentColor}60` }
+                      : {}
+                  }
+                >
+                  {isAllSelected && <span className="text-xs leading-none font-bold">✓</span>}
+                  {isPartiallySelected && <span className="text-[10px] leading-none font-bold">-</span>}
                 </div>
                 <span className="select-none font-bold text-xs sm:text-sm">
-                  전체 선택 <span className="text-[#EC4899] font-mono">({selectedIds.length}/{POP_TRACKS.length})</span>
+                  전체 선택 <span className="font-mono" style={{ color: currentAlbum.accentColor }}>({selectedCountInCurrentAlbum}/{currentAlbumTracks.length})</span>
                 </span>
               </button>
 
               {/* 선택한 곡 재생하기 버튼 */}
               <button
                 onClick={handlePlaySelectedQueue}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EC4899] hover:bg-[#db2777] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#EC4899]/30 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white font-bold text-xs sm:text-sm shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95"
+                style={{
+                  background: `linear-gradient(135deg, ${currentAlbum.accentColor}, #db2777)`,
+                  boxShadow: `0 8px 20px -4px ${currentAlbum.accentColor}40`
+                }}
               >
                 {isPlaying && currentTrack && selectedIds.includes(currentTrack.id) ? (
                   <>
@@ -800,7 +1043,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 ) : (
                   <>
                     <Play className="w-4 h-4 fill-current" />
-                    <span>선택 곡 재생 ({selectedIds.length})</span>
+                    <span>선택 곡 재생 ({selectedCountInCurrentAlbum})</span>
                   </>
                 )}
               </button>
@@ -814,8 +1057,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
 
           {/* Tracks List */}
-          <div className="space-y-3.5 relative z-10">
-            {POP_TRACKS.map((track) => {
+          <div className="space-y-3 relative z-10">
+            {currentAlbumTracks.map((track) => {
               const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
               const isThisTrackSelected = currentTrack?.id === track.id;
               const isChecked = selectedIds.includes(track.id);
@@ -824,13 +1067,21 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <div
                   key={track.id}
                   onClick={() => handlePlayTrack(track)}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer group ${
+                  className={`p-4 sm:p-4.5 rounded-2xl border transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer group ${
                     isThisTrackPlaying
-                      ? 'bg-[#EC4899]/15 border-[#EC4899]/50 shadow-lg shadow-[#EC4899]/10'
+                      ? 'bg-white/10 shadow-lg'
                       : isThisTrackSelected
                       ? 'bg-white/10 border-white/20'
                       : 'bg-white/5 hover:bg-white/[0.08] border-white/10'
                   }`}
+                  style={
+                    isThisTrackPlaying
+                      ? {
+                          borderColor: `${currentAlbum.accentColor}70`,
+                          boxShadow: `0 10px 25px -8px ${currentAlbum.accentColor}20`,
+                        }
+                      : {}
+                  }
                 >
                   {/* Left: 체크박스 + 번호 뱃지 + 곡 정보 */}
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -840,11 +1091,14 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       className="p-1 -m-1 cursor-pointer flex-shrink-0"
                       title={isChecked ? '선택 해제' : '플레이리스트에 추가'}
                     >
-                      <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
-                        isChecked 
-                          ? 'bg-[#EC4899] text-white shadow-sm' 
-                          : 'border-2 border-white/30 hover:border-[#EC4899] bg-white/5'
-                      }`}>
+                      <div 
+                        className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
+                          isChecked 
+                            ? 'text-white shadow-sm' 
+                            : 'border-2 border-white/30 hover:border-white bg-white/5'
+                        }`}
+                        style={isChecked ? { backgroundColor: currentAlbum.accentColor } : {}}
+                      >
                         {isChecked && <span className="text-xs font-bold leading-none">✓</span>}
                       </div>
                     </div>
@@ -853,9 +1107,17 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                     <div 
                       className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
                         isThisTrackPlaying 
-                          ? 'bg-[#EC4899] text-white shadow-lg shadow-[#EC4899]/30' 
+                          ? 'text-white shadow-lg' 
                           : 'bg-white/10 text-white/70 font-mono font-bold text-sm group-hover:bg-white/15'
                       }`}
+                      style={
+                        isThisTrackPlaying 
+                          ? { 
+                              backgroundColor: currentAlbum.accentColor,
+                              boxShadow: `0 8px 20px -4px ${currentAlbum.accentColor}50`
+                            } 
+                          : {}
+                      }
                     >
                       {isThisTrackPlaying ? (
                         <div className="flex items-end gap-0.5 h-5">
@@ -876,9 +1138,17 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                           {track.genreTag}
                         </span>
                       </div>
-                      <h3 className="text-base sm:text-lg font-bold text-white truncate group-hover:text-[#EC4899] transition-colors">
+                      <h3 
+                        className="text-base sm:text-lg font-bold text-white truncate transition-colors"
+                        style={isThisTrackPlaying ? { color: currentAlbum.accentColor } : {}}
+                      >
                         {track.title}
                       </h3>
+                      {track.description && (
+                        <p className="text-xs text-white/50 truncate mt-0.5">
+                          {track.description}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -904,9 +1174,17 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         onClick={() => handlePlayTrack(track)}
                         className={`flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${
                           isThisTrackPlaying
-                            ? 'bg-[#EC4899] hover:bg-[#db2777] text-white shadow-lg shadow-[#EC4899]/30'
+                            ? 'text-white shadow-lg'
                             : 'bg-white/10 hover:bg-white/20 text-white border border-white/15 hover:border-white/30'
                         }`}
+                        style={
+                          isThisTrackPlaying
+                            ? {
+                                backgroundColor: currentAlbum.accentColor,
+                                boxShadow: `0 8px 20px -4px ${currentAlbum.accentColor}40`
+                              }
+                            : {}
+                        }
                         title={isThisTrackPlaying ? '일시정지' : '음악 재생'}
                       >
                         {isThisTrackPlaying ? (
