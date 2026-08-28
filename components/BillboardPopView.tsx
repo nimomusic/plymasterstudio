@@ -53,6 +53,8 @@ export const ALBUMS: AlbumCategory[] = [
     accentColor: '#EC4899',
     bgGlow: 'from-[#EC4899]/20 to-[#8B5CF6]/10',
     tags: ['#인스타감성', '#칠힙합', '#알앤비', '#새벽감성', '#릴스음악'],
+    // 👇 감성 힙합 앨범용 배경 이미지 URL
+    bgImage: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80',
   },
   {
     id: 'jazz',
@@ -63,6 +65,8 @@ export const ALBUMS: AlbumCategory[] = [
     accentColor: '#F59E0B',
     bgGlow: 'from-[#F59E0B]/20 to-[#D97706]/10',
     tags: ['#빈티지재즈', '#카페음악', '#스윙', '#보사노바', '#LP감성'],
+    // 👇 빈티지 재즈 앨범용 배경 이미지 URL
+    bgImage: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=1920&q=80',
   },
   {
     id: 'pop',
@@ -73,6 +77,8 @@ export const ALBUMS: AlbumCategory[] = [
     accentColor: '#06B6D4',
     bgGlow: 'from-[#06B6D4]/20 to-[#3B82F6]/10',
     tags: ['#트렌디팝', '#신스웨이브', '#쇼츠바이럴', '#드라이브', '#댄스'],
+    // 👇 트렌디 팝송 앨범용 배경 이미지 URL
+    bgImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1920&q=80',
   },
 ];
 
@@ -871,7 +877,16 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0c14] text-white flex flex-col justify-start items-center py-8 px-4 sm:px-6 lg:px-8">
+    <div 
+      className="min-h-screen text-white flex flex-col justify-start items-center py-8 px-4 sm:px-6 lg:px-8 relative bg-cover bg-center bg-fixed bg-no-repeat transition-all duration-700"
+      style={{
+        /* 앨범 선택에 따라 해당 앨범의 배경 이미지가 자동 적용됩니다 */
+        backgroundImage: `url('${(currentAlbum as any).bgImage || ''}')`
+      }}
+    >
+      {/* 💡 배경 이미지가 은은하게 비치고 글자가 또렷하게 보이도록 하는 어두운 오버레이 레이어 */}
+      <div className="absolute inset-0 bg-[#0a0c14]/85 backdrop-blur-[2px] pointer-events-none -z-0" />
+  
       {/* Hidden Real HTML5 Audio Element */}
       <audio 
         ref={audioRef}
