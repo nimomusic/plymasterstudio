@@ -457,25 +457,32 @@ export interface CustomNewTrack {
 
 export const NEW_TRACKS: CustomNewTrack[] = [
   {
-    title: '신곡 1번 - Mood Drip',
-    audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3',
-    genreTag: '감성 알앤비',
-    description: '부드러운 기타 루프와 감각적인 808 베이스',
-    duration: '03:08',
-  },
-  {
-    title: '신곡 2번 - Same Script',
-    audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
+    title: 'Unbound Notion',
+    audioUrl: 'https://cdn1.suno.ai/ca941d08-0abf-4644-803f-023300df4a61.mp3',
     genreTag: '트렌디 팝',
-    description: '80년대 레트로 신스웨이브 베이스',
-    duration: '02:35',
+    description: 'Dark Alt-Pop',
+    duration: '01:52',
   },
   {
-    title: '신곡 3번 - A Soft Surrender',
-    audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
-    genreTag: '빈티지 재즈',
-    description: '따뜻한 콘트라베이스와 피아노 선율',
-    duration: '04:28',
+    title: 'Redline Zone',
+    audioUrl: 'https://cdn1.suno.ai/1be540ff-5c50-4d16-8f39-ae6e8d322a6e.mp3',
+    genreTag: '트렌디 팝',
+    description: 'Tropical house',
+    duration: '02:10',
+  },
+  {
+    title: '掠れた約束-갈라진 약속',
+    audioUrl: 'https://cdn1.suno.ai/745032ff-514f-48b1-98f2-b8a6901653bd.mp3',
+    genreTag: 'JPOP',
+    description: 'Emotional acoustic rock ballad',
+    duration: '03:50',
+  },
+  {
+    title: '水面の彼方',
+    audioUrl: 'https://cdn1.suno.ai/969d3731-eb43-460d-b37b-4240a36eb014.mp3',
+    genreTag: 'JPOP',
+    description: 'Electronic R&B J-pop,
+    duration: '03:17',
   },
   // 💡 곡을 더 추가하고 싶으시면 여기에 계속 이어서 넣으시면 됩니다:
   // {
@@ -1244,7 +1251,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                   <Flame className="w-4 h-4 fill-current" />
                 </span>
                 <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  Hot & New
+                  New
                 </h2>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
                   신곡 {FORMATTED_NEW_TRACKS.length}곡
