@@ -481,7 +481,7 @@ export const NEW_TRACKS: CustomNewTrack[] = [
     title: '水面の彼方',
     audioUrl: 'https://cdn1.suno.ai/969d3731-eb43-460d-b37b-4240a36eb014.mp3',
     genreTag: 'JPOP',
-    description: 'Electronic R&B J-pop,
+    description: 'Electronic R&B J-pop',
     duration: '03:17',
   },
   // 💡 곡을 더 추가하고 싶으시면 여기에 계속 이어서 넣으시면 됩니다:
