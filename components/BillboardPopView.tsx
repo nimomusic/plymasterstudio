@@ -84,7 +84,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
   // 1. 느좋 인스타 감성힙합 앨범 트랙
   hiphop: [
     {
-      id: 'pop-1',
+      id: 'hiphop-1',
       number: '01',
       title: 'Mood drip',
       duration: '03:08',
@@ -95,7 +95,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-2',
+      id: 'hiphop-2',
       number: '02',
       title: 'Daydream',
       duration: '03:05',
@@ -106,7 +106,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-3',
+      id: 'hiphop-3',
       number: '03',
       title: 'Soft Drizzle',
       duration: '02:50',
@@ -128,7 +128,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-5',
+      id: 'hiphop-5',
       number: '05',
       title: '읽히지 않아',
       duration: '03:03',
@@ -139,7 +139,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-6',
+      id: 'hiphop-6',
       number: '06',
       title: '환상통',
       duration: '03:12',
@@ -150,7 +150,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-7',
+      id: 'hiphop-7',
       number: '07',
       title: '상상',
       duration: '03:29',
@@ -161,7 +161,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-8',
+      id: 'hiphop-8',
       number: '08',
       title: '착각',
       duration: '02:28',
@@ -172,7 +172,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-9',
+      id: 'hiphop-9',
       number: '09',
       title: 'Drift',
       duration: '03:06',
@@ -183,7 +183,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-10',
+      id: 'hiphop-10',
       number: '10',
       title: 'Uncharted Still',
       duration: '03:14',
@@ -194,7 +194,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-11',
+      id: 'hiphop-11',
       number: '11',
       title: 'Hazy View',
       duration: '02:51',
@@ -205,7 +205,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'pop-12',
+      id: 'hiphop-12',
       number: '12',
       title: 'Frozen Frame',
       duration: '03:06',
@@ -280,18 +280,6 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       // =========================================================
     },
     {
-      id: 'jazz-5',
-      number: '05',
-      title: 'Softest Hours',
-      duration: '04:14',
-      genreTag: '빈티지 재즈',
-      albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
-      audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
-      // =========================================================
-    },
-    {
       id: 'jazz-6',
       number: '06',
       title: 'Soft Exhale',
@@ -330,13 +318,13 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     {
       id: 'jazz-9',
       number: '09',
-      title: 'Softest Hours',
-      duration: '04:14',
+      title: 'Quiet Resonance',
+      duration: '04:53',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
       // =========================================================
       // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
-      audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
+      audioUrl: 'https://cdn1.suno.ai/68712f78-7eab-46d8-838f-3718a222ffc1.mp3',
       // =========================================================
     },
     {
@@ -591,6 +579,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     // 만약 현재 재생 중인 곡이 없거나 앨범이 바뀌면 첫 번째 곡을 대기 상태로 설정
     if (!isPlaying && newTracks.length > 0) {
       setCurrentTrack(newTracks[0]);
+      setProgress(0);
+      setCurrentTime('00:00');
     }
   };
 
