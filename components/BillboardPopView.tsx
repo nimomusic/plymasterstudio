@@ -15,11 +15,11 @@ import {
   Disc3, 
   Sparkles, 
   Repeat,
-  Radio,
-  Layers,
   Flame,
   Coffee,
-  Headphones
+  Headphones,
+  ChevronRight,
+  ChevronLeft
 } from 'lucide-react';
 
 interface BillboardPopViewProps {
@@ -33,8 +33,22 @@ export interface PopTrackItem {
   title: string;
   duration: string;
   genreTag: string;
+  description?: string;
+  albumId: string;
   /* 하이퍼링크넣는 곳: 실제 mp3 파일 또는 스트리밍 링크 URL */
   audioUrl: string;
+}
+
+export interface AlbumCategory {
+  id: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  iconType: 'hiphop' | 'jazz' | 'pop';
+  accentColor: string;
+  bgGlow: string;
+  tags: string[];
+  bgImage?: string;
 }
 
 // ==================================================================================
@@ -53,7 +67,6 @@ export const ALBUMS: AlbumCategory[] = [
     accentColor: '#EC4899',
     bgGlow: 'from-[#EC4899]/20 to-[#8B5CF6]/10',
     tags: ['#인스타감성', '#칠힙합', '#알앤비', '#새벽감성', '#릴스음악'],
-    // 👇 감성 힙합 앨범용 배경 이미지 URL
     bgImage: '/hiphop.jpeg',
   },
   {
@@ -65,7 +78,6 @@ export const ALBUMS: AlbumCategory[] = [
     accentColor: '#F59E0B',
     bgGlow: 'from-[#F59E0B]/20 to-[#D97706]/10',
     tags: ['#빈티지재즈', '#카페음악', '#스윙', '#보사노바', '#LP감성'],
-    // 👇 빈티지 재즈 앨범용 배경 이미지 URL
     bgImage: '/jazz.jpeg',
   },
   {
@@ -77,14 +89,12 @@ export const ALBUMS: AlbumCategory[] = [
     accentColor: '#06B6D4',
     bgGlow: 'from-[#06B6D4]/20 to-[#3B82F6]/10',
     tags: ['#트렌디팝', '#신스웨이브', '#쇼츠바이럴', '#드라이브', '#댄스'],
-    // 👇 트렌디 팝송 앨범용 배경 이미지 URL
     bgImage: '/pop.jpeg',
   },
 ];
 
 // ==================================================================================
 // 🎵 [하이퍼링크넣는 곳] 앨범별 트랙 리스트 & 음원 링크 데이터
-// 각 곡의 audioUrl 항목에 실제 호스팅된 음원 파일 URL(mp3, wav 등)을 입력하시면 됩니다.
 // ==================================================================================
 export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
   // 1. 느좋 인스타 감성힙합 앨범 트랙
@@ -95,10 +105,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Mood drip',
       duration: '03:08',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 1 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-2',
@@ -106,10 +114,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Daydream',
       duration: '03:05',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 2 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/bb01c0ca-06df-4fab-95aa-1d75daad899c.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-3',
@@ -117,21 +123,17 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Soft Drizzle',
       duration: '02:50',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 3 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/b924b122-3bd1-4ba5-b833-854168b90b99.mp3',
-      // =========================================================
     },
     {
-      id: 'pop-4',
+      id: 'hiphop-4',
       number: '04',
       title: '우산 없는 밤',
       duration: '04:02',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 4 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/c4142110-476a-4b75-867d-6a5dc3b65ee2.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-5',
@@ -139,10 +141,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: '읽히지 않아',
       duration: '03:03',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/7ad30ed2-3112-4a85-a54d-797340f35c29.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-6',
@@ -150,10 +150,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: '환상통',
       duration: '03:12',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/34c49a87-8f59-42b0-8af9-8d4c0a0e7a68.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-7',
@@ -161,10 +159,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: '상상',
       duration: '03:29',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/dc3e09c8-2dc6-40a1-93db-78968eed183a.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-8',
@@ -172,10 +168,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: '착각',
       duration: '02:28',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/b05c14a7-997b-4e1f-8fe5-e998e609e175.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-9',
@@ -183,10 +177,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Drift',
       duration: '03:06',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/ae50ba63-53b4-4e90-8e36-caba6afb056e.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-10',
@@ -194,10 +186,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Uncharted Still',
       duration: '03:14',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/570e8be4-6e3d-4544-a20d-b661d086ed87.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-11',
@@ -205,10 +195,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Hazy View',
       duration: '02:51',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/4f740500-8f41-4a5d-be00-f08aaecc4bc4.mp3',
-      // =========================================================
     },
     {
       id: 'hiphop-12',
@@ -216,10 +204,8 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       title: 'Frozen Frame',
       duration: '03:06',
       genreTag: '느좋 인스타 알앤비 힙합',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 곡 5 링크:
+      albumId: 'hiphop',
       audioUrl: 'https://cdn1.suno.ai/27bd341f-5828-42c8-80af-5f458b56400d.mp3',
-      // =========================================================
     },
   ],
 
@@ -232,10 +218,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:28',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 1번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-2',
@@ -244,10 +227,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:27',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 2번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/c6dca2e7-5311-4119-9869-f39efd74955a.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-3',
@@ -256,10 +236,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:53',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 3번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/def4da68-b80f-40b4-af7b-51ad8f5207cb.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-4',
@@ -268,10 +245,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:23',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 4번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/5c60a6bc-0f9d-4114-96cf-3e3b2f2dc915.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-5',
@@ -280,10 +254,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:14',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-6',
@@ -292,10 +263,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:43',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/d4f49773-9714-4ced-87c5-93031381ea99.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-7',
@@ -304,10 +272,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:31',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/10c9cc6b-6b5c-4f46-ad1f-90ddb28efe6f.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-8',
@@ -316,10 +281,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:43',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/3da806b5-4712-4e09-b5b9-a1ae040bb8e3.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-9',
@@ -328,10 +290,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:53',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/68712f78-7eab-46d8-838f-3718a222ffc1.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-10',
@@ -340,10 +299,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:58',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/8a3b599a-a161-4372-833f-9720ea0691db.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-11',
@@ -352,10 +308,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:16',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/5edc5fbe-68e6-4913-85c0-789f7f9d21b3.mp3',
-      // =========================================================
     },
     {
       id: 'jazz-12',
@@ -364,10 +317,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:43',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 재즈 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/39f7675a-497a-43ac-8225-7e1c80827525.mp3',
-      // =========================================================
     },
   ],
 
@@ -380,10 +330,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:35',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 1번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
-      // =========================================================
     },
     {
       id: 'pop-2',
@@ -392,10 +339,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:06',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 2번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/009ce87e-aea8-45a8-b47b-aae9496c88f4.mp3',
-      // =========================================================
     },
     {
       id: 'pop-3',
@@ -404,10 +348,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:01',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 3번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/1a4006fb-32d6-4e9c-870d-a20e9dd13b6d.mp3',
-      // =========================================================
     },
     {
       id: 'pop-4',
@@ -416,10 +357,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:13',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 4번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a.mp3',
-      // =========================================================
     },
     {
       id: 'pop-5',
@@ -428,10 +366,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:07',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/dfe7344f-51e0-4369-8536-78594a70f514.mp3',
-      // =========================================================
     },
     {
       id: 'pop-6',
@@ -440,10 +375,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:59',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 1번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/5287ae16-8e99-4f17-ae54-c1d1d388204d.mp3',
-      // =========================================================
     },
     {
       id: 'pop-7',
@@ -452,10 +384,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:42',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 2번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/c9ff40ae-14d9-4334-96e6-b46acab554cd.mp3',
-      // =========================================================
     },
     {
       id: 'pop-8',
@@ -464,10 +393,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:15',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 3번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/75f65fb6-8460-41b9-92f8-931348f551ec.mp3',
-      // =========================================================
     },
     {
       id: 'pop-9',
@@ -476,10 +402,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:13',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 4번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a.mp3',
-      // =========================================================
     },
     {
       id: 'pop-10',
@@ -488,10 +411,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:07',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/dfe7344f-51e0-4369-8536-78594a70f514.mp3',
-      // =========================================================
     },
     {
       id: 'pop-11',
@@ -500,10 +420,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:28',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 4번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/904b00f8-76ed-465c-a3e4-96b700a890d8.mp3',
-      // =========================================================
     },
     {
       id: 'pop-12',
@@ -512,10 +429,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:27',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/b21eca7d-4dd4-4bcc-bfd4-3cec9623bbbc.mp3',
-      // =========================================================
     },
     {
       id: 'pop-13',
@@ -524,58 +438,63 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:21',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      // =========================================================
-      // [하이퍼링크넣는 곳] 팝 5번 곡 링크:
       audioUrl: 'https://cdn1.suno.ai/d6d00917-5520-451e-8541-627ca509e4bd.mp3',
-      // =========================================================
     },
   ],
 };
 
+// ==================================================================================
+// 🔥 [Hot & New] 표시할 신곡 목록을 여기서 직접 등록/수정하세요!
+// 원하는 만큼 곡을 추가할 수 있으며, title과 audioUrl만 넣어도 바로 재생 및 표시됩니다.
+// ==================================================================================
 export interface CustomNewTrack {
-    title: string;           // 곡 제목 (필수)
-    audioUrl: string;        // mp3 음원 링크 URL (필수)
-    genreTag?: string;       // (선택) 장르 태그 - 기본값: 'NEW'
-    description?: string;    // (선택) 곡 설명
-    duration?: string;       // (선택) 재생 시간 - 기본값: '03:00'
-  }
+  title: string;           // 곡 제목 (필수)
+  audioUrl: string;        // mp3 음원 링크 URL (필수)
+  genreTag?: string;       // (선택) 장르 태그 - 기본값: 'NEW'
+  description?: string;    // (선택) 곡 설명
+  duration?: string;       // (선택) 재생 시간 - 기본값: '03:00'
+}
 
-  export const NEW_TRACKS: CustomNewTrack[] = [
-    {
-      title: '신곡 1번 - Mood Drip',
-      audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3',
-      genreTag: '감성 알앤비',
-      description: '부드러운 기타 루프와 감각적인 808 베이스',
-      duration: '03:08',
-    },
-    {
-      title: '신곡 2번 - Same Script',
-      audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
-      genreTag: '트렌디 팝',
-      description: '80년대 레트로 신스웨이브 베이스',
-      duration: '02:35',
-    },
-    {
-      title: '신곡 3번 - A Soft Surrender',
-      audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
-      genreTag: '빈티지 재즈',
-      description: '따뜻한 콘트라베이스와 피아노 선율',
-      duration: '04:28',
-    },
-    // 💡 곡을 더 추가하고 싶으시면 여기에 계속 이어서 넣으시면 됩니다.
-  ];
+export const NEW_TRACKS: CustomNewTrack[] = [
+  {
+    title: '신곡 1번 - Mood Drip',
+    audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3',
+    genreTag: '감성 알앤비',
+    description: '부드러운 기타 루프와 감각적인 808 베이스',
+    duration: '03:08',
+  },
+  {
+    title: '신곡 2번 - Same Script',
+    audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
+    genreTag: '트렌디 팝',
+    description: '80년대 레트로 신스웨이브 베이스',
+    duration: '02:35',
+  },
+  {
+    title: '신곡 3번 - A Soft Surrender',
+    audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
+    genreTag: '빈티지 재즈',
+    description: '따뜻한 콘트라베이스와 피아노 선율',
+    duration: '04:28',
+  },
+  // 💡 곡을 더 추가하고 싶으시면 여기에 계속 이어서 넣으시면 됩니다:
+  // {
+  //   title: '신곡 4번 - 내 노래 제목',
+  //   audioUrl: 'https://내음원.mp3',
+  // },
+];
 
-  // 뷰어용 자동 포맷 변환기
-  export const FORMATTED_NEW_TRACKS: PopTrackItem[] = NEW_TRACKS.map((item, idx) => ({
-    id: `custom-new-${idx + 1}`,
-    number: String(idx + 1).padStart(2, '0'),
-    title: item.title,
-    audioUrl: item.audioUrl,
-    genreTag: item.genreTag || 'NEW',
-    description: item.description || '새롭게 등록된 신곡',
-    duration: item.duration || '03:00',
-    albumId: 'hiphop',
-  }));
+// 뷰어용 자동 포맷 변환기
+export const FORMATTED_NEW_TRACKS: PopTrackItem[] = NEW_TRACKS.map((item, idx) => ({
+  id: `custom-new-${idx + 1}`,
+  number: String(idx + 1).padStart(2, '0'),
+  title: item.title,
+  audioUrl: item.audioUrl,
+  genreTag: item.genreTag || 'NEW',
+  description: item.description || '새롭게 등록된 신곡',
+  duration: item.duration || '03:00',
+  albumId: 'hiphop',
+}));
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
   // 현재 선택된 앨범 ID ('hiphop' | 'jazz' | 'pop')
@@ -644,6 +563,18 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthCtxRef = useRef<AudioContext | null>(null);
   const synthIntervalRef = useRef<number | null>(null);
+  const hotScrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Hot & New 가로 스크롤 이동 함수
+  const scrollHotTracks = (direction: 'left' | 'right') => {
+    if (hotScrollRef.current) {
+      const scrollAmount = 300;
+      hotScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   // 현재 활성화된 재생 큐 (선택된 곡들 중 현재 앨범에 속한 곡 목록)
   const activePlaylist = currentAlbumTracks.filter(t => selectedIds.includes(t.id));
@@ -722,10 +653,10 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       const type = albumType || selectedAlbumId;
       // 앨범별 톤 설정
       const freqs = type === 'jazz' 
-        ? [261.63, 311.13, 392.00, 466.16, 523.25] // Jazz chords (C minor 7th)
+        ? [261.63, 311.13, 392.00, 466.16, 523.25]
         : type === 'pop'
-        ? [329.63, 392.00, 493.88, 587.33, 659.25] // Pop Synth
-        : [220.00, 261.63, 329.63, 392.00, 440.00]; // Lofi HipHop
+        ? [329.63, 392.00, 493.88, 587.33, 659.25]
+        : [220.00, 261.63, 329.63, 392.00, 440.00];
 
       let step = 0;
 
@@ -764,6 +695,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     setIsPlaying(true);
     setProgress(0);
     setCurrentTime('00:00');
+
+    incrementPlayCount(track.id);
 
     // 재생하려는 곡이 현재 앨범과 다르면 앨범 탭도 자동 동기화
     if (track.albumId && track.albumId !== selectedAlbumId) {
@@ -813,7 +746,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 상단 '선택된 곡 재생하기' 버튼 클릭 시
   const handlePlaySelectedQueue = () => {
     if (activePlaylist.length === 0) {
-      // 선택된 곡이 없으면 현재 앨범 전곡 선택 후 첫 곡부터 재생
       const allIds = currentAlbumTracks.map(t => t.id);
       setSelectedIds(allIds);
       if (currentAlbumTracks.length > 0) {
@@ -822,7 +754,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       return;
     }
 
-    // 현재 재생 중인 곡이 선택 목록에 포함되어 있다면 토글
     if (currentTrack && activePlaylist.some(t => t.id === currentTrack.id)) {
       if (isPlaying) {
         if (audioRef.current) audioRef.current.pause();
@@ -832,7 +763,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         startPlayingTrack(currentTrack);
       }
     } else {
-      // 선택된 목록의 첫 곡부터 재생 시작
       startPlayingTrack(activePlaylist[0]);
     }
   };
@@ -847,7 +777,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
     if (nextIndex >= queue.length) {
       if (isAutoRepeat) {
-        nextIndex = 0; // 반복
+        nextIndex = 0;
       } else {
         handleStopTrack();
         return;
@@ -959,12 +889,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
   return (
     <div className="min-h-screen bg-[#0a0c14] text-white flex flex-col justify-start items-center py-8 px-4 sm:px-6 lg:px-8">
-    {/* Hidden Real HTML5 Audio Element */}
-    <audio 
-      ref={audioRef}
-      onTimeUpdate={handleTimeUpdate}
-      onEnded={handleAudioEnded}
-    />
+      {/* Hidden Real HTML5 Audio Element */}
+      <audio 
+        ref={audioRef}
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={handleAudioEnded}
+      />
 
       {/* Top Header Helper Bar */}
       <div className="w-full max-w-7xl flex items-center justify-between gap-4 mb-4">
@@ -979,7 +909,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         )}
       
         <div className="flex items-center gap-2 ml-auto">
-          {/* ✨ [추가] 방문자 수 카운터 (VISIT) */}
+          {/* 방문자 수 카운터 (VISIT) */}
           <div 
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium"
             title="누적 방문 횟수"
@@ -1002,11 +932,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         </div>
       </div>
 
-      {/* Main 2-Column Studio Grid Layout (Left: Tall Audio Player Rack, Right: Album Selector & Playlist Table) */}
+      {/* Main 2-Column Studio Grid Layout */}
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* ========================================================================= */}
-        {/* [LEFT COLUMN: 위아래로 긴 세로형 오디오 플레이어 랙] */}
+        {/* [LEFT COLUMN: 세로형 오디오 플레이어 랙] */}
         {/* ========================================================================= */}
         <div className="lg:col-span-4 w-full bg-[#121420]/95 border border-white/15 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden flex flex-col justify-between sticky top-6">
           {/* Ambient Glow */}
@@ -1047,17 +977,14 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
             {/* Vinyl / Cover Art Visualizer Display */}
             <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-[#1b1e30] to-[#0d0f17] border border-white/10 p-5 flex flex-col items-center justify-center relative overflow-hidden mb-5 group shadow-inner">
-              {/* Rotating Vinyl Record Animation when playing */}
               <div className={`relative w-36 h-36 sm:w-44 sm:h-44 rounded-full border-4 border-[#222738] bg-black shadow-2xl flex items-center justify-center transition-transform duration-700 ${
                 isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''
               }`}>
-                {/* Vinyl Grooves */}
                 <div className="absolute inset-2 rounded-full border border-white/5" />
                 <div className="absolute inset-4 rounded-full border border-white/5" />
                 <div className="absolute inset-7 rounded-full border border-white/10" />
                 <div className="absolute inset-10 rounded-full border border-white/5" />
                 
-                {/* Center Label */}
                 <div 
                   className="w-16 h-16 rounded-full p-1 flex flex-col items-center justify-center text-center shadow-lg transition-all duration-500"
                   style={{
@@ -1069,7 +996,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 </div>
               </div>
 
-              {/* Real-time Visualizer Waves Bar at bottom of art */}
               {isPlaying && (
                 <div className="absolute bottom-3 left-4 right-4 flex items-end justify-center gap-1 h-8 bg-black/40 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/10">
                   <span className="w-1 rounded-full animate-[bounce_0.5s_infinite_100ms] h-4" style={{ backgroundColor: currentAlbum.accentColor }} />
@@ -1132,9 +1058,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               </div>
             </div>
 
-            {/* Main Audio Controls (Prev / Play / Next / Stop) */}
+            {/* Main Audio Controls */}
             <div className="flex items-center justify-center gap-3 mb-5">
-              {/* Previous Track */}
               <button
                 onClick={handlePrevTrack}
                 className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/80 hover:text-white transition cursor-pointer hover:scale-105 active:scale-95"
@@ -1143,7 +1068,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <SkipBack className="w-5 h-5 fill-current" />
               </button>
 
-              {/* Play / Pause Main Button */}
               <button
                 onClick={() => currentTrack && handlePlayTrack(currentTrack)}
                 className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/80 hover:text-white transition cursor-pointer hover:scale-105 active:scale-95"
@@ -1160,7 +1084,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 )}
               </button>
 
-              {/* Next Track */}
               <button
                 onClick={handleNextTrack}
                 className="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/80 hover:text-white transition cursor-pointer hover:scale-105 active:scale-95"
@@ -1169,7 +1092,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <SkipForward className="w-5 h-5 fill-current" />
               </button>
 
-              {/* Stop Track */}
               <button
                 onClick={handleStopTrack}
                 className="p-3 rounded-2xl bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/40 text-white/60 hover:text-red-400 transition cursor-pointer"
@@ -1258,139 +1180,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
         </div>
 
-        <div className="mb-6 pb-6 border-b border-white/10 relative z-10">
-          <div className="flex items-center justify-between mb-3.5">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 shadow-inner">
-                <Flame className="w-4 h-4 fill-current" />
-              </span>
-              <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
-                Hot & New
-              </h2>
-              {/* 등록된 신곡 개수 표시 */}
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                신곡 {FORMATTED_NEW_TRACKS.length}곡
-              </span>
-            </div>
-
-            {/* 좌우 스크롤 화살표 버튼 */}
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-white/40 font-mono hidden sm:inline mr-1">
-                화살표 클릭 또는 좌우 스크롤
-              </span>
-              <button
-                type="button"
-                onClick={() => scrollHotTracks('left')}
-                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer"
-                title="이전 곡 보기"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollHotTracks('right')}
-                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer"
-                title="다음 곡 보기"
-              >
-                <ChevronRight className="w-4 h-4 text-rose-400" />
-              </button>
-            </div>
-          </div>
-
-          {/* 등록된 신곡 리스트를 map으로 순회하여 출력 */}
-          <div 
-            ref={hotScrollRef}
-            className="flex gap-3 overflow-x-auto pb-2 select-none scroll-smooth snap-x snap-mandatory"
-            style={{
-              scrollbarWidth: 'thin',
-              WebkitOverflowScrolling: 'touch'
-            }}
-          >
-            {FORMATTED_NEW_TRACKS.map((track) => {
-              const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
-              const isThisTrackSelected = currentTrack?.id === track.id;
-              const trackAlbum = ALBUMS.find(a => a.id === track.albumId) || currentAlbum;
-
-              return (
-                <div
-                  key={`hot-${track.id}`}
-                  onClick={() => handlePlayTrack(track)}
-                  className={`flex-none w-[calc(100%-20px)] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-8px)] min-w-[220px] p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer snap-start relative overflow-hidden group flex flex-col justify-between ${
-                    isThisTrackPlaying
-                      ? 'bg-white/15 border-rose-500/60 shadow-xl'
-                      : isThisTrackSelected
-                      ? 'bg-white/10 border-white/25'
-                      : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20'
-                  }`}
-                  style={
-                    isThisTrackPlaying
-                      ? {
-                          boxShadow: `0 10px 25px -8px ${trackAlbum.accentColor}40`,
-                          borderColor: trackAlbum.accentColor,
-                        }
-                      : {}
-                  }
-                >
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span 
-                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border"
-                      style={{
-                        backgroundColor: `${trackAlbum.accentColor}20`,
-                        borderColor: `${trackAlbum.accentColor}40`,
-                        color: trackAlbum.accentColor,
-                      }}
-                    >
-                      {track.genreTag}
-                    </span>
-                    <span className="text-[10px] font-mono text-white/40">
-                      {(playCounts[track.id] || 0).toLocaleString()}회 재생
-                    </span>
-                  </div>
-
-                  <div className="mb-3">
-                    <h4 
-                      className="text-sm font-bold text-white truncate transition-colors"
-                      style={isThisTrackPlaying ? { color: trackAlbum.accentColor } : {}}
-                    >
-                      {track.title}
-                    </h4>
-                    <p className="text-[11px] text-white/50 truncate mt-0.5">
-                      {track.description || trackAlbum.title}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                    <div className="flex items-center gap-1.5 text-xs text-white/60 font-mono">
-                      <span>{track.duration}</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePlayTrack(track);
-                      }}
-                      className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                        isThisTrackPlaying
-                          ? 'text-white shadow-md'
-                          : 'bg-white/10 hover:bg-white/20 text-white'
-                      }`}
-                      style={isThisTrackPlaying ? { backgroundColor: trackAlbum.accentColor } : {}}
-                      title={isThisTrackPlaying ? '일시정지' : '재생'}
-                    >
-                      {isThisTrackPlaying ? (
-                        <Pause className="w-3.5 h-3.5 fill-current" />
-                      ) : (
-                        <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        
         {/* ========================================================================= */}
         {/* [RIGHT COLUMN: 플리마스터 앨범 탭 선택 & 플레이리스트 목록] */}
         {/* ========================================================================= */}
@@ -1446,9 +1235,144 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
 
           {/* ========================================================================= */}
-          {/* 💽 [붉은색 박스 영역: 앨범 선택 탭 (3대 앨범)] */}
+          {/* 🔥 [Hot & New 직접 등록한 신곡 가로 스크롤 섹션] */}
           {/* ========================================================================= */}
-          <div className="mb-6 relative z-10">
+          <div className="mb-6 pb-6 border-b border-white/10 relative z-10">
+            <div className="flex items-center justify-between mb-3.5">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 shadow-inner">
+                  <Flame className="w-4 h-4 fill-current" />
+                </span>
+                <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+                  Hot & New
+                </h2>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                  신곡 {FORMATTED_NEW_TRACKS.length}곡
+                </span>
+              </div>
+
+              {/* 좌우 스크롤 화살표 버튼 */}
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] text-white/40 font-mono hidden sm:inline mr-1">
+                  화살표 클릭 또는 좌우 스크롤
+                </span>
+                <button
+                  type="button"
+                  onClick={() => scrollHotTracks('left')}
+                  className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer"
+                  title="이전 곡 보기"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollHotTracks('right')}
+                  className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer"
+                  title="다음 곡 보기"
+                >
+                  <ChevronRight className="w-4 h-4 text-rose-400" />
+                </button>
+              </div>
+            </div>
+
+            {/* 등록된 신곡 리스트를 map으로 순회하여 출력 */}
+            <div 
+              ref={hotScrollRef}
+              className="flex gap-3 overflow-x-auto pb-2 select-none scroll-smooth snap-x snap-mandatory"
+              style={{
+                scrollbarWidth: 'thin',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
+              {FORMATTED_NEW_TRACKS.map((track) => {
+                const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
+                const isThisTrackSelected = currentTrack?.id === track.id;
+                const trackAlbum = ALBUMS.find(a => a.id === track.albumId) || currentAlbum;
+
+                return (
+                  <div
+                    key={`hot-${track.id}`}
+                    onClick={() => handlePlayTrack(track)}
+                    className={`flex-none w-[calc(100%-20px)] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-8px)] min-w-[220px] p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer snap-start relative overflow-hidden group flex flex-col justify-between ${
+                      isThisTrackPlaying
+                        ? 'bg-white/15 border-rose-500/60 shadow-xl'
+                        : isThisTrackSelected
+                        ? 'bg-white/10 border-white/25'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20'
+                    }`}
+                    style={
+                      isThisTrackPlaying
+                        ? {
+                            boxShadow: `0 10px 25px -8px ${trackAlbum.accentColor}40`,
+                            borderColor: trackAlbum.accentColor,
+                          }
+                        : {}
+                    }
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span 
+                        className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border"
+                        style={{
+                          backgroundColor: `${trackAlbum.accentColor}20`,
+                          borderColor: `${trackAlbum.accentColor}40`,
+                          color: trackAlbum.accentColor,
+                        }}
+                      >
+                        {track.genreTag}
+                      </span>
+                      <span className="text-[10px] font-mono text-white/40">
+                        {(playCounts[track.id] || 0).toLocaleString()}회 재생
+                      </span>
+                    </div>
+
+                    <div className="mb-3">
+                      <h4 
+                        className="text-sm font-bold text-white truncate transition-colors"
+                        style={isThisTrackPlaying ? { color: trackAlbum.accentColor } : {}}
+                      >
+                        {track.title}
+                      </h4>
+                      <p className="text-[11px] text-white/50 truncate mt-0.5">
+                        {track.description || trackAlbum.title}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                      <div className="flex items-center gap-1.5 text-xs text-white/60 font-mono">
+                        <span>{track.duration}</span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePlayTrack(track);
+                        }}
+                        className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+                          isThisTrackPlaying
+                            ? 'text-white shadow-md'
+                            : 'bg-white/10 hover:bg-white/20 text-white'
+                        }`}
+                        style={isThisTrackPlaying ? { backgroundColor: trackAlbum.accentColor } : {}}
+                        title={isThisTrackPlaying ? '일시정지' : '재생'}
+                      >
+                        {isThisTrackPlaying ? (
+                          <Pause className="w-3.5 h-3.5 fill-current" />
+                        ) : (
+                          <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* 💽 [앨범 선택 카드 탭 (3대 앨범)] */}
+          {/* ========================================================================= */}
+          <div className="pb-5 mb-5 border-b border-white/10 relative z-10">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 text-xs font-bold text-white/80">
                 <Disc3 className="w-4 h-4 text-[#EC4899]" />
@@ -1481,7 +1405,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         : {}
                     }
                   >
-                    {/* Active Accent Top Indicator Bar */}
                     {isSelected && (
                       <div 
                         className="absolute top-0 left-0 right-0 h-1"
@@ -1514,7 +1437,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         </span>
                       </div>
 
-                      {/* Track Count Badge */}
                       <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/70 flex-shrink-0">
                         {trackCount}곡
                       </span>
@@ -1539,7 +1461,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           {/* ========================================================================= */}
           {/* [1번 곡 상단 왼쪽 정렬 툴바: 전체 선택 체크박스 & 선택 곡 재생하기 버튼] */}
           {/* ========================================================================= */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10 relative z-10">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 relative z-10">
             {/* Left: 전체 선택 체크박스 & 선택 곡 재생하기 버튼 */}
             <div className="flex items-center gap-3 flex-wrap">
               {/* 전체 선택 체크박스 */}
@@ -1630,7 +1552,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 >
                   {/* Left: 체크박스 + 번호 뱃지 + 곡 정보 */}
                   <div className="flex items-center gap-3.5 min-w-0">
-                    {/* 개별 곡 체크박스 (01,02,03 번호 박스 왼쪽) */}
                     <div 
                       onClick={(e) => handleToggleSelectTrack(track.id, e)}
                       className="p-1 -m-1 cursor-pointer flex-shrink-0"
@@ -1648,7 +1569,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       </div>
                     </div>
 
-                    {/* Number Badge / Equalizer Animation */}
                     <div 
                       className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
                         isThisTrackPlaying 
@@ -1676,7 +1596,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       )}
                     </div>
 
-                    {/* Title & Tag */}
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className="text-xs font-mono font-bold text-[#38bdf8] bg-[#0284c7]/20 px-2 py-0.5 rounded">
@@ -1702,7 +1621,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-white/5 flex-shrink-0"
                   >
-                    {/* Duration / Status */}
                     <div className="text-right mr-2 hidden sm:block">
                       <div className="text-xs font-mono font-semibold text-white/70">
                         {isThisTrackPlaying ? currentTime : track.duration}
@@ -1712,10 +1630,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                       </div>
                     </div>
 
-                    {/* ✨ [수정] Play & Stop Buttons와 하단 재생 횟수 카운터 래퍼 */}
                     <div className="flex flex-col items-end gap-1.5 w-full md:w-auto">
                       <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-                        {/* Play / Pause Button */}
                         <button
                           onClick={() => handlePlayTrack(track)}
                           className={`flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${
@@ -1746,7 +1662,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                           )}
                         </button>
                     
-                        {/* Stop Button */}
                         <button
                           onClick={handleStopTrack}
                           disabled={!isThisTrackSelected}
@@ -1761,7 +1676,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         </button>
                       </div>
                     
-                      {/* ✨ [추가] 재생 횟수 카운터 라벨 */}
                       <div className="text-[11px] font-mono text-white/50 pr-1 flex items-center gap-1 select-none">
                         <span 
                           className="font-bold transition-colors"
