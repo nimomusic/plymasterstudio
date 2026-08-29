@@ -115,7 +115,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:05',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://nimomusic-suno-ai-prompter.vercel.app/api/play/81aeb10b-3e8d-49b2-ae85-60d5feaf7ce5.mp3',
+      audioUrl: 'https://nimomusic-suno-ai-prompter.vercel.app/api/play/6b0c1c15-ce27-41fc-8849-9385cba006ac.mp3',
     },
     {
       id: 'hiphop-3',
