@@ -106,7 +106,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:08',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/Mood Drip.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Mood Drip.mp3',
     },
     {
       id: 'hiphop-2',
@@ -115,7 +115,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:05',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/Daydream.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Daydream.mp3',
     },
     {
       id: 'hiphop-3',
@@ -124,7 +124,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:50',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/Soft Drizzle.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Soft Drizzle.mp3',
     },
     {
       id: 'hiphop-4',
@@ -133,7 +133,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:02',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/c4142110-476a-4b75-867d-6a5dc3b65ee2.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/우산 없는 밤.mp3',
     },
     {
       id: 'hiphop-5',
@@ -142,7 +142,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:03',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/7ad30ed2-3112-4a85-a54d-797340f35c29.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/읽히지 않아.mp3',
     },
     {
       id: 'hiphop-6',
@@ -151,7 +151,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:12',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://nimomusic-suno-ai-prompter.vercel.app/api/play/34c49a87-8f59-42b0-8af9-8d4c0a0e7a68.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/환상통.mp3',
     },
     {
       id: 'hiphop-7',
@@ -160,7 +160,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:29',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/dc3e09c8-2dc6-40a1-93db-78968eed183a.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/상상.mp3',
     },
     {
       id: 'hiphop-8',
@@ -169,7 +169,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:28',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/b05c14a7-997b-4e1f-8fe5-e998e609e175.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/착각.mp3',
     },
     {
       id: 'hiphop-9',
@@ -178,7 +178,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:06',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/ae50ba63-53b4-4e90-8e36-caba6afb056e.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Drift.mp3',
     },
     {
       id: 'hiphop-10',
@@ -187,7 +187,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:14',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/570e8be4-6e3d-4544-a20d-b661d086ed87.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Uncharted Still.mp3',
     },
     {
       id: 'hiphop-11',
@@ -196,7 +196,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:51',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/4f740500-8f41-4a5d-be00-f08aaecc4bc4.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Hazy View.mp3',
     },
     {
       id: 'hiphop-12',
@@ -205,7 +205,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:06',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/27bd341f-5828-42c8-80af-5f458b56400d.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Frozen Frame.mp3',
     },
   ],
 
@@ -218,7 +218,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:28',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/621e2642-24a6-4a6f-8895-e88a1574fd7b.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/A Soft Surrender.mp3',
     },
     {
       id: 'jazz-2',
@@ -227,7 +227,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:27',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/c6dca2e7-5311-4119-9869-f39efd74955a.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Soft Drift.mp3',
     },
     {
       id: 'jazz-3',
@@ -236,7 +236,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:53',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/def4da68-b80f-40b4-af7b-51ad8f5207cb.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Where Thoughts Linger.mp3',
     },
     {
       id: 'jazz-4',
@@ -245,7 +245,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:23',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/5c60a6bc-0f9d-4114-96cf-3e3b2f2dc915.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/A Soft Place to Be.mp3',
     },
     {
       id: 'jazz-5',
@@ -254,7 +254,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:14',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/ad9a53b9-6801-4fc9-ba6f-463bbfdf012f.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Softest Hours.mp3',
     },
     {
       id: 'jazz-6',
@@ -263,7 +263,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:43',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/d4f49773-9714-4ced-87c5-93031381ea99.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Soft Exhale.mp3',
     },
     {
       id: 'jazz-7',
@@ -272,7 +272,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:31',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/10c9cc6b-6b5c-4f46-ad1f-90ddb28efe6f.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Deepening Sigh.mp3',
     },
     {
       id: 'jazz-8',
@@ -281,7 +281,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:43',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/3da806b5-4712-4e09-b5b9-a1ae040bb8e3.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Somnus.mp3',
     },
     {
       id: 'jazz-9',
@@ -290,7 +290,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:53',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/68712f78-7eab-46d8-838f-3718a222ffc1.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Quiet Resonance.mp3',
     },
     {
       id: 'jazz-10',
@@ -299,7 +299,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:58',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/8a3b599a-a161-4372-833f-9720ea0691db.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/A Gentle Murmur.mp3',
     },
     {
       id: 'jazz-11',
@@ -308,7 +308,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '04:16',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/5edc5fbe-68e6-4913-85c0-789f7f9d21b3.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Hush.mp3',
     },
     {
       id: 'jazz-12',
@@ -317,7 +317,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:43',
       genreTag: '빈티지 재즈',
       albumId: 'jazz',
-      audioUrl: 'https://cdn1.suno.ai/39f7675a-497a-43ac-8225-7e1c80827525.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/Sanctuary.mp3',
     },
   ],
 
@@ -330,7 +330,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:35',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://plymasterstudio.com/api/play/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Same Script.mp3',
     },
     {
       id: 'pop-2',
@@ -339,7 +339,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:06',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/009ce87e-aea8-45a8-b47b-aae9496c88f4.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Sweet Tide.mp3',
     },
     {
       id: 'pop-3',
@@ -348,7 +348,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:01',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/1a4006fb-32d6-4e9c-870d-a20e9dd13b6d.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Sweet Fix.mp3',
     },
     {
       id: 'pop-4',
@@ -357,7 +357,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:13',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Lose My Number.mp3',
     },
     {
       id: 'pop-5',
@@ -366,7 +366,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:07',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/dfe7344f-51e0-4369-8536-78594a70f514.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Heated Silence.mp3',
     },
     {
       id: 'pop-6',
@@ -375,7 +375,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:59',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/5287ae16-8e99-4f17-ae54-c1d1d388204d.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Say It First.mp3',
     },
     {
       id: 'pop-7',
@@ -384,7 +384,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:42',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/c9ff40ae-14d9-4334-96e6-b46acab554cd.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/I Hate Your New Girl.mp3',
     },
     {
       id: 'pop-8',
@@ -393,52 +393,43 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:15',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/75f65fb6-8460-41b9-92f8-931348f551ec.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Call Me Back.mp3',
     },
     {
       id: 'pop-9',
       number: '09',
-      title: 'Lose My Number',
-      duration: '02:13',
-      genreTag: '트렌디 팝송',
-      albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a.mp3',
-    },
-    {
-      id: 'pop-10',
-      number: '10',
       title: 'I Heard You Breathe',
       duration: '03:07',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/dfe7344f-51e0-4369-8536-78594a70f514.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/I Heard You Breathe.mp3',
     },
     {
-      id: 'pop-11',
-      number: '11',
+      id: 'pop-10',
+      number: '10',
       title: 'Blindside',
       duration: '02:28',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/904b00f8-76ed-465c-a3e4-96b700a890d8.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Blindside.mp3',
     },
     {
-      id: 'pop-12',
-      number: '12',
+      id: 'pop-11',
+      number: '11',
       title: 'Cold Radius',
       duration: '02:27',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/b21eca7d-4dd4-4bcc-bfd4-3cec9623bbbc.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Cold Radius.mp3',
     },
     {
-      id: 'pop-13',
-      number: '13',
+      id: 'pop-12',
+      number: '12',
       title: 'V.I.P. Zone',
       duration: '02:21',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/d6d00917-5520-451e-8541-627ca509e4bd.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/VIP Zone.mp3',
     },
   ],
 };
@@ -457,46 +448,25 @@ export interface CustomNewTrack {
 
 export const NEW_TRACKS: CustomNewTrack[] = [
   {
-    title: '내 속의 엑셀',
-    audioUrl: 'https://cdn1.suno.ai/f707e945-14ab-495a-9b92-7e470915ace6.mp3',
-    genreTag: '제작자: 홍트',
-    description: 'Korean Hip-hop Trot',
-    duration: '03:04',
+    title: 'Just Like This',
+    audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Just Like This.mp3',
+    genreTag: 'Chill R&B',
+    description: 'Neo-Soul R&B',
+    duration: '02:59',
   },
   {
-    title: 'Unbound Notion',
-    audioUrl: 'https://cdn1.suno.ai/ca941d08-0abf-4644-803f-023300df4a61.mp3',
-    genreTag: '트렌디 팝',
-    description: 'Dark Alt-Pop',
-    duration: '01:52',
-  },
-  {
-    title: 'Redline Zone',
-    audioUrl: 'https://cdn1.suno.ai/1be540ff-5c50-4d16-8f39-ae6e8d322a6e.mp3',
-    genreTag: '트렌디 팝',
-    description: 'Tropical house',
-    duration: '02:10',
+    title: 'Inner Tide',
+    audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Inner Tide.mp3',
+    genreTag: 'Chill R&B',
+    description: 'Ethereal R&B',
+    duration: '03:20',
   },
   {
     title: 'Sweet Observance',
-    audioUrl: 'https://cdn1.suno.ai/9aae0af6-7ad3-4c0c-91d3-e25d934a654d.mp3',
+    audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Sweet Observance.mp3',
     genreTag: 'Chill R&B',
     description: 'Neo-Soul R&B',
     duration: '03:09',
-  },
-  {
-    title: '掠れた約束-갈라진 약속',
-    audioUrl: 'https://cdn1.suno.ai/745032ff-514f-48b1-98f2-b8a6901653bd.mp3',
-    genreTag: 'JPOP',
-    description: 'Emotional acoustic rock ballad',
-    duration: '03:50',
-  },
-  {
-    title: '水面の彼方',
-    audioUrl: 'https://cdn1.suno.ai/969d3731-eb43-460d-b37b-4240a36eb014.mp3',
-    genreTag: 'JPOP',
-    description: 'Electronic R&B J-pop',
-    duration: '03:17',
   },
   // 💡 곡을 더 추가하고 싶으시면 여기에 계속 이어서 넣으시면 됩니다:
   // {
