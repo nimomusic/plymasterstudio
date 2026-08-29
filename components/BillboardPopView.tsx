@@ -889,7 +889,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
       {/* Top Header Helper Bar */}
       <div className="w-full max-w-7xl flex items-center justify-between gap-4 mb-4">
-        {setView && (
+        {/*setView && (
           <button
             onClick={() => setView('themepack')}
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs font-medium transition cursor-pointer"
@@ -897,7 +897,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>전체 테마팩으로 가기</span>
           </button>
-        )}
+        )*/}
       
         <div className="flex items-center gap-2 ml-auto">
           {/* 방문자 수 카운터 (VISIT) */}
@@ -1188,7 +1188,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
                 <span className="text-2xl text-yellow-400 select-none">⚡</span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  플리마스터 플레이리스트
+                  아이 - 무료 스트리밍
                 </h1>
                 <span 
                   className="text-xs font-bold px-3 py-1 rounded-full border transition-all"
@@ -1198,11 +1198,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                     color: currentAlbum.accentColor
                   }}
                 >
-                  오마카세 모음
+                  AI음악 전문
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-white/60 leading-relaxed break-keep">
-                플리마스터에서 테마팩을 사용하여 만든 곡들 중 엄선하여 모은 플레이리스트 입니다.
+                AI를 사용하여 만든 곡들을 스트리밍 합니다.
               </p>
             </div>
             
