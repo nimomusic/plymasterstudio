@@ -1323,7 +1323,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                     color: currentAlbum.accentColor
                   }}
                 >
-                  {selectedAlbumId === 'hot100' ? '월간 HOT 100' : '오직 AI음악만'}
+                  {selectedAlbumId === 'hot100' ? '오직 AI음악만' : '오직 AI음악만'}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-white/60 leading-relaxed break-keep">
