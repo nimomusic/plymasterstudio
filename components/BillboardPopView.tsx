@@ -1313,7 +1313,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
                 <span className="text-2xl text-yellow-400 select-none">⚡</span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  아이 - 무료 스트리밍
+                  AI ARTIST PLAYGROUND
                 </h1>
                 <span 
                   className="text-xs font-bold px-3 py-1 rounded-full border transition-all"
@@ -1323,11 +1323,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                     color: currentAlbum.accentColor
                   }}
                 >
-                  {selectedAlbumId === 'hot100' ? '실시간 HOT 100' : 'AI음악 전문'}
+                  {selectedAlbumId === 'hot100' ? '월간 HOT 100' : '공식 아티스트 허브'}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-white/60 leading-relaxed break-keep">
-                plymaster.co.kr에서 운영하며 AI를 사용하여 만든 곡들을 스트리밍 합니다.
+                plymaster.co.kr에서 운영하며 AI 음악 크리에이터들이 자유롭게 교류하고 증명하는 공간, 감각적인 AI 오리지널 사운드를 무료로 스트리밍합니다.
               </p>
             </div>
           </div>
