@@ -330,7 +330,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:35',
       genreTag: '트렌디 팝송',
       albumId: 'pop',
-      audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
+      audioUrl: 'https://plymasterstudio.com/api/play/994ade1c-43c4-45d3-85ef-4fcfba3e0625.mp3',
     },
     {
       id: 'pop-2',
