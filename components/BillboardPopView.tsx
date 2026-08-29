@@ -106,7 +106,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:08',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/9e6a853e-849b-4149-a16e-fb9b7570126b.mp3',
+      audioUrl: 'https://drive.google.com/file/d/1uH3dcP7wICqspH3UG7Gju9oDUejl0rSP/view?usp=drive_link',
     },
     {
       id: 'hiphop-2',
