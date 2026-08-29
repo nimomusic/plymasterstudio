@@ -106,7 +106,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:08',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://drive.google.com/file/d/1uH3dcP7wICqspH3UG7Gju9oDUejl0rSP/view?usp=drive_link',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/Mood Drip.mp3',
     },
     {
       id: 'hiphop-2',
@@ -115,7 +115,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '03:05',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://nimomusic-suno-ai-prompter.vercel.app/api/play/6b0c1c15-ce27-41fc-8849-9385cba006ac.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/Daydream.mp3',
     },
     {
       id: 'hiphop-3',
@@ -124,7 +124,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:50',
       genreTag: '느좋 인스타 알앤비 힙합',
       albumId: 'hiphop',
-      audioUrl: 'https://cdn1.suno.ai/b924b122-3bd1-4ba5-b833-854168b90b99.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/Soft Drizzle.mp3',
     },
     {
       id: 'hiphop-4',
