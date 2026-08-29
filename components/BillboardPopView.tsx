@@ -65,18 +65,19 @@ export interface AlbumCategory {
 // 4. 빈티지 재즈
 // 5. 트렌디 팝송
 // ==================================================================================
-export const ALBUMS: AlbumCategory[] = [
-  {
-    id: 'hot100',
-    title: 'HOT 100 차트',
-    subtitle: 'AI음악 아티스트 조회수 상위 100곡 실시간 랭킹',
-    badge: '인기 차트',
-    iconType: 'hot100',
-    accentColor: '#F43F5E',
-    bgGlow: 'from-[#F43F5E]/20 to-[#EC4899]/10',
-    tags: ['#HOT100', '#인기순위', '#AI음악차트', '#실시간'],
-    bgImage: '/hiphop.jpeg',
-  },
+export const HOT_100_ALBUM: AlbumCategory = {
+  id: 'hot100',
+  title: 'HOT 100 차트',
+  subtitle: 'AI음악 아티스트 조회수 상위 100곡 실시간 랭킹',
+  badge: '인기 차트',
+  iconType: 'hot100',
+  accentColor: '#F43F5E',
+  bgGlow: 'from-[#F43F5E]/20 to-[#EC4899]/10',
+  tags: ['#HOT100', '#인기순위', '#AI음악차트', '#실시간'],
+  bgImage: '/hiphop.jpeg',
+};
+
+export const GENRE_ALBUMS: AlbumCategory[] = [
   {
     id: 'artist',
     title: 'AI음악 아티스트',
@@ -122,6 +123,8 @@ export const ALBUMS: AlbumCategory[] = [
     bgImage: '/pop.jpeg',
   },
 ];
+
+export const ALBUMS: AlbumCategory[] = [HOT_100_ALBUM, ...GENRE_ALBUMS];
 
 // ==================================================================================
 // 🎵 [하이퍼링크넣는 곳] 앨범별 트랙 리스트 & 음원 링크 데이터
@@ -1283,13 +1286,86 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
 
           {/* ========================================================================= */}
-          {/* 💽 [앨범 선택 카드 탭: 맨 앞에 HOT 100 차트 앨범 배치] */}
+          {/* 🔥 [상단 HOT 100 차트 단독 한 줄 섹션] */}
+          {/* ========================================================================= */}
+          <div className="pb-5 mb-5 border-b border-white/10 relative z-10">
+            {/* HOT 100 헤더 */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Flame className="w-4 h-4 text-rose-500 fill-current" />
+                <span className="text-xs font-black text-white/90">HOT 100</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                  New 실시간 인기 차트
+                </span>
+              </div>
+            </div>
+
+            {/* HOT 100 단독 카드 */}
+            <div>
+              {(() => {
+                const isSelected = selectedAlbumId === 'hot100';
+                const trackCount = Math.min((ALBUM_TRACKS['artist'] || []).length, 100);
+
+                return (
+                  <button
+                    type="button"
+                    onClick={() => handleSelectAlbum('hot100')}
+                    className={`w-full sm:max-w-sm p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer relative overflow-hidden group ${
+                      isSelected
+                        ? 'bg-rose-500/10 shadow-xl border-rose-500'
+                        : 'bg-white/5 hover:bg-white/[0.08] border-white/10 hover:border-white/20'
+                    }`}
+                    style={
+                      isSelected
+                        ? {
+                            boxShadow: '0 10px 25px -8px rgba(244, 63, 94, 0.35)',
+                          }
+                        : {}
+                    }
+                  >
+                    {isSelected && (
+                      <div 
+                        className="absolute top-0 left-0 right-0 h-1 bg-rose-500"
+                      />
+                    )}
+
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Flame className="w-4 h-4 flex-shrink-0 fill-current text-rose-500" />
+                        <span className={`text-sm font-black tracking-tight ${isSelected ? 'text-white' : 'text-white/80 group-hover:text-white'}`}>
+                          HOT 100 차트
+                        </span>
+                      </div>
+
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full flex-shrink-0 bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                        {trackCount}곡
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-white/50 line-clamp-1 group-hover:text-white/70 transition-colors">
+                      AI음악 아티스트 조회수 상위 100곡 실시간 랭킹
+                    </p>
+
+                    {isSelected && (
+                      <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold font-mono text-rose-400">
+                        <span className="w-1.5 h-1.5 rounded-full animate-ping bg-rose-500" />
+                        <span>선택된 앨범</span>
+                      </div>
+                    )}
+                  </button>
+                );
+              })()}
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* 💽 [앨범 선택 카드 탭: 4개 일반 앨범들] */}
           {/* ========================================================================= */}
           <div className="pb-5 mb-5 border-b border-white/10 relative z-10">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 text-xs font-bold text-white/80">
                 <Disc3 className="w-4 h-4 text-[#EC4899]" />
-                <span>앨범 선택 ({ALBUMS.length}개 앨범)</span>
+                <span>앨범 선택 ({GENRE_ALBUMS.length}개 앨범)</span>
               </div>
 
               {/* 좌우 스크롤 화살표 버튼 */}
@@ -1325,11 +1401,9 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {ALBUMS.map((album) => {
+              {GENRE_ALBUMS.map((album) => {
                 const isSelected = selectedAlbumId === album.id;
-                const trackCount = album.id === 'hot100'
-                  ? Math.min((ALBUM_TRACKS['artist'] || []).length, 100)
-                  : ALBUM_TRACKS[album.id]?.length || 0;
+                const trackCount = ALBUM_TRACKS[album.id]?.length || 0;
 
                 return (
                   <button
@@ -1358,11 +1432,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2">
-                        {album.iconType === 'hot100' && (
-                          <Flame 
-                            className="w-4 h-4 flex-shrink-0 fill-current text-rose-500" 
-                          />
-                        )}
                         {album.iconType === 'artist' && (
                           <Radio 
                             className="w-4 h-4 flex-shrink-0" 
@@ -1392,11 +1461,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         </span>
                       </div>
 
-                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
-                        album.id === 'hot100' 
-                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' 
-                          : 'bg-white/10 text-white/70'
-                      }`}>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full flex-shrink-0 bg-white/10 text-white/70">
                         {trackCount}곡
                       </span>
                     </div>
