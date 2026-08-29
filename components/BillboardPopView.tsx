@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Play, 
   Pause, 
@@ -22,7 +22,10 @@ import {
   PlusCircle,
   X,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  ArrowUpDown,
+  Trophy,
+  ChevronDown
 } from 'lucide-react';
 
 interface BillboardPopViewProps {
@@ -55,7 +58,7 @@ export interface AlbumCategory {
 }
 
 // ==================================================================================
-// 💽 앨범 목록 정의 (첫 번째: AI음악 아티스트 추가)
+// 💽 앨범 목록 정의 (첫 번째: AI음악 아티스트)
 // 1. AI음악 아티스트
 // 2. 느좋 인스타 감성힙합
 // 3. 빈티지 재즈
@@ -513,63 +516,57 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
   ],
 };
 
-// ==================================================================================
-// 🔥 [HOT 100 / New] 표시할 신곡 목록
-// 붉은색 박스에 HOT 100 으로 앨범/태그가 표기됩니다.
-// ==================================================================================
-export interface CustomNewTrack {
-  title: string;           // 곡 제목 (필수)
-  audioUrl: string;        // mp3 음원 링크 URL (필수)
-  genreTag?: string;       // (선택) 장르 태그 - 기본값: 'HOT 100'
-  description?: string;    // (선택) 곡 설명
-  duration?: string;       // (선택) 재생 시간 - 기본값: '03:00'
-}
-
-export const NEW_TRACKS: CustomNewTrack[] = [
-  {
-    title: 'Just Like This',
-    audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Just Like This.mp3',
-    genreTag: 'HOT 100',
-    description: 'Neo-Soul R&B',
-    duration: '02:59',
-  },
-  {
-    title: 'Inner Tide',
-    audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Inner Tide.mp3',
-    genreTag: 'HOT 100',
-    description: 'Ethereal R&B',
-    duration: '03:20',
-  },
-  {
-    title: 'Sweet Observance',
-    audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Sweet Observance.mp3',
-    genreTag: 'HOT 100',
-    description: 'Neo-Soul R&B',
-    duration: '03:09',
-  },
-];
-
-// 뷰어용 자동 포맷 변환기
-export const FORMATTED_NEW_TRACKS: PopTrackItem[] = NEW_TRACKS.map((item, idx) => ({
-  id: `custom-new-${idx + 1}`,
-  number: String(idx + 1).padStart(2, '0'),
-  title: item.title,
-  audioUrl: item.audioUrl,
-  genreTag: item.genreTag || 'HOT 100',
-  description: item.description || 'HOT 100 추천 트랙',
-  duration: item.duration || '03:00',
-  albumId: 'artist',
-}));
+export type TrackSortOption = 'default' | 'views' | 'latest';
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
   // 현재 선택된 앨범 ID (기본: 'artist' -> AI음악 아티스트)
   const [selectedAlbumId, setSelectedAlbumId] = useState<string>('artist');
 
-  // 현재 선택된 앨범 객체 및 트랙 목록
-  const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
-  const currentAlbumTracks = ALBUM_TRACKS[selectedAlbumId] || [];
+  // 정렬 옵션 상태 ('default': 기본순 | 'views': 조회수순 | 'latest': 최신순)
+  const [sortBy, setSortBy] = useState<TrackSortOption>('default');
 
-  // ✨ [노란 박스 수정] 전체 선택 기본 체크해제 (빈 배열 [])
+  // 현재 선택된 앨범 객체
+  const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
+  const rawAlbumTracks = ALBUM_TRACKS[selectedAlbumId] || [];
+
+  // 1. 각 곡별 재생 횟수 (localStorage 연동)
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('plymaster_play_counts');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+
+  // 정렬된 현재 앨범 트랙 목록
+  const currentAlbumTracks = useMemo(() => {
+    const list = [...rawAlbumTracks];
+    if (sortBy === 'views') {
+      return list.sort((a, b) => {
+        const countA = playCounts[a.id] || 0;
+        const countB = playCounts[b.id] || 0;
+        return countB - countA;
+      });
+    } else if (sortBy === 'latest') {
+      return list.reverse();
+    }
+    return list;
+  }, [rawAlbumTracks, sortBy, playCounts]);
+
+  // 붉은색 박스: 항상 고정으로 'HOT 100 차트' (AI음악 아티스트 앨범에 등록된 곡의 조회수 상위 100곡)
+  const hot100Tracks = useMemo(() => {
+    const artistTracks = [...(ALBUM_TRACKS['artist'] || [])];
+    return artistTracks
+      .sort((a, b) => {
+        const countA = playCounts[a.id] || 0;
+        const countB = playCounts[b.id] || 0;
+        return countB - countA;
+      })
+      .slice(0, 100);
+  }, [playCounts]);
+
+  // 전체 선택 기본 체크해제 (빈 배열 [])
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   // 현재 재생 중인 트랙 정보
@@ -590,7 +587,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // '준비중입니다.' 팝업 모달 상태
   const [showRegisterPopup, setShowRegisterPopup] = useState<boolean>(false);
   
-  // 1. 방문자 카운트 (localStorage 연동)
+  // 방문자 카운트 (localStorage 연동)
   const [visitCount, setVisitCount] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('plymaster_visit_count');
@@ -600,16 +597,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       return newCount;
     } catch (e) {
       return 1;
-    }
-  });
-
-  // 2. 각 곡별 재생 횟수 (localStorage 연동)
-  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
-    try {
-      const saved = localStorage.getItem('plymaster_play_counts');
-      return saved ? JSON.parse(saved) : {};
-    } catch (e) {
-      return {};
     }
   });
 
@@ -632,7 +619,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const hotScrollRef = useRef<HTMLDivElement | null>(null);
   const albumScrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Hot & New 가로 스크롤 이동 함수
+  // HOT 100 가로 스크롤 이동 함수
   const scrollHotTracks = (direction: 'left' | 'right') => {
     if (hotScrollRef.current) {
       const scrollAmount = 300;
@@ -664,7 +651,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const selectedCountInCurrentAlbum = activePlaylist.length;
   const isPartiallySelected = selectedCountInCurrentAlbum > 0 && !isAllSelected;
 
-  // 앨범 변경 핸들러 (앨범 변경 시에도 기본 선택 해제 상태 유지)
+  // 앨범 변경 핸들러
   const handleSelectAlbum = (albumId: string) => {
     setSelectedAlbumId(albumId);
     const newTracks = ALBUM_TRACKS[albumId] || [];
@@ -682,10 +669,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 전체 선택 토글
   const handleToggleSelectAll = () => {
     if (isAllSelected) {
-      // 현재 앨범의 곡들만 선택 해제
       setSelectedIds(prev => prev.filter(id => !currentAlbumTracks.some(t => t.id === id)));
     } else {
-      // 현재 앨범의 전곡을 선택에 추가
       const newIds = new Set([...selectedIds, ...currentAlbumTracks.map(t => t.id)]);
       setSelectedIds(Array.from(newIds));
     }
@@ -816,7 +801,6 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 상단 '선택된 곡 재생하기' 버튼 클릭 시
   const handlePlaySelectedQueue = () => {
     if (activePlaylist.length === 0) {
-      // 선택된 곡이 없으면 첫 번째 곡 바로 재생
       if (currentAlbumTracks.length > 0) {
         startPlayingTrack(currentAlbumTracks[0]);
       }
@@ -1276,9 +1260,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             style={{ backgroundColor: currentAlbum.accentColor }}
           />
 
-          {/* Card Header Section - ✨ [오렌지 박스 내용 제거됨] */}
+          {/* Card Header Section */}
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 pb-5 mb-5 border-b border-white/10 relative z-10">
-            {/* Left: Title, Badge, Description */}
             <div className="max-w-2xl">
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
                 <span className="text-2xl text-yellow-400 select-none">⚡</span>
@@ -1303,7 +1286,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
 
           {/* ========================================================================= */}
-          {/* 🔥 [Hot & New 직접 등록한 신곡 가로 스크롤 섹션 - 붉은색 박스: HOT 100 표기] */}
+          {/* 🔥 [3번 요구사항: 항상 고정 'HOT 100 차트' (AI음악 아티스트 앨범 조회수 상위 100곡)] */}
           {/* ========================================================================= */}
           <div className="mb-6 pb-6 border-b border-white/10 relative z-10">
             <div className="flex items-center justify-between mb-3.5">
@@ -1311,11 +1294,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 shadow-inner">
                   <Flame className="w-4 h-4 fill-current" />
                 </span>
-                <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  New
+                <h2 className="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-2">
+                  HOT 100 차트
                 </h2>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                  HOT 100 • 신곡 {FORMATTED_NEW_TRACKS.length}곡
+                  인기 {hot100Tracks.length}곡
                 </span>
               </div>
 
@@ -1343,7 +1326,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               </div>
             </div>
 
-            {/* 등록된 신곡 리스트를 map으로 순회하여 출력 (붉은색 박스: HOT 100 표기) */}
+            {/* HOT 100 트랙 리스트 (조회수 상위 100곡) */}
             <div 
               ref={hotScrollRef}
               className="flex gap-3 overflow-x-auto pb-2 select-none scroll-smooth snap-x snap-mandatory"
@@ -1352,14 +1335,14 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {FORMATTED_NEW_TRACKS.map((track) => {
+              {hot100Tracks.map((track, rankIndex) => {
                 const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
                 const isThisTrackSelected = currentTrack?.id === track.id;
-                const trackAlbum = ALBUMS.find(a => a.id === track.albumId) || currentAlbum;
+                const trackPlays = playCounts[track.id] || 0;
 
                 return (
                   <div
-                    key={`hot-${track.id}`}
+                    key={`hot-chart-${track.id}`}
                     onClick={() => handlePlayTrack(track)}
                     className={`flex-none w-[calc(100%-20px)] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-8px)] min-w-[220px] p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer snap-start relative overflow-hidden group flex flex-col justify-between ${
                       isThisTrackPlaying
@@ -1371,33 +1354,42 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                     style={
                       isThisTrackPlaying
                         ? {
-                            boxShadow: `0 10px 25px -8px ${trackAlbum.accentColor}40`,
-                            borderColor: trackAlbum.accentColor,
+                            boxShadow: '0 10px 25px -8px rgba(244, 63, 94, 0.4)',
+                            borderColor: '#F43F5E',
                           }
                         : {}
                     }
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      {/* ✨ [붉은색 박스] HOT 100 앨범 표기 */}
-                      <span 
-                        className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border bg-rose-500/20 text-rose-300 border-rose-500/40"
-                      >
-                        HOT 100
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {/* 랭킹 뱃지 */}
+                        <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-md border flex items-center gap-1 ${
+                          rankIndex === 0
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            : rankIndex === 1
+                            ? 'bg-slate-300/20 text-slate-200 border-slate-300/40'
+                            : rankIndex === 2
+                            ? 'bg-orange-500/20 text-orange-300 border-orange-500/40'
+                            : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                        }`}>
+                          {rankIndex < 3 && <Trophy className="w-3 h-3" />}
+                          HOT {rankIndex + 1}
+                        </span>
+                      </div>
                       <span className="text-[10px] font-mono text-white/40">
-                        {(playCounts[track.id] || 0).toLocaleString()}회 재생
+                        {trackPlays.toLocaleString()}회 재생
                       </span>
                     </div>
 
                     <div className="mb-3">
                       <h4 
                         className="text-sm font-bold text-white truncate transition-colors"
-                        style={isThisTrackPlaying ? { color: trackAlbum.accentColor } : {}}
+                        style={isThisTrackPlaying ? { color: '#F43F5E' } : {}}
                       >
                         {track.title}
                       </h4>
                       <p className="text-[11px] text-white/50 truncate mt-0.5">
-                        {track.description || 'HOT 100'}
+                        {track.description || 'AI 아티스트 공식 트랙'}
                       </p>
                     </div>
 
@@ -1414,10 +1406,9 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         }}
                         className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                           isThisTrackPlaying
-                            ? 'text-white shadow-md'
+                            ? 'bg-rose-500 text-white shadow-md'
                             : 'bg-white/10 hover:bg-white/20 text-white'
                         }`}
-                        style={isThisTrackPlaying ? { backgroundColor: trackAlbum.accentColor } : {}}
                         title={isThisTrackPlaying ? '일시정지' : '재생'}
                       >
                         {isThisTrackPlaying ? (
@@ -1434,7 +1425,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
 
           {/* ========================================================================= */}
-          {/* 💽 [앨범 선택 카드 탭 - ✨ 초록 박스: 가로 스크롤 & 화살표 버튼 추가 구현] */}
+          {/* 💽 [앨범 선택 카드 탭] */}
           {/* ========================================================================= */}
           <div className="pb-5 mb-5 border-b border-white/10 relative z-10">
             <div className="flex items-center justify-between mb-3">
@@ -1443,7 +1434,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 <span>앨범 선택 ({ALBUMS.length}개 앨범)</span>
               </div>
 
-              {/* ✨ [초록 박스 수정] 좌우 스크롤 화살표 버튼 및 기능 구현 */}
+              {/* 좌우 스크롤 화살표 버튼 */}
               <div className="flex items-center gap-2">
                 <span className="text-[11px] text-white/40 font-mono hidden sm:inline mr-1">
                   화살표 클릭 또는 좌우 스크롤
@@ -1558,15 +1549,15 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           </div>
 
           {/* ========================================================================= */}
-          {/* [1번 곡 상단 툴바: 전체 선택 & 선택 곡 재생 & 음원등록 버튼] */}
+          {/* [1번 곡 상단 툴바: 전체 선택 & 선택 곡 재생 & 음원등록(조건부) & 정렬 드롭다운] */}
           {/* ========================================================================= */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4 relative z-10">
-            {/* Left: 전체 선택 체크박스 & 선택 곡 재생하기 버튼 & 음원등록 버튼 */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* ✨ [노란 박스 수정] 전체 선택 체크박스 (기본 체크해제 상태) */}
+            {/* Left: 전체 선택 체크박스 & 선택 곡 재생하기 버튼 & 음원등록 버튼 (AI음악 아티스트 앨범일 때만 표시) */}
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              {/* 전체 선택 체크박스 */}
               <button
                 onClick={handleToggleSelectAll}
-                className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white font-medium text-sm transition cursor-pointer group"
+                className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white font-medium text-sm transition cursor-pointer group"
               >
                 <div 
                   className={`w-4 h-4 rounded flex items-center justify-center transition ${
@@ -1595,7 +1586,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               {/* 선택한 곡 재생하기 버튼 */}
               <button
                 onClick={handlePlaySelectedQueue}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white font-bold text-xs sm:text-sm shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-white font-bold text-xs sm:text-sm shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95"
                 style={{
                   background: `linear-gradient(135deg, ${currentAlbum.accentColor}, #db2777)`,
                   boxShadow: `0 8px 20px -4px ${currentAlbum.accentColor}40`
@@ -1614,21 +1605,38 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                 )}
               </button>
 
-              {/* ✨ [신규 추가] AI음악 아티스트 앨범 음원등록 버튼 */}
-              <button
-                onClick={() => setShowRegisterPopup(true)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 hover:text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer hover:scale-105 active:scale-95"
-                title="음원 등록하기"
-              >
-                <PlusCircle className="w-4 h-4 text-purple-400" />
-                <span>음원등록</span>
-              </button>
+              {/* ✨ [1번 요구사항: AI음악 아티스트 앨범을 선택했을 때만 음원등록 버튼 표시] */}
+              {selectedAlbumId === 'artist' && (
+                <button
+                  onClick={() => setShowRegisterPopup(true)}
+                  className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 hover:text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer hover:scale-105 active:scale-95"
+                  title="음원 등록하기"
+                >
+                  <PlusCircle className="w-4 h-4 text-purple-400" />
+                  <span>음원등록</span>
+                </button>
+              )}
             </div>
 
-            {/* Right: 재생 모드 안내 뱃지 */}
-            <div className="text-xs text-white/40 hidden sm:flex items-center gap-1.5 font-mono">
-              <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
-              <span>체크된 곡이 순서대로 자동 재생됩니다</span>
+            {/* ✨ [2번 요구사항: 노란색 박스 내용 삭제 -> 정렬 드롭다운 메뉴 추가 (기본순, 조회수, 최신순)] */}
+            <div className="flex items-center gap-2 ml-auto">
+              <div className="relative inline-flex items-center">
+                <div className="absolute left-3 pointer-events-none text-white/50">
+                  <ArrowUpDown className="w-3.5 h-3.5" />
+                </div>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as TrackSortOption)}
+                  className="appearance-none pl-8 pr-8 py-1.5 sm:py-2 bg-white/5 hover:bg-white/10 border border-white/15 focus:border-purple-400 rounded-xl text-xs sm:text-sm font-semibold text-white/90 focus:outline-none transition cursor-pointer shadow-sm"
+                >
+                  <option value="default" className="bg-[#181a27] text-white">기본순</option>
+                  <option value="views" className="bg-[#181a27] text-white">조회수순</option>
+                  <option value="latest" className="bg-[#181a27] text-white">최신순</option>
+                </select>
+                <div className="absolute right-2.5 pointer-events-none text-white/50">
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1638,6 +1646,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
               const isThisTrackSelected = currentTrack?.id === track.id;
               const isChecked = selectedIds.includes(track.id);
+              const trackPlays = playCounts[track.id] || 0;
 
               return (
                 <div
@@ -1790,7 +1799,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                           className="font-bold transition-colors"
                           style={{ color: isThisTrackPlaying ? currentAlbum.accentColor : 'rgba(255, 255, 255, 0.75)' }}
                         >
-                          {(playCounts[track.id] || 0).toLocaleString()}회
+                          {trackPlays.toLocaleString()}회
                         </span>
                         <span>재생</span>
                       </div>
