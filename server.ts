@@ -40,14 +40,12 @@ function loadStatsFromDB(): StatsDB {
   };
 }
 
-let dbMemoryCache: StatsDB = loadStatsFromDB();
-
-function saveStatsToDB() {
+function saveStatsToDB(data: StatsDB) {
   try {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    fs.writeFileSync(DATA_FILE, JSON.stringify(dbMemoryCache, null, 2), "utf-8");
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
   } catch (err) {
     console.error("Error saving db counts.json:", err);
   }
@@ -61,19 +59,21 @@ async function startServer() {
 
   // 1. 통계 데이터 조회 (방문자수 & 곡별 재생수)
   app.get("/api/stats", (req, res) => {
+    const stats = loadStatsFromDB();
     res.json({
-      visitCount: dbMemoryCache.visitCount,
-      trackPlayCounts: dbMemoryCache.trackPlayCounts,
+      visitCount: stats.visitCount,
+      trackPlayCounts: stats.trackPlayCounts,
     });
   });
 
   // 2. 방문자 수(VISIT) 1 증가 및 저장
   app.post("/api/visit", (req, res) => {
-    dbMemoryCache.visitCount = (dbMemoryCache.visitCount || 0) + 1;
-    saveStatsToDB();
+    const stats = loadStatsFromDB();
+    stats.visitCount = (stats.visitCount || 0) + 1;
+    saveStatsToDB(stats);
     res.json({
       success: true,
-      visitCount: dbMemoryCache.visitCount,
+      visitCount: stats.visitCount,
     });
   });
 
@@ -83,12 +83,13 @@ async function startServer() {
     if (!trackId) {
       return res.status(400).json({ error: "trackId is required" });
     }
-    dbMemoryCache.trackPlayCounts[trackId] = (dbMemoryCache.trackPlayCounts[trackId] || 0) + 1;
-    saveStatsToDB();
+    const stats = loadStatsFromDB();
+    stats.trackPlayCounts[trackId] = (stats.trackPlayCounts[trackId] || 0) + 1;
+    saveStatsToDB(stats);
     res.json({
       success: true,
       trackId,
-      totalPlays: dbMemoryCache.trackPlayCounts[trackId],
+      totalPlays: stats.trackPlayCounts[trackId],
     });
   });
 
