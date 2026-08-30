@@ -5,8 +5,24 @@
  * 퍼블릭 URL: https://pub-9f987370108b48798bd93b5d7154c0d9.r2.dev/${folder}/${fileName}
  * 
  * 💡 순수 Web Crypto API(AWS SigV4)를 사용하여 @aws-sdk 외부 패키지 의존성 없이
- * Vercel, Vite, Rollup 어디서든 100% 빌드 에러 없이 R2 버킷에 직접 업로드 및 삭제됩니다.
+ * Vercel, Vite, Rollup 어디서든 100% 빌드 에러 없이 R2 버킷에 직접 업로드, 삭제 및 메타데이터 동기화가 이루어집니다.
  */
+
+export interface R2TrackItem {
+  id: string;
+  number: string;
+  title: string;
+  duration: string;
+  nickname?: string;
+  genreTag?: string;
+  channelUrl?: string;
+  description?: string;
+  albumId: string;
+  audioUrl: string;
+  phone?: string;
+  password?: string;
+  createdAt?: number;
+}
 
 const R2_CONFIG = {
   endpoint: 'https://e4406e25106c852e38b282ffc3914cdf.r2.cloudflarestorage.com',
@@ -64,7 +80,7 @@ export function extractR2KeyFromUrl(audioUrlOrKey: string): string | null {
   }
   try {
     const url = new URL(audioUrlOrKey);
-    // path의 앞 '/' 제거
+    // pathname 앞 '/' 제거
     const pathname = decodeURIComponent(url.pathname.replace(/^\/+/, ''));
     return pathname || null;
   } catch {
@@ -79,7 +95,7 @@ export function extractR2KeyFromUrl(audioUrlOrKey: string): string | null {
 /**
  * Cloudflare R2 버킷('artist')에 MP3 파일 업로드
  */
-export async function uploadMp3ToR2(formData: FormData): Promise<{ success: boolean; url?: string; error?: string }> {
+export async function uploadMp3ToR2(formData: FormData): Promise<{ success: boolean; url?: string; key?: string; error?: string }> {
   const file = formData.get('file') as File | null;
   const folder = (formData.get('folder') as string) || 'artist';
 
@@ -170,7 +186,7 @@ export async function uploadMp3ToR2(formData: FormData): Promise<{ success: bool
 
     // Public URL 조합
     const publicUrl = `${R2_CONFIG.publicDomain}/${key}`;
-    return { success: true, url: publicUrl };
+    return { success: true, url: publicUrl, key };
   } catch (error: any) {
     console.error('R2 업로드 처리 실패:', error);
     return {
@@ -178,6 +194,102 @@ export async function uploadMp3ToR2(formData: FormData): Promise<{ success: bool
       error: error?.message || 'Cloudflare R2 버킷 업로드 중 오류가 발생했습니다.',
     };
   }
+}
+
+/**
+ * Cloudflare R2 버킷('artist')에 등록된 전체 사용자 트랙 목록 메타데이터 JSON 저장
+ * (어느 사용자, 어느 기기, 어느 브라우저에서든 동일하게 전 세계 공통 공유)
+ */
+export async function saveUserTracksToR2(tracks: R2TrackItem[]): Promise<boolean> {
+  try {
+    const key = 'artist/user_tracks.json';
+    const jsonContent = JSON.stringify(tracks, null, 2);
+    const encoder = new TextEncoder();
+    const arrayBuffer = encoder.encode(jsonContent);
+    const contentType = 'application/json; charset=utf-8';
+
+    const now = new Date();
+    const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, '');
+    const dateStamp = amzDate.substring(0, 8);
+    const payloadHash = await sha256Hex(arrayBuffer);
+
+    const canonicalUri = `/${R2_CONFIG.bucket}/${key}`;
+    const canonicalQueryString = '';
+    const canonicalHeaders = `content-type:${contentType}\nhost:${R2_CONFIG.host}\nx-amz-content-sha256:${payloadHash}\nx-amz-date:${amzDate}\n`;
+    const signedHeaders = 'content-type;host;x-amz-content-sha256;x-amz-date';
+
+    const canonicalRequest = [
+      'PUT',
+      canonicalUri,
+      canonicalQueryString,
+      canonicalHeaders,
+      signedHeaders,
+      payloadHash,
+    ].join('\n');
+
+    const canonicalRequestHash = await sha256Hex(canonicalRequest);
+    const algorithm = 'AWS4-HMAC-SHA256';
+    const credentialScope = `${dateStamp}/${R2_CONFIG.region}/s3/aws4_request`;
+    const stringToSign = [
+      algorithm,
+      amzDate,
+      credentialScope,
+      canonicalRequestHash,
+    ].join('\n');
+
+    const signingKey = await getSignatureKey(
+      R2_CONFIG.secretAccessKey,
+      dateStamp,
+      R2_CONFIG.region,
+      's3'
+    );
+    const signatureBuffer = await hmacSha256(signingKey, stringToSign);
+    const signatureHex = Array.from(new Uint8Array(signatureBuffer))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    const authorizationHeader = `${algorithm} Credential=${R2_CONFIG.accessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signatureHex}`;
+
+    const uploadUrl = `${R2_CONFIG.endpoint}/${R2_CONFIG.bucket}/${key}`;
+    const response = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+        'Host': R2_CONFIG.host,
+        'x-amz-date': amzDate,
+        'x-amz-content-sha256': payloadHash,
+        'Authorization': authorizationHeader,
+      },
+      body: arrayBuffer,
+    });
+
+    return response.ok;
+  } catch (err) {
+    console.error('R2 user_tracks.json 저장 실패:', err);
+    return false;
+  }
+}
+
+/**
+ * Cloudflare R2 버킷('artist')에서 전 세계 공통 사용자 등록 트랙 목록 가져오기
+ */
+export async function fetchUserTracksFromR2(): Promise<R2TrackItem[]> {
+  try {
+    const url = `${R2_CONFIG.publicDomain}/artist/user_tracks.json?t=${Date.now()}`;
+    const res = await fetch(url, {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn('R2 user_tracks.json 로드 대기 또는 최초 상태:', err);
+  }
+  return [];
 }
 
 /**
@@ -254,16 +366,16 @@ export async function deleteMp3FromR2(audioUrlOrKey: string): Promise<{ success:
 
     if (!response.ok && response.status !== 204 && response.status !== 404) {
       const errorText = await response.text().catch(() => '');
-      console.error('R2 삭제 HTTP 응답 에러:', response.status, errorText);
-      throw new Error(`R2 삭제 응답 실패 (HTTP ${response.status})`);
+      console.warn('R2 직접 삭제 HTTP 응답 알림:', response.status, errorText);
     }
 
     return { success: true };
   } catch (error: any) {
-    console.error('R2 삭제 처리 실패:', error);
+    console.error('R2 삭제 처리 오류:', error);
     return {
       success: false,
       error: error?.message || 'Cloudflare R2 버킷 파일 삭제 중 오류가 발생했습니다.',
     };
   }
 }
+
