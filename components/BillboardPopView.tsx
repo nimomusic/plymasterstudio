@@ -25,8 +25,12 @@ import {
   ChevronLeft,
   ArrowUpDown,
   Trophy,
-  ChevronDown
+  ChevronDown,
+  ExternalLink,
+  Trash2
 } from 'lucide-react';
+import MusicRegisterModal from './MusicRegisterModal';
+import MusicDeleteModal from './MusicDeleteModal';
 
 interface BillboardPopViewProps {
   setView?: (view: any) => void;
@@ -38,11 +42,16 @@ export interface PopTrackItem {
   number: string;
   title: string;
   duration: string;
-  genreTag: string;
+  genreTag?: string;
+  nickname?: string;
+  channelUrl?: string;
   description?: string;
   albumId: string;
   /* 하이퍼링크넣는 곳: 실제 mp3 파일 또는 스트리밍 링크 URL */
   audioUrl: string;
+  phone?: string;
+  password?: string;
+  createdAt?: number;
 }
 
 export interface AlbumCategory {
@@ -553,6 +562,51 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   });
 
+  // 1-1. 사용자가 직접 등록한 AI음악 아티스트 음원 목록 (로컬스토리지 & 서버 동기화)
+  const [userTracks, setUserTracks] = useState<PopTrackItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('nimo_music_user_tracks');
+      if (saved) {
+        const parsed: PopTrackItem[] = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [];
+      }
+    } catch {}
+    return [];
+  });
+
+  // 🚀 [한 달 경과 & 월간 조회순 300위 밖 자동 삭제 로직]
+  // 업로드 후 30일(1개월)이 지났을 때 조회수 300위 안에 들지 못하면 자동 삭제
+  useEffect(() => {
+    if (!userTracks.length) return;
+
+    const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+
+    // 전체 AI 아티스트 트랙(기본 + 사용자)을 조회수 순으로 정렬하여 상위 300위 ID Set 생성
+    const allTracks = [...(ALBUM_TRACKS['artist'] || []), ...userTracks];
+    const sortedByViews = [...allTracks].sort((a, b) => {
+      const countA = playCounts[a.id] || 0;
+      const countB = playCounts[b.id] || 0;
+      return countB - countA;
+    });
+    const top300Ids = new Set(sortedByViews.slice(0, 300).map(t => t.id));
+
+    // 필터링: 1개월 미만이거나, 1개월이 넘었어도 상위 300위 안에 있는 곡만 유지
+    const filteredUserTracks = userTracks.filter(t => {
+      const createdAt = t.createdAt || now;
+      const isOlderThanOneMonth = (now - createdAt) > ONE_MONTH_MS;
+      if (!isOlderThanOneMonth) return true;
+      return top300Ids.has(t.id);
+    });
+
+    if (filteredUserTracks.length !== userTracks.length) {
+      setUserTracks(filteredUserTracks);
+      try {
+        localStorage.setItem('nimo_music_user_tracks', JSON.stringify(filteredUserTracks));
+      } catch {}
+    }
+  }, [playCounts]);
+
   // 2. 방문자 카운트 (VISIT, 접속 시 즉시 +1 누적 저장 및 글로벌 서버 연동)
   const [visitCount, setVisitCount] = useState<number>(() => {
     try {
@@ -566,7 +620,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   });
 
-  // 🚀 [전 세계 실시간 글로벌 카운터 + 서버 연동] 접속 시 방문자수 글로벌 누적 동기화
+  // 🚀 [전 세계 실시간 글로벌 카운터 + 서버 연동] 접속 시 방문자수 글로벌 누적 동기화 & 사용자 트랙 동기화
   useEffect(() => {
     let isMounted = true;
     const NAMESPACE = 'nimomusic_ai_chart_v2';
@@ -606,20 +660,33 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             return merged;
           });
         }
+        if (Array.isArray(data.userTracks) && data.userTracks.length > 0) {
+          setUserTracks(prev => {
+            const existingIds = new Set(prev.map(t => t.id));
+            const newTracks = data.userTracks.filter((t: PopTrackItem) => !existingIds.has(t.id));
+            const merged = [...prev, ...newTracks];
+            try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(merged)); } catch {}
+            return merged;
+          });
+        }
       })
       .catch(() => {});
 
     return () => { isMounted = false; };
   }, []);
 
-  // 현재 선택된 앨범의 기본 트랙 리스트
+  // 현재 선택된 앨범의 기본 트랙 리스트 (기본곡 + 사용자 등록곡 합산)
   const rawAlbumTracks = useMemo(() => {
     if (selectedAlbumId === 'hot100') {
-      const artistTracks = [...(ALBUM_TRACKS['artist'] || [])];
-      return artistTracks;
+      const baseTracks = [...(ALBUM_TRACKS['artist'] || [])];
+      return [...baseTracks, ...userTracks];
+    }
+    if (selectedAlbumId === 'artist') {
+      const baseTracks = [...(ALBUM_TRACKS['artist'] || [])];
+      return [...baseTracks, ...userTracks];
     }
     return ALBUM_TRACKS[selectedAlbumId] || [];
-  }, [selectedAlbumId]);
+  }, [selectedAlbumId, userTracks]);
 
   // 정렬 옵션이 적용된 현재 앨범 트랙 목록 (재생 시 순서가 뒤죽박죽되지 않도록 안정적 정렬 유지)
   const currentAlbumTracks = useMemo(() => {
@@ -672,8 +739,59 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const [copied, setCopied] = useState<boolean>(false);
   const [isAutoRepeat, setIsAutoRepeat] = useState<boolean>(true);
 
-  // '준비중입니다.' 팝업 모달 상태
+  // 음원등록 모달 및 음원삭제 모달 상태
   const [showRegisterPopup, setShowRegisterPopup] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [trackToDelete, setTrackToDelete] = useState<PopTrackItem | null>(null);
+
+  // 음원 등록 성공 처리 함수
+  const handleRegisterSuccess = (newTrack: PopTrackItem) => {
+    const updated = [...userTracks, newTrack];
+    setUserTracks(updated);
+    try {
+      localStorage.setItem('nimo_music_user_tracks', JSON.stringify(updated));
+    } catch {}
+
+    // 서버로도 저장 동기화 시도
+    fetch('/api/tracks/user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTrack),
+    }).catch(() => {});
+
+    setShowRegisterPopup(false);
+    // 등록된 곡을 즉시 재생
+    startPlayingTrack(newTrack);
+  };
+
+  // 음원 삭제 성공 처리 함수
+  const handleDeleteSuccess = (trackId: string) => {
+    const updated = userTracks.filter(t => t.id !== trackId);
+    setUserTracks(updated);
+    try {
+      localStorage.setItem('nimo_music_user_tracks', JSON.stringify(updated));
+    } catch {}
+
+    // 서버로도 삭제 동기화 시도
+    if (trackToDelete) {
+      fetch('/api/tracks/user/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trackId,
+          phone: trackToDelete.phone,
+          password: trackToDelete.password,
+        }),
+      }).catch(() => {});
+    }
+
+    if (currentTrack?.id === trackId) {
+      handleStopTrack();
+    }
+    setSelectedIds(prev => prev.filter(id => id !== trackId));
+    setShowDeleteModal(false);
+    setTrackToDelete(null);
+  };
 
   // 곡 재생 횟수 증가 함수 (글로벌 클라우드 카운터 + 로컬 서버 + 로컬스토리지 3중 저장)
   const incrementPlayCount = (trackId: string) => {
@@ -1043,32 +1161,24 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         onEnded={handleAudioEnded}
       />
 
-      {/* 준비중입니다 팝업 모달 */}
-      {showRegisterPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-[#181a27] border border-white/20 rounded-3xl p-6 sm:p-7 max-w-sm w-full shadow-2xl relative text-center">
-            <button
-              onClick={() => setShowRegisterPopup(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-            <div className="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center mx-auto mb-4">
-              <PlusCircle className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-black text-white mb-2">음원등록 안내</h3>
-            <p className="text-sm text-white/70 leading-relaxed mb-6">
-              준비중입니다.
-            </p>
-            <button
-              onClick={() => setShowRegisterPopup(false)}
-              className="w-full py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg transition active:scale-95 cursor-pointer"
-            >
-              확인
-            </button>
-          </div>
-        </div>
-      )}
+      {/* 음원등록 모달 */}
+      <MusicRegisterModal
+        isOpen={showRegisterPopup}
+        onClose={() => setShowRegisterPopup(false)}
+        onSuccess={handleRegisterSuccess}
+        totalArtistTracksCount={rawAlbumTracks.length}
+      />
+
+      {/* 음원삭제 본인 인증 모달 */}
+      <MusicDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setTrackToDelete(null);
+        }}
+        onDeleteSuccess={handleDeleteSuccess}
+        targetTrack={trackToDelete}
+      />
 
       {/* Top Header Helper Bar */}
       <div className="w-full max-w-7xl flex items-center justify-between gap-4 mb-4">
@@ -1770,9 +1880,43 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                             HOT {trackIdx + 1}
                           </span>
                         )}
+
+                        {/* 닉네임 또는 장르 태그 */}
                         <span className="text-xs font-mono font-bold text-[#38bdf8] bg-[#0284c7]/20 px-2 py-0.5 rounded">
-                          {track.genreTag}
+                          {track.nickname ? track.nickname : track.genreTag}
                         </span>
+
+                        {/* 아티스트 채널 주소 버튼 (새 탭으로 열기) */}
+                        {track.channelUrl && (
+                          <a
+                            href={track.channelUrl.startsWith('http') ? track.channelUrl : `https://${track.channelUrl}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-pink-400 hover:text-pink-300 bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/30 px-2 py-0.5 rounded transition"
+                            title="아티스트 채널 바로가기"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            <span>아티스트 채널</span>
+                          </a>
+                        )}
+
+                        {/* 사용자가 등록한 곡인 경우 삭제 버튼 노출 */}
+                        {(track.phone || track.password || track.id.startsWith('user-')) && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTrackToDelete(track);
+                              setShowDeleteModal(true);
+                            }}
+                            className="inline-flex items-center gap-1 text-[10px] font-medium text-red-400/80 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 px-1.5 py-0.5 rounded transition cursor-pointer"
+                            title="음원 삭제 (본인 인증 필요)"
+                          >
+                            <Trash2 className="w-2.5 h-2.5" />
+                            <span>삭제</span>
+                          </button>
+                        )}
                       </div>
                       <h3 
                         className="text-base sm:text-lg font-bold text-white truncate transition-colors"
