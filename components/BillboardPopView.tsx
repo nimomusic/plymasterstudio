@@ -543,7 +543,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 현재 선택된 앨범 객체
   const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
 
-  // 1. 각 곡별 전체 누적 재생 횟수 (로컬스토리지 즉시 영구 저장 + 서버 동기화)
+  // 1. 각 곡별 전체 누적 재생 횟수 (로컬스토리지 즉시 영구 저장 + 글로벌 클라우드 서버 + 로컬 서버 동기화)
   const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
     try {
       const saved = localStorage.getItem('nimo_music_play_counts');
@@ -553,7 +553,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   });
 
-  // 2. 방문자 카운트 (VISIT, 접속 시 즉시 +1 누적 저장)
+  // 2. 방문자 카운트 (VISIT, 접속 시 즉시 +1 누적 저장 및 글로벌 서버 연동)
   const [visitCount, setVisitCount] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('nimo_music_visit_count');
@@ -566,10 +566,28 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   });
 
-  // 🚀 서버가 실행 중인 경우 서버 데이터와 동기화 (최대값 유지)
+  // 🚀 [전 세계 실시간 글로벌 카운터 + 서버 연동] 접속 시 방문자수 글로벌 누적 동기화
   useEffect(() => {
     let isMounted = true;
+    const NAMESPACE = 'nimomusic_ai_chart_v2';
 
+    // 1) 공개 글로벌 클라우드 카운터 API (어느 환경, 깃허브 배포, 모바일, PC 어디서든 전 세계 공통 누적)
+    fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/site_visits`)
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted || !data) return;
+        const val = data.value || data.count;
+        if (typeof val === 'number') {
+          setVisitCount(prev => {
+            const finalCount = Math.max(prev, val);
+            try { localStorage.setItem('nimo_music_visit_count', String(finalCount)); } catch {}
+            return finalCount;
+          });
+        }
+      })
+      .catch(() => {});
+
+    // 2) 백엔드 서버가 있는 경우 로컬 store.json과도 동기화
     fetch(`/api/count/visit?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
@@ -589,9 +607,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           });
         }
       })
-      .catch(() => {
-        // 서버 연결 불가 시에도 로컬스토리지로 정상 동작
-      });
+      .catch(() => {});
 
     return () => { isMounted = false; };
   }, []);
@@ -610,7 +626,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     const list = [...rawAlbumTracks];
 
     if (selectedAlbumId === 'hot100') {
-      // HOT 100 차트: 조회수 내림차순 정렬 (기본 트랙 번호 기준 보존)
+      // HOT 100 차트: 기본적으로 조회수 내림차순 정렬하되, 트랙 번호 기준으로 안정성 유지
       return list.sort((a, b) => {
         const countA = playCounts[a.id] || 0;
         const countB = playCounts[b.id] || 0;
@@ -634,9 +650,9 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       return list.reverse();
     }
 
-    // 'default' (기본): 01, 02, 03... 고유 트랙 번호 순서 유지 (재생해도 순서 고정)
+    // 'default' (기본): 01, 02, 03... 고유 트랙 번호 순서 유지 (재생해도 순서가 튀지 않고 고정)
     return list;
-  }, [rawAlbumTracks, sortBy, selectedAlbumId]);
+  }, [rawAlbumTracks, sortBy, selectedAlbumId, sortBy === 'views' ? playCounts : null]);
 
   // 전체 선택 기본 체크해제 (빈 배열 [])
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -659,9 +675,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // '준비중입니다.' 팝업 모달 상태
   const [showRegisterPopup, setShowRegisterPopup] = useState<boolean>(false);
 
-  // 곡 재생 횟수 증가 함수 (로컬스토리지 즉시 반영 & 서버 동기화)
+  // 곡 재생 횟수 증가 함수 (글로벌 클라우드 카운터 + 로컬 서버 + 로컬스토리지 3중 저장)
   const incrementPlayCount = (trackId: string) => {
-    // 1. UI 즉시 +1 반영 및 로컬스토리지 영구 저장
+    const NAMESPACE = 'nimomusic_ai_chart_v2';
+    const cleanTrackKey = trackId.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+    // 1. UI 및 로컬스토리지 즉시 +1 반영 (0ms 지연)
     setPlayCounts(prev => {
       const nextCount = (prev[trackId] || 0) + 1;
       const updated = { ...prev, [trackId]: nextCount };
@@ -671,7 +690,23 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       return updated;
     });
 
-    // 2. 서버 store.json에 +1 요청
+    // 2. 전 세계 공통 공개 글로벌 클라우드 카운터에 +1 누적 (깃허브/모바일/PC 어디서든 동기화)
+    fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/play_${cleanTrackKey}`)
+      .then(res => res.json())
+      .then(data => {
+        const val = data?.value || data?.count;
+        if (typeof val === 'number') {
+          setPlayCounts(prev => {
+            const finalCount = Math.max(prev[trackId] || 0, val);
+            const updated = { ...prev, [trackId]: finalCount };
+            try { localStorage.setItem('nimo_music_play_counts', JSON.stringify(updated)); } catch {}
+            return updated;
+          });
+        }
+      })
+      .catch(() => {});
+
+    // 3. 백엔드 서버 store.json에 +1 저장 요청 (자체 서버 환경 지원)
     fetch('/api/count/play', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
