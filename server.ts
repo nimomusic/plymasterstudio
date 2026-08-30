@@ -186,7 +186,7 @@ async function startServer() {
   });
 
   // [6] 사용자 음원 등록
-  app.post("/api/tracks/user", (req, res) => {
+  app.post("/api/tracks/user", async (req, res) => {
     const track = req.body;
     if (!track || !track.id || !track.title) {
       return res.status(400).json({ error: "올바른 트랙 데이터가 아닙니다." });
@@ -200,8 +200,25 @@ async function startServer() {
       return res.status(400).json({ error: "AI음악 아티스트 테마에 1,000곡이 모두 등록되어 추가 업로드가 불가능합니다." });
     }
 
+    // 중복 제거 후 추가
+    store.userTracks = store.userTracks.filter((t) => t.id !== track.id);
     store.userTracks.push(track);
     ServerStorage.save(store);
+
+    // R2 버킷에 user_tracks.json 동기화 시도
+    try {
+      await r2Client.send(
+        new PutObjectCommand({
+          Bucket: "artist",
+          Key: "artist/user_tracks.json",
+          Body: Buffer.from(JSON.stringify(store.userTracks, null, 2)),
+          ContentType: "application/json; charset=utf-8",
+        })
+      );
+    } catch (r2SyncErr) {
+      console.warn("R2 user_tracks.json 동기화 알림:", r2SyncErr);
+    }
+
     res.json({ success: true, track, total: totalCount + 1 });
   });
 
@@ -216,28 +233,37 @@ async function startServer() {
     if (!store.userTracks) store.userTracks = [];
 
     const targetIdx = store.userTracks.findIndex((t) => t.id === trackId);
-    if (targetIdx === -1) {
-      return res.status(404).json({ error: "삭제할 음원을 찾을 수 없습니다." });
+    let targetTrack = targetIdx !== -1 ? store.userTracks[targetIdx] : null;
+
+    if (targetTrack) {
+      const inputPhoneDigits = (phone || "").replace(/[^0-9]/g, "");
+      const trackPhoneDigits = (targetTrack.phone || "").replace(/[^0-9]/g, "");
+
+      if (inputPhoneDigits && trackPhoneDigits && inputPhoneDigits !== trackPhoneDigits) {
+        return res.status(403).json({ error: "등록된 전화번호와 일치하지 않습니다." });
+      }
+
+      if (targetTrack.password && targetTrack.password !== password) {
+        return res.status(403).json({ error: "비밀번호가 일치하지 않습니다." });
+      }
     }
 
-    const targetTrack = store.userTracks[targetIdx];
-    const inputPhoneDigits = (phone || "").replace(/[^0-9]/g, "");
-    const trackPhoneDigits = (targetTrack.phone || "").replace(/[^0-9]/g, "");
-
-    if (inputPhoneDigits !== trackPhoneDigits) {
-      return res.status(403).json({ error: "등록된 전화번호와 일치하지 않습니다." });
-    }
-
-    if (targetTrack.password && targetTrack.password !== password) {
-      return res.status(403).json({ error: "비밀번호가 일치하지 않습니다." });
-    }
-
-    // Cloudflare R2 버킷에서 실제 파일 삭제 시도
-    const targetAudioUrl = targetTrack.audioUrl || audioUrl;
-    if (targetAudioUrl && targetAudioUrl.includes(".r2.dev/")) {
+    // Cloudflare R2 버킷에서 실제 MP3 파일 영구 삭제
+    const targetAudioUrl = targetTrack?.audioUrl || audioUrl;
+    if (targetAudioUrl) {
       try {
-        const key = decodeURIComponent(targetAudioUrl.split(".r2.dev/")[1]);
+        let key = "";
+        if (targetAudioUrl.includes(".r2.dev/")) {
+          key = decodeURIComponent(targetAudioUrl.split(".r2.dev/")[1]);
+        } else if (targetAudioUrl.startsWith("http")) {
+          const u = new URL(targetAudioUrl);
+          key = decodeURIComponent(u.pathname.replace(/^\/+/, ""));
+        } else {
+          key = targetAudioUrl.replace(/^\/+/, "");
+        }
+
         if (key) {
+          console.log(`[R2 Deleting Object] Bucket: artist, Key: ${key}`);
           await r2Client.send(
             new DeleteObjectCommand({
               Bucket: "artist",
@@ -246,13 +272,64 @@ async function startServer() {
           );
         }
       } catch (delErr) {
-        console.error("R2 파일 삭제 실패:", delErr);
+        console.error("R2 파일 삭제 처리 실패:", delErr);
       }
     }
 
-    store.userTracks.splice(targetIdx, 1);
-    ServerStorage.save(store);
+    if (targetIdx !== -1) {
+      store.userTracks.splice(targetIdx, 1);
+      ServerStorage.save(store);
+
+      // R2 버킷의 user_tracks.json 갱신
+      try {
+        await r2Client.send(
+          new PutObjectCommand({
+            Bucket: "artist",
+            Key: "artist/user_tracks.json",
+            Body: Buffer.from(JSON.stringify(store.userTracks, null, 2)),
+            ContentType: "application/json; charset=utf-8",
+          })
+        );
+      } catch (r2SyncErr) {
+        console.warn("R2 user_tracks.json 동기화 알림:", r2SyncErr);
+      }
+    }
+
     res.json({ success: true, deletedId: trackId });
+  });
+
+  // [8] R2 파일 직접 삭제 지원 프록시 엔드포인트
+  app.post("/api/r2/delete-file", async (req, res) => {
+    const { audioUrl, key: directKey } = req.body;
+    try {
+      let key = directKey || "";
+      if (!key && audioUrl) {
+        if (audioUrl.includes(".r2.dev/")) {
+          key = decodeURIComponent(audioUrl.split(".r2.dev/")[1]);
+        } else if (audioUrl.startsWith("http")) {
+          const u = new URL(audioUrl);
+          key = decodeURIComponent(u.pathname.replace(/^\/+/, ""));
+        } else {
+          key = audioUrl.replace(/^\/+/, "");
+        }
+      }
+
+      if (!key) {
+        return res.status(400).json({ success: false, error: "Key or audioUrl is required" });
+      }
+
+      console.log(`[R2 Proxy Delete] Key: ${key}`);
+      await r2Client.send(
+        new DeleteObjectCommand({
+          Bucket: "artist",
+          Key: key,
+        })
+      );
+      return res.json({ success: true, deletedKey: key });
+    } catch (err: any) {
+      console.error("R2 Proxy Delete Error:", err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
   });
 
   const ai = new GoogleGenAI({
