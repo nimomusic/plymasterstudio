@@ -51,30 +51,34 @@ function saveStatsToDB(data: StatsDB) {
   }
 }
 
+// 메모리 캐시 (서버 실행 중 항상 최신 상태 유지)
+let inMemoryStats: StatsDB = loadStatsFromDB();
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
   app.use(express.json());
 
+  // CORS & No-cache headers to prevent browser from caching API responses
+  app.use("/api", (req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    next();
+  });
+
   // 1. 통계 데이터 조회 (방문자수 & 곡별 재생수)
   app.get("/api/stats", (req, res) => {
-    const stats = loadStatsFromDB();
-    res.json({
-      visitCount: stats.visitCount,
-      trackPlayCounts: stats.trackPlayCounts,
-    });
+    res.json(inMemoryStats);
   });
 
   // 2. 방문자 수(VISIT) 1 증가 및 저장
   app.post("/api/visit", (req, res) => {
-    const stats = loadStatsFromDB();
-    stats.visitCount = (stats.visitCount || 0) + 1;
-    saveStatsToDB(stats);
+    inMemoryStats.visitCount = (inMemoryStats.visitCount || 0) + 1;
+    saveStatsToDB(inMemoryStats);
     res.json({
       success: true,
-      visitCount: stats.visitCount,
-      trackPlayCounts: stats.trackPlayCounts,
+      visitCount: inMemoryStats.visitCount,
+      trackPlayCounts: inMemoryStats.trackPlayCounts,
     });
   });
 
@@ -84,15 +88,17 @@ async function startServer() {
     if (!trackId) {
       return res.status(400).json({ error: "trackId is required" });
     }
-    const stats = loadStatsFromDB();
-    stats.trackPlayCounts[trackId] = (stats.trackPlayCounts[trackId] || 0) + 1;
-    saveStatsToDB(stats);
+    if (!inMemoryStats.trackPlayCounts) {
+      inMemoryStats.trackPlayCounts = {};
+    }
+    inMemoryStats.trackPlayCounts[trackId] = (inMemoryStats.trackPlayCounts[trackId] || 0) + 1;
+    saveStatsToDB(inMemoryStats);
     res.json({
       success: true,
       trackId,
-      totalPlays: stats.trackPlayCounts[trackId],
-      visitCount: stats.visitCount,
-      trackPlayCounts: stats.trackPlayCounts,
+      totalPlays: inMemoryStats.trackPlayCounts[trackId],
+      visitCount: inMemoryStats.visitCount,
+      trackPlayCounts: inMemoryStats.trackPlayCounts,
     });
   });
 
