@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import MusicRegisterModal from './MusicRegisterModal';
 import MusicDeleteModal from './MusicDeleteModal';
-import { deleteMp3FromR2 } from '../lib/uploadAction';
+import { deleteMp3FromR2, saveUserTracksToR2, fetchUserTracksFromR2, R2TrackItem } from '../lib/uploadAction';
 
 interface BillboardPopViewProps {
   setView?: (view: any) => void;
@@ -621,7 +621,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   });
 
-  // 🚀 [전 세계 실시간 글로벌 카운터 + 서버 연동] 접속 시 방문자수 글로벌 누적 동기화 & 사용자 트랙 동기화
+  // 🚀 [전 세계 실시간 글로벌 카운터 + R2 버킷 전역 음원 카탈로그 동기화]
+  // 어느 사용자, 어느 기기, 어느 브라우저에서 접속하든 실시간 공통 누적 & 등록 음원 공유
   useEffect(() => {
     let isMounted = true;
     const NAMESPACE = 'nimomusic_ai_chart_v2';
@@ -642,7 +643,24 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       })
       .catch(() => {});
 
-    // 2) 백엔드 서버가 있는 경우 로컬 store.json과도 동기화
+    // 2) ☁️ Cloudflare R2 버킷('artist')에 저장된 전 세계 공통 사용자 등록 음원 메타데이터 실시간 로드
+    fetchUserTracksFromR2()
+      .then((r2Tracks) => {
+        if (!isMounted || !Array.isArray(r2Tracks) || r2Tracks.length === 0) return;
+        setUserTracks((prev) => {
+          const map = new Map<string, PopTrackItem>();
+          r2Tracks.forEach(t => map.set(t.id, t as PopTrackItem));
+          prev.forEach(t => {
+            if (!map.has(t.id)) map.set(t.id, t);
+          });
+          const merged = Array.from(map.values());
+          try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(merged)); } catch {}
+          return merged;
+        });
+      })
+      .catch(() => {});
+
+    // 3) 백엔드 서버가 있는 경우 로컬 store.json과도 동기화
     fetch(`/api/count/visit?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
@@ -663,9 +681,10 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         }
         if (Array.isArray(data.userTracks) && data.userTracks.length > 0) {
           setUserTracks(prev => {
-            const existingIds = new Set(prev.map(t => t.id));
-            const newTracks = data.userTracks.filter((t: PopTrackItem) => !existingIds.has(t.id));
-            const merged = [...prev, ...newTracks];
+            const map = new Map<string, PopTrackItem>();
+            prev.forEach(t => map.set(t.id, t));
+            data.userTracks.forEach((t: PopTrackItem) => map.set(t.id, t));
+            const merged = Array.from(map.values());
             try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(merged)); } catch {}
             return merged;
           });
@@ -746,14 +765,21 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const [trackToDelete, setTrackToDelete] = useState<PopTrackItem | null>(null);
 
   // 음원 등록 성공 처리 함수
-  const handleRegisterSuccess = (newTrack: PopTrackItem) => {
-    const updated = [...userTracks, newTrack];
+  const handleRegisterSuccess = async (newTrack: PopTrackItem) => {
+    const updated = [...userTracks.filter(t => t.id !== newTrack.id), newTrack];
     setUserTracks(updated);
     try {
       localStorage.setItem('nimo_music_user_tracks', JSON.stringify(updated));
     } catch {}
 
-    // 서버로도 저장 동기화 시도
+    // ☁️ 1. Cloudflare R2 버킷('artist/user_tracks.json')에 즉시 저장하여 전 세계 모든 기기/유저와 공통 공유
+    try {
+      await saveUserTracksToR2(updated as R2TrackItem[]);
+    } catch (r2Err) {
+      console.warn('R2 user_tracks.json 저장 알림:', r2Err);
+    }
+
+    // 2. 서버로도 저장 동기화 시도
     fetch('/api/tracks/user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -769,13 +795,20 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const handleDeleteSuccess = async (trackId: string) => {
     const target = trackToDelete || userTracks.find(t => t.id === trackId);
 
-    // 🗑️ Cloudflare R2 스토리지('artist' 버킷)에서 실제 파일 삭제 수행
+    // 🗑️ 1. Cloudflare R2 스토리지('artist' 버킷)에서 실제 MP3 물리 파일 영구 삭제
     if (target?.audioUrl) {
       try {
         await deleteMp3FromR2(target.audioUrl);
       } catch (r2Err) {
         console.warn('Cloudflare R2 버킷 파일 삭제 요청:', r2Err);
       }
+
+      // 프록시 서버 삭제도 백업으로 동시 실행
+      fetch('/api/r2/delete-file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audioUrl: target.audioUrl }),
+      }).catch(() => {});
     }
 
     const updated = userTracks.filter(t => t.id !== trackId);
@@ -784,7 +817,14 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       localStorage.setItem('nimo_music_user_tracks', JSON.stringify(updated));
     } catch {}
 
-    // 서버로도 삭제 동기화 시도
+    // ☁️ 2. Cloudflare R2 버킷('artist/user_tracks.json')에서도 해당 곡 제거하여 전 세계 동기화
+    try {
+      await saveUserTracksToR2(updated as R2TrackItem[]);
+    } catch (r2Err) {
+      console.warn('R2 user_tracks.json 갱신 알림:', r2Err);
+    }
+
+    // 3. 서버로도 삭제 동기화 시도
     if (target) {
       fetch('/api/tracks/user/delete', {
         method: 'POST',
@@ -1521,7 +1561,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <div>
               {(() => {
                 const isSelected = selectedAlbumId === 'hot100';
-                const trackCount = Math.min((ALBUM_TRACKS['artist'] || []).length, 100);
+                const trackCount = Math.min((ALBUM_TRACKS['artist']?.length || 0) + userTracks.length, 100);
 
                 return (
                   <button
@@ -1618,7 +1658,10 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             >
               {GENRE_ALBUMS.map((album) => {
                 const isSelected = selectedAlbumId === album.id;
-                const trackCount = ALBUM_TRACKS[album.id]?.length || 0;
+                // AI음악 아티스트 앨범인 경우 기본 트랙 수 + 업로드된 사용자 트랙 수 합산 표시
+                const trackCount = album.id === 'artist' 
+                  ? (ALBUM_TRACKS['artist']?.length || 0) + userTracks.length 
+                  : (ALBUM_TRACKS[album.id]?.length || 0);
 
                 return (
                   <button
@@ -1914,8 +1957,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                           </a>
                         )}
 
-                        {/* 사용자가 등록한 곡인 경우 삭제 버튼 노출 */}
-                        {(track.phone || track.password || track.id.startsWith('user-')) && (
+                        {/* 사용자가 등록한 곡인 경우 삭제 버튼 노출 (본인 확인 비밀번호 모달 연동) */}
+                        {(track.phone || track.password || track.id.startsWith('user-') || track.id.startsWith('artist-user') || (track.audioUrl && (track.audioUrl.includes('user-upload') || track.audioUrl.includes('.r2.dev/')))) && (
                           <button
                             type="button"
                             onClick={(e) => {
