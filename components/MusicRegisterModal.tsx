@@ -120,9 +120,16 @@ export const MusicRegisterModal: React.FC<MusicRegisterModalProps> = ({
     }
 
     // 전화번호 010-XXXX-XXXX 또는 010-XXX-XXXX 유효성 검사 (010 이후 7~8자리)
-    const phoneDigits = phone.replace(/[^0-9]/g, '').slice(3);
+    const rawFullPhone = phone.replace(/[^0-9]/g, '');
+    const phoneDigits = rawFullPhone.slice(3);
     if (phoneDigits.length < 7 || phoneDigits.length > 8) {
       setErrorMessage('전화번호는 010 이후 7~8자리 숫자로 입력해 주세요.');
+      return;
+    }
+
+    // 010-7430-0527 번호가 아니면 닉네임에 '놀이터' 단어 포함 금지
+    if (rawFullPhone !== '01074300527' && nickname.includes('놀이터')) {
+      setErrorMessage("닉네임에 '놀이터' 단어는 포함될 수 없습니다.");
       return;
     }
 
