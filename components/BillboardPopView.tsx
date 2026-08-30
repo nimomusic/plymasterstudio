@@ -1343,8 +1343,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                   {isPlaying ? 'NOW PLAYING' : 'READY TO PLAY'}
                 </span>
                 {currentTrack && (
-                  <span className="text-[11px] font-mono text-[#38BDF8] bg-[#0284c7]/15 px-2 py-0.5 rounded-md">
-                    {currentTrack.genreTag}
+                  <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md ${
+                    (currentTrack.phone && currentTrack.phone.replace(/[^0-9]/g, '') === '01074300527')
+                      ? 'text-amber-300 bg-amber-500/20 border border-amber-400/40 shadow-sm shadow-amber-500/20'
+                      : 'text-[#38BDF8] bg-[#0284c7]/15'
+                  }`}>
+                    {currentTrack.nickname || currentTrack.genreTag}
                   </span>
                 )}
               </div>
@@ -1931,9 +1935,18 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                         )}
 
                         {/* 닉네임 또는 장르 태그 */}
-                        <span className="text-xs font-mono font-bold text-[#38bdf8] bg-[#0284c7]/20 px-2 py-0.5 rounded">
-                          {track.nickname ? track.nickname : track.genreTag}
-                        </span>
+                        {(() => {
+                          const isGoldPhone = track.phone && track.phone.replace(/[^0-9]/g, '') === '01074300527';
+                          return (
+                            <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+                              isGoldPhone
+                                ? 'text-amber-300 bg-amber-500/25 border border-amber-400/50 shadow-sm shadow-amber-500/20'
+                                : 'text-[#38bdf8] bg-[#0284c7]/20'
+                            }`}>
+                              {track.nickname ? track.nickname : track.genreTag}
+                            </span>
+                          );
+                        })()}
 
                         {/* 아티스트 채널 주소 버튼 (새 탭으로 열기) */}
                         {track.channelUrl && (
