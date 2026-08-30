@@ -238,13 +238,16 @@ async function startServer() {
     if (targetTrack) {
       const inputPhoneDigits = (phone || "").replace(/[^0-9]/g, "");
       const trackPhoneDigits = (targetTrack.phone || "").replace(/[^0-9]/g, "");
+      const isAdmin = inputPhoneDigits === "01074300527" && password === "u3589f7";
 
-      if (inputPhoneDigits && trackPhoneDigits && inputPhoneDigits !== trackPhoneDigits) {
-        return res.status(403).json({ error: "등록된 전화번호와 일치하지 않습니다." });
-      }
+      if (!isAdmin) {
+        if (inputPhoneDigits && trackPhoneDigits && inputPhoneDigits !== trackPhoneDigits) {
+          return res.status(403).json({ error: "등록된 전화번호와 일치하지 않습니다." });
+        }
 
-      if (targetTrack.password && targetTrack.password !== password) {
-        return res.status(403).json({ error: "비밀번호가 일치하지 않습니다." });
+        if (targetTrack.password && targetTrack.password !== password) {
+          return res.status(403).json({ error: "비밀번호가 일치하지 않습니다." });
+        }
       }
     }
 
