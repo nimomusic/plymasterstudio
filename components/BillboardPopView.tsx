@@ -546,14 +546,31 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 현재 선택된 앨범 객체
   const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
 
-  // 1. 각 곡별 전체 누적 재생 횟수 (서버 counts.json DB와 완전 동기화)
-  const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
+  // 1. 각 곡별 전체 누적 재생 횟수 (로컬 캐시 + 서버 counts.json 실시간 동기화)
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('ai_artist_play_counts');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
 
-  // 2. 서버 방문자 카운트 (VISIT, 서버 counts.json DB와 완전 동기화)
-  const [visitCount, setVisitCount] = useState<number>(0);
+  // 2. 서버 방문자 카운트 (VISIT, 로컬 캐시 + 서버 counts.json 실시간 동기화)
+  const [visitCount, setVisitCount] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('ai_artist_visit_count');
+      const num = saved ? parseInt(saved, 10) : 1;
+      return isNaN(num) || num < 1 ? 1 : num;
+    } catch {
+      return 1;
+    }
+  });
 
   // 🚀 [서버 DB 연동] 접속 시 방문자수 1 증가 및 서버 DB 데이터 동기화
   useEffect(() => {
+    let isMounted = true;
+
     const syncServerData = async () => {
       try {
         // 1) 방문 카운트 +1
@@ -561,22 +578,37 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
-        if (visitRes.ok) {
+        if (visitRes.ok && isMounted) {
           const vData = await visitRes.json();
           if (typeof vData.visitCount === 'number') {
             setVisitCount(vData.visitCount);
+            try {
+              localStorage.setItem('ai_artist_visit_count', String(vData.visitCount));
+            } catch {}
           }
-        }
-
-        // 2) 최신 전체 곡 재생 카운트 가져오기
-        const statsRes = await fetch('/api/stats');
-        if (statsRes.ok) {
-          const sData = await statsRes.json();
-          if (sData.trackPlayCounts) {
-            setPlayCounts(sData.trackPlayCounts);
+          if (vData.trackPlayCounts && typeof vData.trackPlayCounts === 'object') {
+            setPlayCounts(vData.trackPlayCounts);
+            try {
+              localStorage.setItem('ai_artist_play_counts', JSON.stringify(vData.trackPlayCounts));
+            } catch {}
           }
-          if (typeof sData.visitCount === 'number') {
-            setVisitCount(sData.visitCount);
+        } else {
+          // stats 조회 fallback
+          const statsRes = await fetch('/api/stats');
+          if (statsRes.ok && isMounted) {
+            const sData = await statsRes.json();
+            if (typeof sData.visitCount === 'number') {
+              setVisitCount(sData.visitCount);
+              try {
+                localStorage.setItem('ai_artist_visit_count', String(sData.visitCount));
+              } catch {}
+            }
+            if (sData.trackPlayCounts) {
+              setPlayCounts(sData.trackPlayCounts);
+              try {
+                localStorage.setItem('ai_artist_play_counts', JSON.stringify(sData.trackPlayCounts));
+              } catch {}
+            }
           }
         }
       } catch (err) {
@@ -585,38 +617,47 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     };
 
     syncServerData();
+    return () => { isMounted = false; };
   }, []);
 
   // 현재 선택된 앨범의 기본 트랙 리스트
-  // 'hot100' 선택 시: AI음악 아티스트 앨범의 곡들을 누적 조회수 순으로 정렬하여 상위 100곡까지 가져옴
   const rawAlbumTracks = useMemo(() => {
     if (selectedAlbumId === 'hot100') {
       const artistTracks = [...(ALBUM_TRACKS['artist'] || [])];
-      return artistTracks
-        .sort((a, b) => {
-          const countA = playCounts[a.id] || 0;
-          const countB = playCounts[b.id] || 0;
-          return countB - countA;
-        })
-        .slice(0, 100);
+      return artistTracks;
     }
     return ALBUM_TRACKS[selectedAlbumId] || [];
-  }, [selectedAlbumId, playCounts]);
+  }, [selectedAlbumId]);
 
   // 정렬 옵션이 적용된 현재 앨범 트랙 목록
   const currentAlbumTracks = useMemo(() => {
     const list = [...rawAlbumTracks];
+    if (selectedAlbumId === 'hot100') {
+      // HOT 100 차트: 조회수 내림차순 정렬 (재생 횟수가 같으면 원본 번호 순서 유지)
+      return list.sort((a, b) => {
+        const countA = playCounts[a.id] || 0;
+        const countB = playCounts[b.id] || 0;
+        if (countB !== countA) {
+          return countB - countA;
+        }
+        return a.number.localeCompare(b.number);
+      });
+    }
+
     if (sortBy === 'views') {
       return list.sort((a, b) => {
         const countA = playCounts[a.id] || 0;
         const countB = playCounts[b.id] || 0;
-        return countB - countA;
+        if (countB !== countA) {
+          return countB - countA;
+        }
+        return a.number.localeCompare(b.number);
       });
     } else if (sortBy === 'latest') {
       return list.reverse();
     }
     return list;
-  }, [rawAlbumTracks, sortBy, playCounts]);
+  }, [rawAlbumTracks, sortBy, selectedAlbumId, playCounts]);
 
   // 전체 선택 기본 체크해제 (빈 배열 [])
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -641,18 +682,34 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
   // 곡 재생 횟수 증가 함수 (서버 DB 파일에 저장 및 즉시 UI 반영)
   const incrementPlayCount = (trackId: string) => {
-    // 1. UI 즉각 반영
-    setPlayCounts(prev => ({
-      ...prev,
-      [trackId]: (prev[trackId] || 0) + 1,
-    }));
+    // 1. UI 및 로컬 스토리지 즉각 반영
+    setPlayCounts(prev => {
+      const updated = {
+        ...prev,
+        [trackId]: (prev[trackId] || 0) + 1,
+      };
+      try {
+        localStorage.setItem('ai_artist_play_counts', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
 
     // 2. 서버 파일 DB(data/counts.json)에 비동기 영구 저장
     fetch('/api/track/play', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ trackId }),
-    }).catch(err => console.warn('Failed to update server play count:', err));
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.trackPlayCounts) {
+        setPlayCounts(data.trackPlayCounts);
+        try {
+          localStorage.setItem('ai_artist_play_counts', JSON.stringify(data.trackPlayCounts));
+        } catch {}
+      }
+    })
+    .catch(err => console.warn('Failed to update server play count:', err));
   };
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -783,19 +840,32 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     setProgress(0);
     setCurrentTime('00:00');
 
+    // 재생 횟수 +1
     incrementPlayCount(track.id);
 
     if (track.audioUrl && track.audioUrl.trim() !== '') {
       setIsDemoMode(false);
       stopSynthAudio();
       if (audioRef.current) {
-        audioRef.current.src = track.audioUrl;
-        audioRef.current.volume = isMuted ? 0 : volume;
-        audioRef.current.play().catch((err) => {
-          console.warn("Audio playback fallback:", err);
+        try {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          audioRef.current.src = track.audioUrl;
+          audioRef.current.load();
+          audioRef.current.volume = isMuted ? 0 : volume;
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise.catch((err) => {
+              console.warn("Audio playback fallback to synth:", err);
+              setIsDemoMode(true);
+              playSynthPreview(track.albumId);
+            });
+          }
+        } catch (e) {
+          console.warn("Audio element play error:", e);
           setIsDemoMode(true);
           playSynthPreview(track.albumId);
-        });
+        }
       }
     } else {
       setIsDemoMode(true);
