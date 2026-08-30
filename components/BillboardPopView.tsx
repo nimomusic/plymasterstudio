@@ -9,11 +9,9 @@ import {
   VolumeX, 
   Music, 
   Zap, 
-  ArrowLeft, 
   Share2, 
   ListMusic, 
   Disc3, 
-  Sparkles, 
   Repeat,
   Flame,
   Coffee,
@@ -534,9 +532,6 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
 export type TrackSortOption = 'views' | 'latest';
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
-  // 30일 (1개월 = 30 * 24 * 60 * 60 * 1000 ms)
-  const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
-
   // 현재 선택된 앨범 ID (기본: 'hot100' -> 월간 HOT 100 차트)
   const [selectedAlbumId, setSelectedAlbumId] = useState<string>('hot100');
 
@@ -546,28 +541,45 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 현재 선택된 앨범 객체
   const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
 
-  // 1. 각 곡별 전체 누적 재생 횟수 (서버 store.json과 연동)
-  const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
+  // 1. 각 곡별 전체 누적 재생 횟수 (글로벌 실시간 카운터 + 로컬 캐시)
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('nimo_play_counts');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
 
-  // 2. 서버 방문자 카운트 (VISIT, 서버 store.json과 연동)
-  const [visitCount, setVisitCount] = useState<number>(1);
+  // 2. 방문자 카운트 (VISIT)
+  const [visitCount, setVisitCount] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('nimo_visit_count');
+      const num = saved ? parseInt(saved, 10) : 1;
+      return isNaN(num) || num < 1 ? 1 : num;
+    } catch {
+      return 1;
+    }
+  });
 
-  // 🚀 [서버 로컬 스토리지 연동] 접속 시 방문자수 +1 및 최신 카운트 동기화
+  // 🚀 [전 세계 실시간 누적 카운터] 사이트 접속 시 방문자수 +1 및 전체 통계 동기화
   useEffect(() => {
     let isMounted = true;
+    const NAMESPACE = 'nimomusic_ai_chart_v1';
 
-    fetch(`/api/count/visit?t=${Date.now()}`)
+    // 1) 방문자 수 +1 (어느 기기/브라우저에서 접속하든 글로벌 서버에 +1 영구 누적)
+    fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/site_visits/up`)
       .then(res => res.json())
       .then(data => {
-        if (!isMounted || !data) return;
-        if (typeof data.visit === 'number') {
-          setVisitCount(data.visit);
-        }
-        if (data.plays && typeof data.plays === 'object') {
-          setPlayCounts(data.plays);
+        if (!isMounted) return;
+        if (typeof data?.count === 'number') {
+          setVisitCount(data.count);
+          try {
+            localStorage.setItem('nimo_visit_count', String(data.count));
+          } catch {}
         }
       })
-      .catch(err => console.warn('Failed to sync server count:', err));
+      .catch(() => {});
 
     return () => { isMounted = false; };
   }, []);
@@ -632,27 +644,36 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // '준비중입니다.' 팝업 모달 상태
   const [showRegisterPopup, setShowRegisterPopup] = useState<boolean>(false);
 
-  // 곡 재생 횟수 증가 함수 (서버 로컬 스토리지에 저장 및 즉시 UI 반영)
+  // 곡 재생 횟수 증가 함수 (글로벌 실시간 카운터 연동)
   const incrementPlayCount = (trackId: string) => {
-    // 1. UI 즉시 +1 반영
-    setPlayCounts(prev => ({
-      ...prev,
-      [trackId]: (prev[trackId] || 0) + 1,
-    }));
+    const NAMESPACE = 'nimomusic_ai_chart_v1';
+    const cleanTrackKey = trackId.replace(/[^a-zA-Z0-9_-]/g, '_');
 
-    // 2. 서버 store.json에 +1 저장
-    fetch('/api/count/play', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ trackId }),
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data && data.plays) {
-        setPlayCounts(data.plays);
-      }
-    })
-    .catch(err => console.warn('Failed to update play count:', err));
+    // 1. UI 즉시 +1 반영 및 로컬 캐시 저장
+    setPlayCounts(prev => {
+      const nextCount = (prev[trackId] || 0) + 1;
+      const updated = { ...prev, [trackId]: nextCount };
+      try {
+        localStorage.setItem('nimo_play_counts', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    // 2. 전 세계 모든 기기/브라우저에서 공유되는 글로벌 카운터에 +1 저장
+    fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/play_${cleanTrackKey}/up`)
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data?.count === 'number') {
+          setPlayCounts(prev => {
+            const updated = { ...prev, [trackId]: data.count };
+            try {
+              localStorage.setItem('nimo_play_counts', JSON.stringify(updated));
+            } catch {}
+            return updated;
+          });
+        }
+      })
+      .catch(() => {});
   };
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -684,11 +705,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 앨범/테마 변경 핸들러
   const handleSelectAlbum = (albumId: string) => {
     setSelectedAlbumId(albumId);
-    
-    // 변경 시 기본 선택 해제
     setSelectedIds([]);
-    
-    // 조회순으로 정렬 옵션 설정
     setSortBy('views');
   };
 
