@@ -5,7 +5,7 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import multer from "multer";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 dotenv.config();
 
@@ -128,39 +128,56 @@ async function startServer() {
   });
 
   // [4] Cloudflare R2 MP3 업로드 엔드포인트
-  app.post("/api/upload/mp3", upload.single("file"), async (req, res) => {
-    try {
-      const file = req.file;
-      const folder = (req.body.folder as string) || "artist";
-
-      if (!file) {
-        return res.status(400).json({ success: false, error: "파일이 없습니다." });
-      }
-
-      const fileName = `${Date.now()}_${file.originalname}`;
-      const key = `${folder}/${fileName}`;
-
-      await r2Client.send(
-        new PutObjectCommand({
-          Bucket: "artist",
-          Key: key,
-          Body: file.buffer,
-          ContentType: file.mimetype || "audio/mpeg",
-        })
-      );
-
-      // Public Development URL 조합 (r2.dev 도메인)
-      const publicUrl = `https://pub-9f987370108b48798bd93b5d7154c0d9.r2.dev/${key}`;
-
-      return res.json({ success: true, url: publicUrl, key });
-    } catch (error: any) {
-      console.error("R2 업로드 실패:", error);
-      return res.status(500).json({
-        success: false,
-        error: error?.message || "업로드 중 오류가 발생했습니다.",
+  app.post(
+    "/api/upload/mp3",
+    (req, res, next) => {
+      upload.single("file")(req, res, (err: any) => {
+        if (err) {
+          console.error("Multer upload error:", err);
+          return res.status(400).json({
+            success: false,
+            error: err.message || "파일 업로드 처리 중 오류가 발생했습니다. (15MB 이하 MP3)",
+          });
+        }
+        next();
       });
+    },
+    async (req, res) => {
+      try {
+        const file = req.file;
+        const folder = (req.body.folder as string) || "artist";
+
+        if (!file) {
+          return res.status(400).json({ success: false, error: "업로드할 파일이 없습니다." });
+        }
+
+        // 파일명 내 특수문자 안전하게 치환
+        const cleanName = (file.originalname || "track.mp3").replace(/[^a-zA-Z0-9._-]/g, "_");
+        const fileName = `${Date.now()}_${cleanName}`;
+        const key = `${folder}/${fileName}`;
+
+        await r2Client.send(
+          new PutObjectCommand({
+            Bucket: "artist",
+            Key: key,
+            Body: file.buffer,
+            ContentType: file.mimetype || "audio/mpeg",
+          })
+        );
+
+        // Public Development URL 조합 (r2.dev 도메인)
+        const publicUrl = `https://pub-9f987370108b48798bd93b5d7154c0d9.r2.dev/${key}`;
+
+        return res.json({ success: true, url: publicUrl, key });
+      } catch (error: any) {
+        console.error("R2 업로드 실패:", error);
+        return res.status(500).json({
+          success: false,
+          error: error?.message || "R2 버킷 업로드 중 오류가 발생했습니다.",
+        });
+      }
     }
-  });
+  );
 
   // [5] 사용자 등록 음원 목록 조회
   app.get("/api/tracks/user", (req, res) => {
@@ -188,9 +205,9 @@ async function startServer() {
     res.json({ success: true, track, total: totalCount + 1 });
   });
 
-  // [7] 사용자 음원 삭제 (전화번호 & 비밀번호 검증)
-  app.post("/api/tracks/user/delete", (req, res) => {
-    const { trackId, phone, password } = req.body;
+  // [7] 사용자 음원 삭제 (전화번호 & 비밀번호 검증 및 R2 스토리지 파일 삭제)
+  app.post("/api/tracks/user/delete", async (req, res) => {
+    const { trackId, phone, password, audioUrl } = req.body;
     if (!trackId) {
       return res.status(400).json({ error: "trackId is required" });
     }
@@ -213,6 +230,24 @@ async function startServer() {
 
     if (targetTrack.password && targetTrack.password !== password) {
       return res.status(403).json({ error: "비밀번호가 일치하지 않습니다." });
+    }
+
+    // Cloudflare R2 버킷에서 실제 파일 삭제 시도
+    const targetAudioUrl = targetTrack.audioUrl || audioUrl;
+    if (targetAudioUrl && targetAudioUrl.includes(".r2.dev/")) {
+      try {
+        const key = decodeURIComponent(targetAudioUrl.split(".r2.dev/")[1]);
+        if (key) {
+          await r2Client.send(
+            new DeleteObjectCommand({
+              Bucket: "artist",
+              Key: key,
+            })
+          );
+        }
+      } catch (delErr) {
+        console.error("R2 파일 삭제 실패:", delErr);
+      }
     }
 
     store.userTracks.splice(targetIdx, 1);
