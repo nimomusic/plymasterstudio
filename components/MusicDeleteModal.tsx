@@ -48,20 +48,25 @@ export const MusicDeleteModal: React.FC<MusicDeleteModalProps> = ({
     const inputPhoneDigits = phone.replace(/[^0-9]/g, '');
     const trackPhoneDigits = (targetTrack.phone || '').replace(/[^0-9]/g, '');
 
-    // 기본 등록 음원(샘플)인 경우 안내
-    if (!targetTrack.phone && !targetTrack.password) {
-      setErrorMessage('시스템 기본 등록 음원은 삭제할 수 없습니다. 사용자가 직접 등록한 음원만 삭제 가능합니다.');
-      return;
-    }
+    // 관리자 마스터 번호/비밀번호 체크 (010-7430-0527 / u3589f7)
+    const isAdmin = inputPhoneDigits === '01074300527' && password === 'u3589f7';
 
-    if (inputPhoneDigits !== trackPhoneDigits) {
-      setErrorMessage('등록된 전화번호와 일치하지 않습니다.');
-      return;
-    }
+    if (!isAdmin) {
+      // 기본 등록 음원(샘플)인 경우 안내
+      if (!targetTrack.phone && !targetTrack.password) {
+        setErrorMessage('시스템 기본 등록 음원은 삭제할 수 없습니다. 사용자가 직접 등록한 음원만 삭제 가능합니다.');
+        return;
+      }
 
-    if (password !== targetTrack.password) {
-      setErrorMessage('비밀번호가 일치하지 않습니다.');
-      return;
+      if (inputPhoneDigits !== trackPhoneDigits) {
+        setErrorMessage('등록된 전화번호와 일치하지 않습니다.');
+        return;
+      }
+
+      if (password !== targetTrack.password) {
+        setErrorMessage('비밀번호가 일치하지 않습니다.');
+        return;
+      }
     }
 
     setLoading(true);
