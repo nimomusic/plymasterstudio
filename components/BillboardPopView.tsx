@@ -1,3 +1,6 @@
+/**
+ * AI 아티스트 놀이터 & 빌보드 차트 뷰 (BillboardPopView)
+ */
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Play, 
@@ -541,51 +544,37 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 현재 선택된 앨범 객체
   const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
 
-  // 1. 각 곡별 전체 누적 재생 횟수
-  const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
+  // 1. 각 곡별 전체 누적 재생 횟수 (브라우저 로컬 저장소 즉시 불러오기)
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('billboard_play_counts');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
 
-  // 2. 서버 방문자 카운트 (VISIT)
-  const [visitCount, setVisitCount] = useState<number>(1);
+  // 2. 방문자 카운트 (VISIT)
+  const [visitCount, setVisitCount] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('billboard_visit_count');
+      const num = saved ? parseInt(saved, 10) : 0;
+      return isNaN(num) || num < 1 ? 1 : num;
+    } catch {
+      return 1;
+    }
+  });
 
-  // 🚀 [서버 DB 연동] 접속 시 방문자수 1 증가 및 서버 DB와 최신 카운트 동기화
+  // 접속 시 방문자 카운트 +1 증가 및 로컬 저장
   useEffect(() => {
-    let isMounted = true;
-
-    const syncServerData = async () => {
-      try {
-        // 1) 방문 카운트 +1 전송 및 최신 상태 수신
-        const res = await fetch(`/api/visit?t=${Date.now()}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (res.ok && isMounted) {
-          const data = await res.json();
-          if (typeof data.visitCount === 'number') {
-            setVisitCount(data.visitCount);
-          }
-          if (data.trackPlayCounts && typeof data.trackPlayCounts === 'object') {
-            setPlayCounts(data.trackPlayCounts);
-          }
-        } else {
-          // fallback
-          const statsRes = await fetch(`/api/stats?t=${Date.now()}`);
-          if (statsRes.ok && isMounted) {
-            const sData = await statsRes.json();
-            if (typeof sData.visitCount === 'number') {
-              setVisitCount(sData.visitCount);
-            }
-            if (sData.trackPlayCounts) {
-              setPlayCounts(sData.trackPlayCounts);
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Server sync notice:', err);
-      }
-    };
-
-    syncServerData();
-    return () => { isMounted = false; };
+    try {
+      const current = localStorage.getItem('billboard_visit_count');
+      const nextCount = current ? parseInt(current, 10) + 1 : 1;
+      localStorage.setItem('billboard_visit_count', String(nextCount));
+      setVisitCount(nextCount);
+    } catch (e) {
+      setVisitCount(prev => prev + 1);
+    }
   }, []);
 
   // 현재 선택된 앨범의 기본 트랙 리스트
@@ -648,29 +637,20 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // '준비중입니다.' 팝업 모달 상태
   const [showRegisterPopup, setShowRegisterPopup] = useState<boolean>(false);
 
-  // 곡 재생 횟수 증가 함수 (서버 DB 파일에 저장 및 즉시 UI 반영)
+  // 곡 재생 횟수 증가 함수 (로컬에 즉시 +1 더해서 영구 저장)
   const incrementPlayCount = (trackId: string) => {
-    // 1. UI 즉각 반영
-    setPlayCounts(prev => ({
-      ...prev,
-      [trackId]: (prev[trackId] || 0) + 1,
-    }));
-
-    // 2. 서버 파일 DB(data/counts.json)에 즉시 저장 및 최신 카운트 동기화
-    fetch('/api/track/play', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ trackId }),
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data && data.trackPlayCounts) {
-        setPlayCounts(data.trackPlayCounts);
-      }
-    })
-    .catch(err => console.warn('Failed to update server play count:', err));
+    setPlayCounts(prev => {
+      const updated = {
+        ...prev,
+        [trackId]: (prev[trackId] || 0) + 1,
+      };
+      try {
+        localStorage.setItem('billboard_play_counts', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
   };
-
+  
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthCtxRef = useRef<AudioContext | null>(null);
   const synthIntervalRef = useRef<number | null>(null);
