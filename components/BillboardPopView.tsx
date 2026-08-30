@@ -643,24 +643,18 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       })
       .catch(() => {});
 
-    // 2) ☁️ Cloudflare R2 버킷('artist')에 저장된 전 세계 공통 사용자 등록 음원 메타데이터 실시간 로드
+    // 2) ☁️ Cloudflare R2 버킷('artist')에 저장된 전 세계 공통 사용자 등록 음원 메타데이터 실시간 로드 (글로벌 단일 진실 공급원)
     fetchUserTracksFromR2()
       .then((r2Tracks) => {
-        if (!isMounted || !Array.isArray(r2Tracks) || r2Tracks.length === 0) return;
-        setUserTracks((prev) => {
-          const map = new Map<string, PopTrackItem>();
-          r2Tracks.forEach(t => map.set(t.id, t as PopTrackItem));
-          prev.forEach(t => {
-            if (!map.has(t.id)) map.set(t.id, t);
-          });
-          const merged = Array.from(map.values());
-          try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(merged)); } catch {}
-          return merged;
-        });
+        if (!isMounted) return;
+        if (Array.isArray(r2Tracks)) {
+          setUserTracks(r2Tracks as PopTrackItem[]);
+          try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(r2Tracks)); } catch {}
+        }
       })
       .catch(() => {});
 
-    // 3) 백엔드 서버가 있는 경우 로컬 store.json과도 동기화
+    // 3) 백엔드 서버가 있는 경우 카운트 및 로컬 동기화
     fetch(`/api/count/visit?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
@@ -679,14 +673,13 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             return merged;
           });
         }
-        if (Array.isArray(data.userTracks) && data.userTracks.length > 0) {
+        // 백엔드에 사용자 트랙이 있고 R2 로드가 아직 안되었거나 백엔드가 최신일 때만 보조 적용
+        if (Array.isArray(data.userTracks)) {
           setUserTracks(prev => {
-            const map = new Map<string, PopTrackItem>();
-            prev.forEach(t => map.set(t.id, t));
-            data.userTracks.forEach((t: PopTrackItem) => map.set(t.id, t));
-            const merged = Array.from(map.values());
-            try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(merged)); } catch {}
-            return merged;
+            // 이미 R2에서 로드된 상태가 있다면 R2 우선, 없으면 서버 데이터 활용
+            if (prev.length > 0) return prev;
+            try { localStorage.setItem('nimo_music_user_tracks', JSON.stringify(data.userTracks)); } catch {}
+            return data.userTracks;
           });
         }
       })
