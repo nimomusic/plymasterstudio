@@ -1,6 +1,3 @@
-/**
- * AI 아티스트 놀이터 & 빌보드 차트 뷰 (BillboardPopView)
- */
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Play, 
@@ -12,9 +9,11 @@ import {
   VolumeX, 
   Music, 
   Zap, 
+  ArrowLeft, 
   Share2, 
   ListMusic, 
   Disc3, 
+  Sparkles, 
   Repeat,
   Flame,
   Coffee,
@@ -535,6 +534,9 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
 export type TrackSortOption = 'views' | 'latest';
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
+  // 30일 (1개월 = 30 * 24 * 60 * 60 * 1000 ms)
+  const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+
   // 현재 선택된 앨범 ID (기본: 'hot100' -> 월간 HOT 100 차트)
   const [selectedAlbumId, setSelectedAlbumId] = useState<string>('hot100');
 
@@ -544,37 +546,30 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 현재 선택된 앨범 객체
   const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
 
-  // 1. 각 곡별 전체 누적 재생 횟수 (브라우저 로컬 저장소 즉시 불러오기)
-  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => {
-    try {
-      const saved = localStorage.getItem('billboard_play_counts');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
+  // 1. 각 곡별 전체 누적 재생 횟수 (서버 store.json과 연동)
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
 
-  // 2. 방문자 카운트 (VISIT)
-  const [visitCount, setVisitCount] = useState<number>(() => {
-    try {
-      const saved = localStorage.getItem('billboard_visit_count');
-      const num = saved ? parseInt(saved, 10) : 0;
-      return isNaN(num) || num < 1 ? 1 : num;
-    } catch {
-      return 1;
-    }
-  });
+  // 2. 서버 방문자 카운트 (VISIT, 서버 store.json과 연동)
+  const [visitCount, setVisitCount] = useState<number>(1);
 
-  // 접속 시 방문자 카운트 +1 증가 및 로컬 저장
+  // 🚀 [서버 로컬 스토리지 연동] 접속 시 방문자수 +1 및 최신 카운트 동기화
   useEffect(() => {
-    try {
-      const current = localStorage.getItem('billboard_visit_count');
-      const nextCount = current ? parseInt(current, 10) + 1 : 1;
-      localStorage.setItem('billboard_visit_count', String(nextCount));
-      setVisitCount(nextCount);
-    } catch (e) {
-      setVisitCount(prev => prev + 1);
-    }
+    let isMounted = true;
+
+    fetch(`/api/count/visit?t=${Date.now()}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted || !data) return;
+        if (typeof data.visit === 'number') {
+          setVisitCount(data.visit);
+        }
+        if (data.plays && typeof data.plays === 'object') {
+          setPlayCounts(data.plays);
+        }
+      })
+      .catch(err => console.warn('Failed to sync server count:', err));
+
+    return () => { isMounted = false; };
   }, []);
 
   // 현재 선택된 앨범의 기본 트랙 리스트
@@ -637,20 +632,29 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // '준비중입니다.' 팝업 모달 상태
   const [showRegisterPopup, setShowRegisterPopup] = useState<boolean>(false);
 
-  // 곡 재생 횟수 증가 함수 (로컬에 즉시 +1 더해서 영구 저장)
+  // 곡 재생 횟수 증가 함수 (서버 로컬 스토리지에 저장 및 즉시 UI 반영)
   const incrementPlayCount = (trackId: string) => {
-    setPlayCounts(prev => {
-      const updated = {
-        ...prev,
-        [trackId]: (prev[trackId] || 0) + 1,
-      };
-      try {
-        localStorage.setItem('billboard_play_counts', JSON.stringify(updated));
-      } catch {}
-      return updated;
-    });
+    // 1. UI 즉시 +1 반영
+    setPlayCounts(prev => ({
+      ...prev,
+      [trackId]: (prev[trackId] || 0) + 1,
+    }));
+
+    // 2. 서버 store.json에 +1 저장
+    fetch('/api/count/play', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trackId }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.plays) {
+        setPlayCounts(data.plays);
+      }
+    })
+    .catch(err => console.warn('Failed to update play count:', err));
   };
-  
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthCtxRef = useRef<AudioContext | null>(null);
   const synthIntervalRef = useRef<number | null>(null);
@@ -680,7 +684,11 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   // 앨범/테마 변경 핸들러
   const handleSelectAlbum = (albumId: string) => {
     setSelectedAlbumId(albumId);
+    
+    // 변경 시 기본 선택 해제
     setSelectedIds([]);
+    
+    // 조회순으로 정렬 옵션 설정
     setSortBy('views');
   };
 
