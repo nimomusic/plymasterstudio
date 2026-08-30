@@ -544,8 +544,15 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
 export type TrackSortOption = 'default' | 'views' | 'latest';
 
 export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, standalone = false }) => {
-  // 현재 선택된 앨범 ID (기본: 'hot100' -> 월간 HOT 100 차트)
-  const [selectedAlbumId, setSelectedAlbumId] = useState<string>('hot100');
+  // 현재 선택된 앨범 ID (URL 파라미터 우선, 기본: 'hot100' -> 월간 HOT 100 차트)
+  const [selectedAlbumId, setSelectedAlbumId] = useState<string>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const alb = params.get('album');
+      if (alb && ALBUMS.some(a => a.id === alb)) return alb;
+    } catch {}
+    return 'hot100';
+  });
 
   // 정렬 옵션 상태 ('default': 트랙순 (기본) | 'views': 조회순 | 'latest': 최신순)
   const [sortBy, setSortBy] = useState<TrackSortOption>('default');
@@ -750,6 +757,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   const [totalDuration, setTotalDuration] = useState<string>('00:00');
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [copiedTrackId, setCopiedTrackId] = useState<string | null>(null);
   const [isAutoRepeat, setIsAutoRepeat] = useState<boolean>(true);
 
   // 음원등록 모달 및 음원삭제 모달 상태
@@ -1042,6 +1050,23 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     }
   };
 
+  // 🔗 공유 링크를 통해 특정 곡(?track=ID)으로 접속한 경우 자동 선택/재생
+  const initialTrackCheckedRef = useRef<boolean>(false);
+  useEffect(() => {
+    if (initialTrackCheckedRef.current) return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const targetTrackId = params.get('track');
+      if (targetTrackId) {
+        const found = rawAlbumTracks.find(t => t.id === targetTrackId);
+        if (found) {
+          initialTrackCheckedRef.current = true;
+          startPlayingTrack(found);
+        }
+      }
+    } catch {}
+  }, [rawAlbumTracks]);
+
   // 단일 곡 재생/일시정지 토글
   const handlePlayTrack = (track: PopTrackItem) => {
     if (currentTrack?.id === track.id && isPlaying) {
@@ -1177,7 +1202,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     handleNextTrack();
   };
 
-  // 링크 복사
+  // 페이지 링크 복사
   const handleCopyLink = () => {
     try {
       const url = window.location.origin + window.location.pathname + `?view=pop&album=${selectedAlbumId}`;
@@ -1186,6 +1211,21 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
       console.warn("Copy link failed", e);
+    }
+  };
+
+  // 특정 곡 공유 링크 복사
+  const handleShareTrack = (track: PopTrackItem, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    try {
+      const url = window.location.origin + window.location.pathname + `?view=pop&album=${track.albumId || selectedAlbumId}&track=${encodeURIComponent(track.id)}`;
+      navigator.clipboard.writeText(url);
+      setCopiedTrackId(track.id);
+      setTimeout(() => {
+        setCopiedTrackId((prev) => (prev === track.id ? null : prev));
+      }, 2000);
+    } catch (err) {
+      console.warn("Track share copy failed:", err);
     }
   };
 
@@ -1962,6 +2002,17 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                             <span>아티스트 채널</span>
                           </a>
                         )}
+
+                        {/* 곡 공유하기 버튼 */}
+                        <button
+                          type="button"
+                          onClick={(e) => handleShareTrack(track, e)}
+                          className="inline-flex items-center gap-1 text-[10px] font-medium text-purple-300 hover:text-white bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 px-2 py-0.5 rounded transition cursor-pointer"
+                          title="이 곡 전용 링크 복사"
+                        >
+                          <Share2 className="w-2.5 h-2.5 text-purple-400" />
+                          <span>{copiedTrackId === track.id ? '복사됨!' : '곡 공유하기'}</span>
+                        </button>
 
                         {/* 사용자가 등록한 곡인 경우 삭제 버튼 노출 (본인 확인 비밀번호 모달 연동) */}
                         {(track.phone || track.password || track.id.startsWith('user-') || track.id.startsWith('artist-user') || (track.audioUrl && (track.audioUrl.includes('user-upload') || track.audioUrl.includes('.r2.dev/')))) && (
