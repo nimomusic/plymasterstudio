@@ -4,8 +4,27 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import multer from "multer";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 dotenv.config();
+
+// ==================================================================================
+// ☁️ Cloudflare R2 S3 Client 설정
+// ==================================================================================
+const r2Client = new S3Client({
+  region: "auto",
+  endpoint: process.env.R2_ENDPOINT || "https://e4406e25106c852e38b282ffc3914cdf.r2.cloudflarestorage.com",
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID || "73ade721f09959ee6a1733a968b0b6d3",
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "668bb089c76adb4ef1124c79f8a5bed0437476ab237937f26589776ca2e3ac83",
+  },
+});
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 }, // 최대 15MB 버퍼 허용
+});
 
 // ==================================================================================
 // 📁 브라우저의 localStorage와 똑같은 서버 로컬 JSON 저장소 (data/store.json)
@@ -72,8 +91,8 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json({ limit: '20mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '20mb' }));
+  app.use(express.json({ limit: "20mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
   // 브라우저 응답 캐싱 방지 헤더
   app.use("/api", (req, res, next) => {
@@ -108,13 +127,48 @@ async function startServer() {
     res.json(store);
   });
 
-  // [4] 사용자 등록 음원 목록 조회
+  // [4] Cloudflare R2 MP3 업로드 엔드포인트
+  app.post("/api/upload/mp3", upload.single("file"), async (req, res) => {
+    try {
+      const file = req.file;
+      const folder = (req.body.folder as string) || "artist";
+
+      if (!file) {
+        return res.status(400).json({ success: false, error: "파일이 없습니다." });
+      }
+
+      const fileName = `${Date.now()}_${file.originalname}`;
+      const key = `${folder}/${fileName}`;
+
+      await r2Client.send(
+        new PutObjectCommand({
+          Bucket: "artist",
+          Key: key,
+          Body: file.buffer,
+          ContentType: file.mimetype || "audio/mpeg",
+        })
+      );
+
+      // Public Development URL 조합 (r2.dev 도메인)
+      const publicUrl = `https://pub-9f987370108b48798bd93b5d7154c0d9.r2.dev/${key}`;
+
+      return res.json({ success: true, url: publicUrl, key });
+    } catch (error: any) {
+      console.error("R2 업로드 실패:", error);
+      return res.status(500).json({
+        success: false,
+        error: error?.message || "업로드 중 오류가 발생했습니다.",
+      });
+    }
+  });
+
+  // [5] 사용자 등록 음원 목록 조회
   app.get("/api/tracks/user", (req, res) => {
     const store = ServerStorage.get();
     res.json({ tracks: store.userTracks || [] });
   });
 
-  // [5] 사용자 음원 등록
+  // [6] 사용자 음원 등록
   app.post("/api/tracks/user", (req, res) => {
     const track = req.body;
     if (!track || !track.id || !track.title) {
@@ -124,8 +178,7 @@ async function startServer() {
     const store = ServerStorage.get();
     if (!store.userTracks) store.userTracks = [];
 
-    // 1000곡 등록 제한 체크
-    const totalCount = 6 + store.userTracks.length; // 기본곡 6곡 + 사용자 등록곡
+    const totalCount = 6 + store.userTracks.length;
     if (totalCount >= 1000) {
       return res.status(400).json({ error: "AI음악 아티스트 테마에 1,000곡이 모두 등록되어 추가 업로드가 불가능합니다." });
     }
@@ -135,7 +188,7 @@ async function startServer() {
     res.json({ success: true, track, total: totalCount + 1 });
   });
 
-  // [6] 사용자 음원 삭제 (전화번호 & 비밀번호 검증)
+  // [7] 사용자 음원 삭제 (전화번호 & 비밀번호 검증)
   app.post("/api/tracks/user/delete", (req, res) => {
     const { trackId, phone, password } = req.body;
     if (!trackId) {
@@ -145,14 +198,14 @@ async function startServer() {
     const store = ServerStorage.get();
     if (!store.userTracks) store.userTracks = [];
 
-    const targetIdx = store.userTracks.findIndex(t => t.id === trackId);
+    const targetIdx = store.userTracks.findIndex((t) => t.id === trackId);
     if (targetIdx === -1) {
       return res.status(404).json({ error: "삭제할 음원을 찾을 수 없습니다." });
     }
 
     const targetTrack = store.userTracks[targetIdx];
-    const inputPhoneDigits = (phone || '').replace(/[^0-9]/g, '');
-    const trackPhoneDigits = (targetTrack.phone || '').replace(/[^0-9]/g, '');
+    const inputPhoneDigits = (phone || "").replace(/[^0-9]/g, "");
+    const trackPhoneDigits = (targetTrack.phone || "").replace(/[^0-9]/g, "");
 
     if (inputPhoneDigits !== trackPhoneDigits) {
       return res.status(403).json({ error: "등록된 전화번호와 일치하지 않습니다." });
