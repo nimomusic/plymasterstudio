@@ -74,6 +74,7 @@ async function startServer() {
     res.json({
       success: true,
       visitCount: stats.visitCount,
+      trackPlayCounts: stats.trackPlayCounts,
     });
   });
 
@@ -90,6 +91,8 @@ async function startServer() {
       success: true,
       trackId,
       totalPlays: stats.trackPlayCounts[trackId],
+      visitCount: stats.visitCount,
+      trackPlayCounts: stats.trackPlayCounts,
     });
   });
 
