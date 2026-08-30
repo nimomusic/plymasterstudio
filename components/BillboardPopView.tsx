@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import MusicRegisterModal from './MusicRegisterModal';
 import MusicDeleteModal from './MusicDeleteModal';
+import { deleteMp3FromR2 } from '../lib/uploadAction';
 
 interface BillboardPopViewProps {
   setView?: (view: any) => void;
@@ -765,7 +766,18 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   };
 
   // 음원 삭제 성공 처리 함수
-  const handleDeleteSuccess = (trackId: string) => {
+  const handleDeleteSuccess = async (trackId: string) => {
+    const target = trackToDelete || userTracks.find(t => t.id === trackId);
+
+    // 🗑️ Cloudflare R2 스토리지('artist' 버킷)에서 실제 파일 삭제 수행
+    if (target?.audioUrl) {
+      try {
+        await deleteMp3FromR2(target.audioUrl);
+      } catch (r2Err) {
+        console.warn('Cloudflare R2 버킷 파일 삭제 요청:', r2Err);
+      }
+    }
+
     const updated = userTracks.filter(t => t.id !== trackId);
     setUserTracks(updated);
     try {
@@ -773,14 +785,15 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     } catch {}
 
     // 서버로도 삭제 동기화 시도
-    if (trackToDelete) {
+    if (target) {
       fetch('/api/tracks/user/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           trackId,
-          phone: trackToDelete.phone,
-          password: trackToDelete.password,
+          phone: target.phone,
+          password: target.password,
+          audioUrl: target.audioUrl,
         }),
       }).catch(() => {});
     }
