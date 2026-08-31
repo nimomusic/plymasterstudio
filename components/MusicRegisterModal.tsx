@@ -364,7 +364,7 @@ export const MusicRegisterModal: React.FC<MusicRegisterModalProps> = ({
               <input
                 type="text"
                 maxLength={40}
-                placeholder="예: 몽환적인 신스웨이브와 따뜻한 네오소울 보컬"
+                placeholder="예: 따스한 햇빛, 카페에서 듣기 좋은 모던한 네오소울 감성 R&B"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-white/5 border border-white/15 focus:border-purple-400 rounded-xl text-white placeholder-white/30 focus:outline-none transition"
