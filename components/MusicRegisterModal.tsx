@@ -507,38 +507,87 @@ export const MusicRegisterModal: React.FC<MusicRegisterModalProps> = ({
               <h3 className="text-lg font-black text-white">AI음악 아티스트 이용약관</h3>
             </div>
 
-            {/* 약관 텍스트 내용 및 추후 외부 txt 파일 링크 연결 가능 공간 */}
-            <div className="flex-1 overflow-y-auto pr-2 text-xs text-white/70 space-y-3 leading-relaxed border border-white/10 p-4 rounded-2xl bg-black/30 font-sans">
-              {/* 🔗 추후 txt 파일 링크가 준비되면 아래 주소(TERMS_TXT_URL)를 연결할 수 있습니다 */}
-              <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[11px] mb-2 flex items-center justify-between">
-                <span>📄 약관 원본 문서 (TXT 링크 연동 대기)</span>
-                <span className="font-mono text-[10px] text-purple-400/70">version 1.0</span>
+            {/* 약관 텍스트 내용 */}
+            <div className="flex-1 overflow-y-auto pr-2 text-xs text-white/70 space-y-4 leading-relaxed border border-white/10 p-4 rounded-2xl bg-black/30 font-sans">
+              
+              {/* 섹션 1: 저작권 및 음원 업로드 정책 */}
+              <div className="space-y-2 pb-3 border-b border-white/10">
+                <div className="flex items-center gap-1.5 text-rose-400 font-bold text-sm">
+                  <span>🎵</span>
+                  <span>1. 저작권 및 음원 업로드 정책 (핵심 가이드라인)</span>
+                </div>
+                <p className="text-white/90 font-medium">
+                  AI 아티스트 놀이터는 순수 AI 생성 창작 음악만을 위한 오픈 스트리밍 플랫폼입니다.
+                </p>
+                <div className="space-y-1.5 pl-1">
+                  <p><strong className="text-white">1) 순수 AI 생성 음원 원칙 (무료/유료 플랜 무관)</strong><br />
+                  Suno, Udio, AIVA, Stable Audio, MusicLM 등 AI 음악 생성 도구(무료 플랜 및 유료 플랜 모두 포함)로 직접 제작한 순수 창작 음원만 업로드할 수 있습니다. 업로드 시 생성에 사용된 정보는 사실에 기반해야 합니다.</p>
+
+                  <p><strong className="text-rose-300">2) 커버곡 및 기존 발매곡 업로드 절대 금지 (발견 즉시 삭제)</strong><br />
+                  기존 발매곡, 타인의 음악, 저작권이 있는 음원의 무단 커버(Cover), 리믹스, 샘플링, 부분 차용 음원은 업로드가 일체 불가합니다. 기존 유명 가수의 목소리·창법을 직접 모방하거나 타인의 저작권을 침해하는 음원은 엄격히 금지되며, 위반 사항이 확인되거나 신고가 접수될 경우 사전 통보 없이 즉시 영구 삭제 처리됩니다.</p>
+
+                  <p><strong className="text-purple-300">3) 분쟁 발생 시 'AI 제작 원본 링크' 제시 의무</strong><br />
+                  등록된 음원에 대해 저작권, 표절, 소유권 분쟁 또는 타인 권리 침해 신고가 접수될 경우, 업로더는 해당 곡의 AI 생성 도구 내 원본 생성 링크(Public Link), 생성 프롬프트 및 작업 이력 등 객관적인 소명 자료를 제시할 의무를 집니다. 기한 내에 AI 생성 링크 및 적법한 증거를 제시하지 못하는 경우 해당 음원은 즉시 삭제되며 영구 재업로드가 제한됩니다.</p>
+
+                  <p><strong className="text-white">4) 신고 접수 및 즉시 처리 절차</strong><br />
+                  권리 침해 신고 접수 시 서비스 안정성과 권리자 보호를 위해 해당 음원은 우선 비공개 또는 즉시 삭제 조치됩니다. 소명 절차가 완료되어 적법성이 입증된 경우에 한해 게시가 재개될 수 있습니다.</p>
+                </div>
               </div>
 
-              <h4 className="font-bold text-white text-sm">제 1 조 (목적 및 등록 자격)</h4>
-              <p>
-                본 약관은 NIMO MUSIC AI음악 아티스트 테마에 창작 음원을 등록하고 스트리밍 서비스를 이용함에 있어 필요한 기본 사항 및 운영 규칙을 규정함을 목적으로 합니다.
-              </p>
+              {/* 섹션 2: 서비스 이용약관 */}
+              <div className="space-y-2 pb-3 border-b border-white/10">
+                <div className="flex items-center gap-1.5 text-purple-400 font-bold text-sm">
+                  <span>📜</span>
+                  <span>2. 서비스 이용약관</span>
+                </div>
+                <div className="space-y-1.5 pl-1">
+                  <p><strong className="text-white">제1조 (목적 및 서비스 정의)</strong><br />
+                  본 약관은 AI 아티스트 놀이터(이하 "서비스")가 제공하는 AI 음악 스트리밍, 음원 등록, 월간 HOT 100 차트 집계 및 링크 공유 기능의 이용 조건과 절차, 권리와 의무를 규정함을 목적으로 합니다.</p>
 
-              <h4 className="font-bold text-white text-sm">제 2 조 (저작권 및 음원 책임)</h4>
-              <p>
-                등록되는 모든 음원은 순수 AI 생성 또는 본인의 창작물이어야 하며, 타인의 저작권, 상표권 또는 인격권을 침해하지 않아야 합니다. 침해로 인해 발생하는 모든 민·형사상 책임은 등록자 본인에게 있습니다.
-              </p>
+                  <p><strong className="text-white">제2조 (음원 등록 및 관리)</strong><br />
+                  1. 이용자는 별도의 회원가입 절차 없이 전화번호와 비밀번호 기반의 간편 인증을 통해 본인의 AI 음원을 직접 등록하고 삭제할 수 있습니다.<br />
+                  2. 닉네임 설정 시 시스템 관리자 전용 특정 명칭(예: '놀이터' 등) 및 미풍양속을 해치는 단어는 사용이 제한될 수 있습니다.<br />
+                  3. 등록된 음원의 정보(곡명, 닉네임, 채널 링크, 곡 소개 등)는 사실에 부합해야 하며 허위 정보 기재 시 삭제 대상이 됩니다.</p>
 
-              <h4 className="font-bold text-white text-sm">제 3 조 (등록 용량 및 파일 규격)</h4>
-              <p>
-                업로드 가능한 음원은 최대 10MB 이내의 MP3 파일이어야 하며, AI음악 아티스트 테마 전체 최대 등록 곡 수는 1,000곡으로 제한됩니다. 1,000곡 도달 시 신규 등록은 자동 제한됩니다.
-              </p>
+                  <p><strong className="text-white">제3조 (콘텐츠의 이용허락)</strong><br />
+                  1. 회원이 서비스에 업로드한 음원 및 메타데이터는 서비스 내에서의 재생(스트리밍), 순위 집계(월간 HOT 100 차트 등), 플레이리스트 포함, 검색 및 플랫폼 홍보 목적으로 저장·표시·전송될 수 있으며, 회원은 이에 필요한 범위의 비독점적 이용허락을 플랫폼에 부여합니다.<br />
+                  2. 등록자가 직접 삭제하거나 관리자에 의해 삭제된 경우, 서비스 내 스트리밍 및 저장소에서 음원 물리 파일과 메타데이터가 영구 파기됩니다.</p>
 
-              <h4 className="font-bold text-white text-sm">제 4 조 (월간 랭킹 및 자동 삭제 정책)</h4>
-              <p>
-                음원을 업로드하고 1개월(30일)이 경과한 시점에 월간 누적 조회수 상위 300위 안에 진입하지 못한 음원은 서비스 품질 및 트래픽 유지를 위해 AI음악 아티스트 테마에서 MP3 음원 파일과 함께 자동으로 삭제 처리됩니다.
-              </p>
+                  <p><strong className="text-white">제4조 (월간 랭킹 및 자동 관리 정책)</strong><br />
+                  업로드 가능한 음원은 최대 10MB 이내의 MP3 파일이어야 하며, AI음악 아티스트 테마 전체 최대 등록 곡 수는 1,000곡으로 제한됩니다. 또한 음원을 업로드하고 1개월(30일)이 경과한 시점에 월간 누적 조회수 상위 300위 안에 진입하지 못한 음원은 서비스 품질 및 트래픽 유지를 위해 AI음악 아티스트 테마에서 자동 삭제 처리됩니다.</p>
 
-              <h4 className="font-bold text-white text-sm">제 5 조 (본인 인증 및 삭제 권한)</h4>
-              <p>
-                등록된 음원은 등록 시 입력한 전화번호와 비밀번호 인증을 통해 언제든지 본인이 직접 삭제할 수 있습니다.
-              </p>
+                  <p><strong className="text-white">제5조 (관리자 권한 및 제재)</strong><br />
+                  운영자는 순수 AI 제작물이 아니거나 기존 발매곡, 커버곡, 무단 샘플링 곡인 경우, 타인의 권리를 침해한 경우, 분쟁 시 정당한 AI 제작 원본 링크를 제시하지 못한 경우, 어뷰징 행위 등이 확인될 시 사전 통지 없이 해당 음원을 임의로 삭제하거나 접속을 차단할 수 있습니다.</p>
+
+                  <p><strong className="text-white">제6조 (이용자의 법적 책임 및 면책)</strong><br />
+                  1. 업로드된 음원으로 인해 발생하는 제3자와의 저작권 분쟁, 민·형사상 손해배상 청구 등 모든 법적 분쟁의 일차적 책임은 음원을 업로드한 당사자에게 있습니다.<br />
+                  2. 서비스는 이용자가 등록한 콘텐츠의 진실성이나 적법성을 사전 보증하지 않으며, 관계 법령과 내부 운영 기준에 따른 신고 접수 및 신속한 삭제 조치를 충실히 수행합니다.</p>
+                </div>
+              </div>
+
+              {/* 섹션 3: 개인정보 처리방침 */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-sm">
+                  <span>🔒</span>
+                  <span>3. 개인정보 처리방침</span>
+                </div>
+                <div className="space-y-1.5 pl-1">
+                  <p><strong className="text-white">1) 수집하는 정보 항목</strong><br />
+                  • 음원 등록 시: 필수(전화번호, 비밀번호 - 본인 확인 및 삭제 인증용, 음원 파일 MP3, 곡 제목), 선택(닉네임, 채널 URL, 곡 소개글)<br />
+                  • 서비스 이용 중 생성/저장: 누적 방문 횟수, 곡별 실시간 재생 횟수, 브라우저 로컬 저장소(localStorage) 설정 데이터<br />
+                  <span className="text-white/50 text-[11px]">※ 별도의 회원가입 아이디/이메일, 주민등록번호, 결제 수단 정보 등은 일체 수집하지 않습니다.</span></p>
+
+                  <p><strong className="text-white">2) 개인정보 수집 및 이용 목적</strong><br />
+                  • 등록된 음원의 본인 확인 및 본인 요청에 따른 음원 삭제 권한 검증<br />
+                  • 저작권 분쟁 및 권리 침해 신고 발생 시 업로더 식별 및 소명 안내<br />
+                  • 실시간 차트 집계, 재생 횟수 통계 산출 및 서비스 어뷰징 방지</p>
+
+                  <p><strong className="text-white">3) 개인정보의 보유 및 파기 절차</strong><br />
+                  • 음원 삭제 시 즉시 파기: 등록자가 직접 비밀번호 인증을 통해 음원을 삭제하거나 관리자 조치로 삭제되는 즉시, 보관된 전화번호와 비밀번호를 포함한 모든 메타데이터와 음원 파일이 영구 파기됩니다.<br />
+                  • 관계 법령에 따른 별도의 보존 의무가 없는 한, 목적이 달성된 개인정보는 지체 없이 안전하게 파기됩니다.</p>
+                </div>
+              </div>
+
             </div>
 
             <div className="pt-4 mt-4 border-t border-white/10 flex justify-end">
