@@ -2123,6 +2123,21 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         </div>
 
       </div>
+      {/* 사이트 하단 회사 정보 푸터 */}
+      <footer className="w-full max-w-7xl mt-12 pt-8 pb-10 border-t border-white/10 text-center">
+        <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/50">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-medium">
+            <span className="text-white/80 font-bold">(주)니모뮤직</span>
+            <span className="text-white/20">|</span>
+            <span>대표: 김준용</span>
+            <span className="text-white/20">|</span>
+            <span>이메일: <a href="mailto:plymaster.help@gmail.com" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors">plymaster.help@gmail.com</a></span>
+          </div>
+          <p className="text-[11px] text-white/30 tracking-wide mt-1">
+            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI 아티스트 놀이터
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
