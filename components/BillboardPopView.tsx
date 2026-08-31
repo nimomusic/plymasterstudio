@@ -555,7 +555,9 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
   });
 
   // 정렬 옵션 상태 ('default': 트랙순 (기본) | 'views': 조회순 | 'latest': 최신순)
-  const [sortBy, setSortBy] = useState<TrackSortOption>('default');
+  const [sortBy, setSortBy] = useState<TrackSortOption>(() => {
+    return selectedAlbumId === 'artist' ? 'latest' : 'default';
+  });
 
   // 현재 선택된 앨범 객체
   const currentAlbum = ALBUMS.find(a => a.id === selectedAlbumId) || ALBUMS[0];
@@ -919,8 +921,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     // 변경 시 기본 선택 해제
     setSelectedIds([]);
     
-    // 기본 트랙 순서(01, 02, 03...)로 정렬 옵션 설정 (재생 시 섞임 방지)
-    setSortBy('default');
+    // AI음악 아티스트 앨범은 기본 최신순('latest'), 그 외 앨범은 기본 트랙순('default')
+    setSortBy(albumId === 'artist' ? 'latest' : 'default');
   };
 
   // 전체 선택 토글
@@ -2123,6 +2125,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         </div>
 
       </div>
+
       {/* 사이트 하단 회사 정보 푸터 */}
       <footer className="w-full max-w-7xl mt-12 pt-8 pb-10 border-t border-white/10 text-center">
         <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/50">
