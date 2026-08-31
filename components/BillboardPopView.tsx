@@ -60,7 +60,7 @@ export interface AlbumCategory {
   title: string;
   subtitle: string;
   badge: string;
-  iconType: 'hot100' | 'artist' | 'hiphop' | 'jazz' | 'pop';
+  iconType: 'hot100' | 'artist' | 'chillrnb' | 'hiphop' | 'jazz' | 'pop';
   accentColor: string;
   bgGlow: string;
   tags: string[];
@@ -71,9 +71,10 @@ export interface AlbumCategory {
 // 💽 앨범 목록 정의 (첫 번째: HOT 100 차트, 두 번째: AI음악 아티스트, ...)
 // 1. HOT 100 차트 (AI음악 아티스트 앨범 조회수 상위 100곡)
 // 2. AI음악 아티스트
-// 3. 느좋 인스타 감성힙합
-// 4. 빈티지 재즈
-// 5. 트렌디 팝송
+// 3. 칠 알앤비
+// 4. 인스타 감성힙합
+// 5. 빈티지 재즈
+// 6. 트렌디 팝송
 // ==================================================================================
 export const HOT_100_ALBUM: AlbumCategory = {
   id: 'hot100',
@@ -100,8 +101,19 @@ export const GENRE_ALBUMS: AlbumCategory[] = [
     bgImage: '/hiphop.jpeg',
   },
   {
+    id: 'chillrnb',
+    title: '칠 알앤비',
+    subtitle: '감각적인 네오소울 & 칠한 무드의 새벽 감성',
+    badge: '칠 바이브',
+    iconType: 'chillrnb',
+    accentColor: '#38BDF8',
+    bgGlow: 'from-[#38BDF8]/20 to-[#818CF8]/10',
+    tags: ['#칠알앤비', '#네오소울', '#새벽감성', '#감성보컬', '#트렌디'],
+    bgImage: '/hiphop.jpeg',
+  },
+  {
     id: 'hiphop',
-    title: '느좋 인스타 감성힙합',
+    title: '인스타 감성힙합',
     subtitle: '감성 알앤비 & 칠한 인스타 릴스 힙합',
     badge: '인스타 릴스 추천',
     iconType: 'hiphop',
@@ -145,46 +157,6 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     {
       id: 'artist-1',
       number: '01',
-      title: 'Just Like This',
-      duration: '02:59',
-      genreTag: 'AI 아티스트',
-      description: 'Neo-Soul R&B 트렌디 사운드',
-      albumId: 'artist',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Just Like This.mp3',
-    },
-    {
-      id: 'artist-2',
-      number: '02',
-      title: 'Inner Tide',
-      duration: '03:20',
-      genreTag: 'AI 아티스트',
-      description: 'Ethereal R&B 몽환적인 보컬 선율',
-      albumId: 'artist',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Inner Tide.mp3',
-    },
-    {
-      id: 'artist-3',
-      number: '03',
-      title: 'Sweet Observance',
-      duration: '03:09',
-      genreTag: 'AI 아티스트',
-      description: '감각적인 비트메이킹과 네오소울 바이브',
-      albumId: 'artist',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Sweet Observance.mp3',
-    },
-    {
-      id: 'artist-4',
-      number: '04',
-      title: 'Mood drip',
-      duration: '03:08',
-      genreTag: 'AI 아티스트',
-      description: '부드러운 기타 루프와 감각적인 808 베이스라인',
-      albumId: 'artist',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Mood Drip.mp3',
-    },
-    {
-      id: 'artist-5',
-      number: '05',
       title: 'Same Script',
       duration: '02:35',
       genreTag: 'AI 아티스트',
@@ -193,25 +165,50 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Same Script.mp3',
     },
     {
-      id: 'artist-6',
-      number: '06',
-      title: 'A Soft Surrender',
-      duration: '04:28',
+      id: 'artist-2',
+      number: '02',
+      title: 'Mood drip',
+      duration: '03:08',
       genreTag: 'AI 아티스트',
-      description: '따뜻한 콘트라베이스와 피아노 선율',
+      description: '부드러운 기타 루프와 감각적인 808 베이스라인',
       albumId: 'artist',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/A Soft Surrender.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Mood Drip.mp3',
+    },
+    {
+      id: 'artist-3',
+      number: '03',
+      title: 'A Gentle Murmur',
+      duration: '03:58',
+      genreTag: 'AI 아티스트',
+      description: '따뜻한 어쿠스틱 피아노와 잔잔한 앰비언스',
+      albumId: 'artist',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/A Gentle Murmur.mp3',
     },
   ],
 
-  // 2. 느좋 인스타 감성힙합 앨범 트랙
+  // 2. 칠 알앤비 앨범 트랙 (양식 및 예시 1곡)
+  chillrnb: [
+    {
+      id: 'chillrnb-1',
+      number: '01',
+      title: 'Just Like This',
+      duration: '02:59',
+      genreTag: '칠 알앤비',
+      description: 'Neo-Soul R&B 트렌디 사운드',
+      albumId: 'chillrnb',
+      /* 하이퍼링크넣는 곳: 실제 mp3 파일 또는 스트리밍 링크 URL */
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Just Like This.mp3',
+    },
+  ],
+
+  // 3. 인스타 감성힙합 앨범 트랙
   hiphop: [
     {
       id: 'hiphop-1',
       number: '01',
       title: 'Mood drip',
       duration: '03:08',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Mood Drip.mp3',
     },
@@ -220,7 +217,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '02',
       title: 'Daydream',
       duration: '03:05',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Daydream.mp3',
     },
@@ -229,7 +226,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '03',
       title: 'Soft Drizzle',
       duration: '02:50',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Soft Drizzle.mp3',
     },
@@ -238,7 +235,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '04',
       title: '우산 없는 밤',
       duration: '04:02',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/우산 없는 밤.mp3',
     },
@@ -247,7 +244,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '05',
       title: '읽히지 않아',
       duration: '03:03',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/읽히지 않아.mp3',
     },
@@ -256,7 +253,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '06',
       title: '환상통',
       duration: '03:12',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/환상통.mp3',
     },
@@ -265,7 +262,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '07',
       title: '상상',
       duration: '03:29',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/상상.mp3',
     },
@@ -274,7 +271,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '08',
       title: '착각',
       duration: '02:28',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/착각.mp3',
     },
@@ -283,7 +280,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '09',
       title: 'Drift',
       duration: '03:06',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Drift.mp3',
     },
@@ -292,7 +289,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '10',
       title: 'Uncharted Still',
       duration: '03:14',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Uncharted Still.mp3',
     },
@@ -301,7 +298,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '11',
       title: 'Hazy View',
       duration: '02:51',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Hazy View.mp3',
     },
@@ -310,7 +307,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       number: '12',
       title: 'Frozen Frame',
       duration: '03:06',
-      genreTag: '느좋 인스타 알앤비 힙합',
+      genreTag: '인스타 감성힙합',
       albumId: 'hiphop',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Frozen Frame.mp3',
     },
@@ -1735,6 +1732,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
                             style={{ color: album.accentColor }} 
                           />
                         )}
+                        {album.iconType === 'chillrnb' && (
+                          <Sparkles 
+                            className="w-4 h-4 flex-shrink-0" 
+                            style={{ color: album.accentColor }} 
+                          />
+                        )}
                         {album.iconType === 'hiphop' && (
                           <Headphones 
                             className="w-4 h-4 flex-shrink-0" 
@@ -2131,6 +2134,8 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
         <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/50">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-medium">
             <span className="text-white/80 font-bold">(주)니모뮤직</span>
+            <span className="text-white/20">|</span>
+            <span>대표: 김준용</span>
             <span className="text-white/20">|</span>
             <span>이메일: <a href="mailto:plymaster.help@gmail.com" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors">plymaster.help@gmail.com</a></span>
           </div>
