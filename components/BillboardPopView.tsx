@@ -2296,7 +2296,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <span className="text-white/20">|</span>
             <span>이메일: <a href="mailto:plymaster.help@gmail.com" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors">plymaster.help@gmail.com</a></span>
             <span className="text-white/20">|</span>
-            <span>홈페이지: <a href="www.plymaster.co.kr" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors"></a></span>
+            <span>홈페이지: <a href="https://plymaster.co.kr" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-red-300 underline underline-offset-2 transition-colors">www.plymaster.co.kr</a></span>
           </div>
           <p className="text-[11px] text-white/30 tracking-wide mt-1">
             &copy; 2026 (주)니모뮤직. All Rights Reserved. AI 아티스트 놀이터
