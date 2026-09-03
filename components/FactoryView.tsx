@@ -112,7 +112,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setView }) => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
           {/* 붉은 박스 영역 수정: 다운로드 버튼 그라데이션 및 그림자 제거 후 무결점 단색 처리 */}
           <a
-            href="https://drive.google.com/file/d/1PsfzLOYcKP9RkCXCc3UC2N-IAeXAEuDd/view?usp=drive_link"
+            href="https://github.com/nimomusic/plymasterstudio/releases/download/plymaster/PlyMaster.Factory.Setup.exe"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative w-full sm:w-auto px-8 py-5 bg-[#006AFF] hover:bg-[#0052cc] rounded-2xl text-lg md:text-xl font-black transition-all hover:scale-105 overflow-hidden text-center inline-flex items-center justify-center gap-3 text-white"
