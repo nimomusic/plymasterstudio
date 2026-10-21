@@ -438,7 +438,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     {
       id: 'drive-27',
       number: '27',
-      title: 'Power's game',
+      title: 'Powers game',
       duration: '02:32',
       genreTag: '클럽 드라이브',
       albumId: 'drive',
