@@ -27,7 +27,9 @@ import {
   Trophy,
   ChevronDown,
   ExternalLink,
-  Trash2
+  Trash2,
+  Download,
+  Upload
 } from 'lucide-react';
 import MusicRegisterModal from './MusicRegisterModal';
 import MusicDeleteModal from './MusicDeleteModal';
@@ -1103,6 +1105,144 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     });
   };
 
+  // 재생 대기열 로컬 PC 저장 및 불러오기 관련 상태 및 핸들러
+  const queueFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [queueNotice, setQueueNotice] = useState<string | null>(null);
+
+  const showQueueMessage = (msg: string) => {
+    setQueueNotice(msg);
+    setTimeout(() => {
+      setQueueNotice(prev => (prev === msg ? null : prev));
+    }, 3500);
+  };
+
+  // 1. 재생 대기열 로컬 PC 저장 (JSON 파일 다운로드)
+  const handleSaveQueueToFile = () => {
+    if (activePlaylist.length === 0) {
+      showQueueMessage('저장할 대기열 곡이 없습니다. 목록에서 곡을 먼저 체크해 주세요.');
+      return;
+    }
+
+    try {
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+      const filename = `playlist_queue_${dateStr}_${timeStr}.json`;
+
+      const exportPayload = {
+        app: 'AI Music Studio',
+        type: 'nimomusic_playlist_queue',
+        version: 1,
+        exportedAt: now.toISOString(),
+        albumId: selectedAlbumId,
+        albumTitle: currentAlbum.title,
+        trackCount: activePlaylist.length,
+        tracks: activePlaylist.map(t => ({
+          id: t.id,
+          number: t.number,
+          title: t.title,
+          duration: t.duration,
+          genreTag: t.genreTag,
+          nickname: t.nickname,
+          channelUrl: t.channelUrl,
+          description: t.description,
+          albumId: t.albumId,
+          audioUrl: t.audioUrl,
+          createdAt: t.createdAt
+        }))
+      };
+
+      const jsonStr = JSON.stringify(exportPayload, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showQueueMessage(`대기열 ${activePlaylist.length}곡이 파일로 저장되었습니다.`);
+    } catch (err) {
+      console.error('Queue save failed:', err);
+      showQueueMessage('대기열 파일 저장 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 2. 재생 대기열 로컬 PC 불러오기
+  const handleTriggerLoadQueue = () => {
+    if (queueFileInputRef.current) {
+      queueFileInputRef.current.value = '';
+      queueFileInputRef.current.click();
+    }
+  };
+
+  const handleLoadQueueFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const parsed = JSON.parse(content);
+
+        let loadedTracks: PopTrackItem[] = [];
+        if (Array.isArray(parsed)) {
+          loadedTracks = parsed;
+        } else if (parsed && Array.isArray(parsed.tracks)) {
+          loadedTracks = parsed.tracks;
+        }
+
+        if (loadedTracks.length === 0) {
+          showQueueMessage('파일에 유효한 트랙 정보가 없습니다.');
+          return;
+        }
+
+        // 대상 앨범 전환
+        const targetAlbumId = parsed?.albumId || loadedTracks[0]?.albumId;
+        if (targetAlbumId && ALBUMS.some(a => a.id === targetAlbumId) && targetAlbumId !== selectedAlbumId) {
+          setSelectedAlbumId(targetAlbumId);
+        }
+
+        // 혹시 표준 앨범에 없고 userTracks에도 없는 사용자 등록곡이 포함된 경우 보존
+        const newCustomTracks: PopTrackItem[] = [];
+        loadedTracks.forEach(t => {
+          const standardList = ALBUM_TRACKS[t.albumId || 'artist'] || [];
+          const isStandard = standardList.some(st => st.id === t.id);
+          const alreadyInUserTracks = userTracks.some(ut => ut.id === t.id);
+          if (!isStandard && !alreadyInUserTracks && t.audioUrl) {
+            newCustomTracks.push(t);
+          }
+        });
+
+        if (newCustomTracks.length > 0) {
+          const mergedUserTracks = [...userTracks, ...newCustomTracks];
+          setUserTracks(mergedUserTracks);
+          try {
+            localStorage.setItem('nimo_music_user_tracks', JSON.stringify(mergedUserTracks));
+          } catch {}
+        }
+
+        // 대기열에 트랙 ID 반영
+        const loadedTrackIds = loadedTracks.map(t => t.id).filter(Boolean);
+        setSelectedIds(loadedTrackIds);
+
+        // 첫 번째 트랙으로 현재 재생 트랙 변경
+        if (loadedTracks[0] && !isPlaying) {
+          setCurrentTrack(loadedTracks[0]);
+        }
+
+        showQueueMessage(`${loadedTracks.length}곡의 대기열을 성공적으로 불러왔습니다.`);
+      } catch (err) {
+        console.error('Queue load failed:', err);
+        showQueueMessage('파일 형식이 올바르지 않습니다 (JSON 오류).');
+      }
+    };
+    reader.readAsText(file, 'utf-8');
+  };
+
   // Synth Audio 정지
   const stopSynthAudio = () => {
     if (synthIntervalRef.current) {
@@ -1718,7 +1858,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
                 <span className="text-2xl text-yellow-400 select-none">⚡</span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  AI 아티스트 놀이터
+                  AI음악 놀이터
                 </h1>
                 <span 
                   className="text-xs font-bold px-3 py-1 rounded-full border transition-all"
@@ -2299,7 +2439,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <span>홈페이지: <a href="https://plymaster.co.kr" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-red-300 underline underline-offset-2 transition-colors">www.plymaster.co.kr</a></span>
           </div>
           <p className="text-[11px] text-white/30 tracking-wide mt-1">
-            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI 아티스트 놀이터
+            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI음악 놀이터
           </p>
         </div>
       </footer>
