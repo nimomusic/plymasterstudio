@@ -176,6 +176,16 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       albumId: 'artist',
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/Mood Drip.mp3',
     },
+    {
+      id: 'artist-3',
+      number: '03',
+      title: 'A Gentle Murmur',
+      duration: '03:58',
+      genreTag: 'AI 아티스트',
+      description: '따뜻한 어쿠스틱 피아노와 잔잔한 앰비언스',
+      albumId: 'artist',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/vintagejazz/A Gentle Murmur.mp3',
+    },
   ],
 
   // 2. 칠 알앤비 앨범 트랙 (양식 및 예시 1곡)
@@ -183,182 +193,13 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     {
       id: 'chillrnb-1',
       number: '01',
-      title: 'No big drama',
-      duration: '02:37',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/No big drama.mp3',
-    },
-    {
-      id: 'chillrnb-2',
-      number: '02',
-      title: 'Easy Flow',
-      duration: '02:53',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Easy Flow.mp3',
-    },
-    {
-      id: 'chillrnb-3',
-      number: '03',
       title: 'Just Like This',
       duration: '02:59',
       genreTag: '칠 알앤비',
+      description: 'Neo-Soul R&B 트렌디 사운드',
       albumId: 'chillrnb',
+      /* 하이퍼링크넣는 곳: 실제 mp3 파일 또는 스트리밍 링크 URL */
       audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Just Like This.mp3',
-    },
-    {
-      id: 'chillrnb-4',
-      number: '04',
-      title: 'Some good times',
-      duration: '03:02',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Some good times.mp3',
-    },
-    {
-      id: 'chillrnb-5',
-      number: '05',
-      title: 'Daylights Sweet Hold',
-      duration: '03:32',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Daylights Sweet Hold.mp3',
-    },
-    {
-      id: 'chillrnb-6',
-      number: '06',
-      title: 'Inner Tide',
-      duration: '03:20',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Inner Tide.mp3',
-    },
-    {
-      id: 'chillrnb-7',
-      number: '07',
-      title: 'Stillness Shared',
-      duration: '02:44',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Stillness Shared.mp3',
-    },
-    {
-      id: 'chillrnb-8',
-      number: '08',
-      title: 'Easy Frame',
-      duration: '02:32',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Easy Frame.mp3',
-    },
-    {
-      id: 'chillrnb-9',
-      number: '09',
-      title: 'Daylight Reverie',
-      duration: '03:03',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Daylight Reverie.mp3',
-    },
-    {
-      id: 'chillrnb-10',
-      number: '10',
-      title: 'Subtle Tide',
-      duration: '02:38',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Subtle Tide.mp3',
-    },
-    {
-      id: 'chillrnb-11',
-      number: '11',
-      title: 'Borrowed Light',
-      duration: '03:31',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Borrowed Light.mp3',
-    },
-    {
-      id: 'chillrnb-12',
-      number: '12',
-      title: 'Softest Touch',
-      duration: '02:59',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Softest Touch.mp3',
-    },
-    {
-      id: 'chillrnb-13',
-      number: '13',
-      title: 'Drifting Gaze',
-      duration: '03:18',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Drifting Gaze.mp3',
-    },
-    {
-      id: 'chillrnb-14',
-      number: '14',
-      title: 'A simple touch',
-      duration: '03:24',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/A simple touch.mp3',
-    },
-    {
-      id: 'chillrnb-15',
-      number: '15',
-      title: 'Daydream Drift',
-      duration: '03:29',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Daydream Drift.mp3',
-    },
-    {
-      id: 'chillrnb-16',
-      number: '16',
-      title: 'Morning Hues',
-      duration: '02:57',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Morning Hues.mp3',
-    },
-    {
-      id: 'chillrnb-17',
-      number: '17',
-      title: 'Those moments',
-      duration: '03:28',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Those moments.mp3',
-    },
-    {
-      id: 'chillrnb-18',
-      number: '18',
-      title: 'Sure Ground',
-      duration: '03:41',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Sure Ground.mp3',
-    },
-    {
-      id: 'chillrnb-19',
-      number: '19',
-      title: 'Sweet Observance',
-      duration: '03:08',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Sweet Observance.mp3',
-    },
-    {
-      id: 'chillrnb-20',
-      number: '20',
-      title: 'Soft Landing',
-      duration: '02:22',
-      genreTag: '칠 알앤비',
-      albumId: 'chillrnb',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/chillrnb/Soft Landing.mp3',
     },
   ],
 
@@ -1105,143 +946,143 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
     });
   };
 
-  // 재생 대기열 로컬 PC 저장 및 불러오기 관련 상태 및 핸들러
-  const queueFileInputRef = useRef<HTMLInputElement | null>(null);
-  const [queueNotice, setQueueNotice] = useState<string | null>(null);
+    // 재생 대기열 로컬 PC 저장 및 불러오기 관련 상태 및 핸들러
+    const queueFileInputRef = useRef<HTMLInputElement | null>(null);
+    const [queueNotice, setQueueNotice] = useState<string | null>(null);
 
-  const showQueueMessage = (msg: string) => {
-    setQueueNotice(msg);
-    setTimeout(() => {
-      setQueueNotice(prev => (prev === msg ? null : prev));
-    }, 3500);
-  };
+    const showQueueMessage = (msg: string) => {
+      setQueueNotice(msg);
+      setTimeout(() => {
+        setQueueNotice(prev => (prev === msg ? null : prev));
+      }, 3500);
+    };
 
-  // 1. 재생 대기열 로컬 PC 저장 (JSON 파일 다운로드)
-  const handleSaveQueueToFile = () => {
-    if (activePlaylist.length === 0) {
-      showQueueMessage('저장할 대기열 곡이 없습니다. 목록에서 곡을 먼저 체크해 주세요.');
-      return;
-    }
+    // 1. 재생 대기열 로컬 PC 저장 (JSON 파일 다운로드)
+    const handleSaveQueueToFile = () => {
+      if (activePlaylist.length === 0) {
+        showQueueMessage('저장할 대기열 곡이 없습니다. 목록에서 곡을 먼저 체크해 주세요.');
+        return;
+      }
 
-    try {
-      const now = new Date();
-      const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
-      const filename = `playlist_queue_${dateStr}_${timeStr}.json`;
-
-      const exportPayload = {
-        app: 'AI Music Studio',
-        type: 'nimomusic_playlist_queue',
-        version: 1,
-        exportedAt: now.toISOString(),
-        albumId: selectedAlbumId,
-        albumTitle: currentAlbum.title,
-        trackCount: activePlaylist.length,
-        tracks: activePlaylist.map(t => ({
-          id: t.id,
-          number: t.number,
-          title: t.title,
-          duration: t.duration,
-          genreTag: t.genreTag,
-          nickname: t.nickname,
-          channelUrl: t.channelUrl,
-          description: t.description,
-          albumId: t.albumId,
-          audioUrl: t.audioUrl,
-          createdAt: t.createdAt
-        }))
-      };
-
-      const jsonStr = JSON.stringify(exportPayload, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      showQueueMessage(`대기열 ${activePlaylist.length}곡이 파일로 저장되었습니다.`);
-    } catch (err) {
-      console.error('Queue save failed:', err);
-      showQueueMessage('대기열 파일 저장 중 오류가 발생했습니다.');
-    }
-  };
-
-  // 2. 재생 대기열 로컬 PC 불러오기
-  const handleTriggerLoadQueue = () => {
-    if (queueFileInputRef.current) {
-      queueFileInputRef.current.value = '';
-      queueFileInputRef.current.click();
-    }
-  };
-
-  const handleLoadQueueFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
       try {
-        const content = event.target?.result as string;
-        const parsed = JSON.parse(content);
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+        const filename = `playlist_queue_${dateStr}_${timeStr}.json`;
 
-        let loadedTracks: PopTrackItem[] = [];
-        if (Array.isArray(parsed)) {
-          loadedTracks = parsed;
-        } else if (parsed && Array.isArray(parsed.tracks)) {
-          loadedTracks = parsed.tracks;
-        }
+        const exportPayload = {
+          app: 'AI Music Studio',
+          type: 'nimomusic_playlist_queue',
+          version: 1,
+          exportedAt: now.toISOString(),
+          albumId: selectedAlbumId,
+          albumTitle: currentAlbum.title,
+          trackCount: activePlaylist.length,
+          tracks: activePlaylist.map(t => ({
+            id: t.id,
+            number: t.number,
+            title: t.title,
+            duration: t.duration,
+            genreTag: t.genreTag,
+            nickname: t.nickname,
+            channelUrl: t.channelUrl,
+            description: t.description,
+            albumId: t.albumId,
+            audioUrl: t.audioUrl,
+            createdAt: t.createdAt
+          }))
+        };
 
-        if (loadedTracks.length === 0) {
-          showQueueMessage('파일에 유효한 트랙 정보가 없습니다.');
-          return;
-        }
+        const jsonStr = JSON.stringify(exportPayload, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
 
-        // 대상 앨범 전환
-        const targetAlbumId = parsed?.albumId || loadedTracks[0]?.albumId;
-        if (targetAlbumId && ALBUMS.some(a => a.id === targetAlbumId) && targetAlbumId !== selectedAlbumId) {
-          setSelectedAlbumId(targetAlbumId);
-        }
-
-        // 혹시 표준 앨범에 없고 userTracks에도 없는 사용자 등록곡이 포함된 경우 보존
-        const newCustomTracks: PopTrackItem[] = [];
-        loadedTracks.forEach(t => {
-          const standardList = ALBUM_TRACKS[t.albumId || 'artist'] || [];
-          const isStandard = standardList.some(st => st.id === t.id);
-          const alreadyInUserTracks = userTracks.some(ut => ut.id === t.id);
-          if (!isStandard && !alreadyInUserTracks && t.audioUrl) {
-            newCustomTracks.push(t);
-          }
-        });
-
-        if (newCustomTracks.length > 0) {
-          const mergedUserTracks = [...userTracks, ...newCustomTracks];
-          setUserTracks(mergedUserTracks);
-          try {
-            localStorage.setItem('nimo_music_user_tracks', JSON.stringify(mergedUserTracks));
-          } catch {}
-        }
-
-        // 대기열에 트랙 ID 반영
-        const loadedTrackIds = loadedTracks.map(t => t.id).filter(Boolean);
-        setSelectedIds(loadedTrackIds);
-
-        // 첫 번째 트랙으로 현재 재생 트랙 변경
-        if (loadedTracks[0] && !isPlaying) {
-          setCurrentTrack(loadedTracks[0]);
-        }
-
-        showQueueMessage(`${loadedTracks.length}곡의 대기열을 성공적으로 불러왔습니다.`);
+        showQueueMessage(`대기열 ${activePlaylist.length}곡이 파일로 저장되었습니다.`);
       } catch (err) {
-        console.error('Queue load failed:', err);
-        showQueueMessage('파일 형식이 올바르지 않습니다 (JSON 오류).');
+        console.error('Queue save failed:', err);
+        showQueueMessage('대기열 파일 저장 중 오류가 발생했습니다.');
       }
     };
-    reader.readAsText(file, 'utf-8');
-  };
+
+    // 2. 재생 대기열 로컬 PC 불러오기
+    const handleTriggerLoadQueue = () => {
+      if (queueFileInputRef.current) {
+        queueFileInputRef.current.value = '';
+        queueFileInputRef.current.click();
+      }
+    };
+
+    const handleLoadQueueFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const content = event.target?.result as string;
+          const parsed = JSON.parse(content);
+
+          let loadedTracks: PopTrackItem[] = [];
+          if (Array.isArray(parsed)) {
+            loadedTracks = parsed;
+          } else if (parsed && Array.isArray(parsed.tracks)) {
+            loadedTracks = parsed.tracks;
+          }
+
+          if (loadedTracks.length === 0) {
+            showQueueMessage('파일에 유효한 트랙 정보가 없습니다.');
+            return;
+          }
+
+          // 대상 앨범 전환
+          const targetAlbumId = parsed?.albumId || loadedTracks[0]?.albumId;
+          if (targetAlbumId && ALBUMS.some(a => a.id === targetAlbumId) && targetAlbumId !== selectedAlbumId) {
+            setSelectedAlbumId(targetAlbumId);
+          }
+
+          // 혹시 표준 앨범에 없고 userTracks에도 없는 사용자 등록곡이 포함된 경우 보존
+          const newCustomTracks: PopTrackItem[] = [];
+          loadedTracks.forEach(t => {
+            const standardList = ALBUM_TRACKS[t.albumId || 'artist'] || [];
+            const isStandard = standardList.some(st => st.id === t.id);
+            const alreadyInUserTracks = userTracks.some(ut => ut.id === t.id);
+            if (!isStandard && !alreadyInUserTracks && t.audioUrl) {
+              newCustomTracks.push(t);
+            }
+          });
+
+          if (newCustomTracks.length > 0) {
+            const mergedUserTracks = [...userTracks, ...newCustomTracks];
+            setUserTracks(mergedUserTracks);
+            try {
+              localStorage.setItem('nimo_music_user_tracks', JSON.stringify(mergedUserTracks));
+            } catch {}
+          }
+
+          // 대기열에 트랙 ID 반영
+          const loadedTrackIds = loadedTracks.map(t => t.id).filter(Boolean);
+          setSelectedIds(loadedTrackIds);
+
+          // 첫 번째 트랙으로 현재 재생 트랙 변경
+          if (loadedTracks[0] && !isPlaying) {
+            setCurrentTrack(loadedTracks[0]);
+          }
+
+          showQueueMessage(`${loadedTracks.length}곡의 대기열을 성공적으로 불러왔습니다.`);
+        } catch (err) {
+          console.error('Queue load failed:', err);
+          showQueueMessage('파일 형식이 올바르지 않습니다 (JSON 오류).');
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    };
 
   // Synth Audio 정지
   const stopSynthAudio = () => {
@@ -1794,13 +1635,68 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
 
           {/* Active Queue Summary List */}
           <div className="pt-4 border-t border-white/10">
-            <div className="flex items-center justify-between text-xs text-white/60 mb-2.5">
-              <div className="flex items-center gap-1.5 font-bold">
+            <div className="flex items-center justify-between text-xs text-white/60 mb-2.5 gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1.5 font-bold text-white/80 shrink-0">
                 <ListMusic className="w-4 h-4" style={{ color: currentAlbum.accentColor }} />
                 <span>재생 대기열 ({activePlaylist.length}곡)</span>
               </div>
-              <span className="text-[11px] font-mono text-white/40">순차 자동 재생</span>
+
+              {/* [재생 대기열과 순차 자동 재생 사이] 로컬 PC 대기열 저장 및 불러오기 버튼 */}
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleSaveQueueToFile}
+                  disabled={activePlaylist.length === 0}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-medium transition cursor-pointer border ${
+                    activePlaylist.length === 0
+                      ? 'opacity-35 cursor-not-allowed border-white/5 bg-white/5 text-white/30'
+                      : 'bg-white/10 hover:bg-white/20 border-white/15 hover:border-white/30 text-white/90 hover:text-white active:scale-95 shadow-sm'
+                  }`}
+                  title={
+                    activePlaylist.length === 0 
+                      ? '대기열에 선택된 곡이 없습니다. 목록에서 곡을 먼저 체크해 주세요.' 
+                      : '현재 재생 대기열 트랙 리스트를 내 PC 파일(.json)로 저장'
+                  }
+                >
+                  <Download className="w-3 h-3 text-cyan-400" />
+                  <span>저장</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleTriggerLoadQueue}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-medium bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white/30 text-white/90 hover:text-white transition cursor-pointer active:scale-95 shadow-sm"
+                  title="내 PC에 저장된 대기열 트랙 리스트(.json) 파일 불러오기"
+                >
+                  <Upload className="w-3 h-3 text-amber-400" />
+                  <span>불러오기</span>
+                </button>
+
+                <input 
+                  type="file" 
+                  ref={queueFileInputRef} 
+                  onChange={handleLoadQueueFromFile} 
+                  accept=".json,application/json" 
+                  className="hidden" 
+                />
+              </div>
+
+              <span className="text-[11px] font-mono text-white/40 shrink-0">순차 자동 재생</span>
             </div>
+
+            {/* 대기열 저장/불러오기 안내 알림 바 */}
+            {queueNotice && (
+              <div className="mb-2.5 px-2.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-[11px] text-white/90 flex items-center justify-between">
+                <span className="truncate">{queueNotice}</span>
+                <button 
+                  type="button" 
+                  onClick={() => setQueueNotice(null)} 
+                  className="ml-2 text-white/40 hover:text-white text-xs cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
 
             <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 text-xs">
               {activePlaylist.length === 0 ? (
@@ -1858,7 +1754,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
                 <span className="text-2xl text-yellow-400 select-none">⚡</span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  AI음악 놀이터
+                  AI 아티스트 놀이터
                 </h1>
                 <span 
                   className="text-xs font-bold px-3 py-1 rounded-full border transition-all"
@@ -2434,12 +2330,12 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-medium">
             <span className="text-white/80 font-bold">(주)니모뮤직</span>
             <span className="text-white/20">|</span>
-            <span>이메일: <a href="mailto:plymaster.help@gmail.com" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors">plymaster.help@gmail.com</a></span>
+            <span>대표: 김준용</span>
             <span className="text-white/20">|</span>
-            <span>홈페이지: <a href="https://plymaster.co.kr" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-red-300 underline underline-offset-2 transition-colors">www.plymaster.co.kr</a></span>
+            <span>이메일: <a href="mailto:plymaster.help@gmail.com" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors">plymaster.help@gmail.com</a></span>
           </div>
           <p className="text-[11px] text-white/30 tracking-wide mt-1">
-            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI음악 놀이터
+            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI 아티스트 놀이터
           </p>
         </div>
       </footer>
