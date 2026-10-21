@@ -1754,7 +1754,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
               <div className="flex items-center gap-3 mb-2.5 flex-wrap">
                 <span className="text-2xl text-yellow-400 select-none">⚡</span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  AI 아티스트 놀이터
+                  AI 음악 놀이터
                 </h1>
                 <span 
                   className="text-xs font-bold px-3 py-1 rounded-full border transition-all"
@@ -2335,7 +2335,7 @@ export const BillboardPopView: React.FC<BillboardPopViewProps> = ({ setView, sta
             <span>이메일: <a href="mailto:plymaster.help@gmail.com" className="text-white/70 hover:text-purple-300 underline underline-offset-2 transition-colors">plymaster.help@gmail.com</a></span>
           </div>
           <p className="text-[11px] text-white/30 tracking-wide mt-1">
-            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI 아티스트 놀이터
+            &copy; 2026 (주)니모뮤직. All Rights Reserved. AI 음악 놀이터
           </p>
         </div>
       </footer>
