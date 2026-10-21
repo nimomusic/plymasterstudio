@@ -103,6 +103,17 @@ export const GENRE_ALBUMS: AlbumCategory[] = [
     bgImage: '/hiphop.jpeg',
   },
   {
+    id: 'drive',
+    title: '드라이브뮤직',
+    subtitle: '심장뛰는 감각적인 하우스 & 펑크팝',
+    badge: '하우스&펑크팝',
+    iconType: 'drive',
+    accentColor: '#38BDF8',
+    bgGlow: 'from-[#38BDF8]/20 to-[#818CF8]/10',
+    tags: ['#펑크팝', '#하우스', '#우주감성', '#감성보컬', '#트렌디'],
+    bgImage: '/hiphop.jpeg',
+  },
+  {
     id: 'chillrnb',
     title: '칠 알앤비',
     subtitle: '감각적인 네오소울 & 칠한 무드의 새벽 감성',
@@ -188,6 +199,64 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
     },
   ],
 
+  // 2. 드라이브 앨범 트랙 (양식 및 예시 1곡)
+  drive: [
+    {
+      id: 'drive-1',
+      number: '01',
+      title: 'Bound in Motion',
+      duration: '03:26',
+      genreTag: '드라이브',
+      albumId: 'drive',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Bound%20in%20Motion.mp3',
+    },
+    {
+      id: 'drive-2',
+      number: '02',
+      title: 'Break the signal',
+      duration: '03:05',
+      genreTag: '드라이브',
+      albumId: 'drive',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Break%20the%20signal.mp3',
+    },
+    {
+      id: 'drive-3',
+      number: '03',
+      title: 'Break the silence',
+      duration: '03:17',
+      genreTag: '드라이브',
+      albumId: 'drive',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Break%20the%20silence.mp3',
+    },
+    {
+      id: 'drive-4',
+      number: '04',
+      title: 'Burn it up',
+      duration: '02:30',
+      genreTag: '드라이브',
+      albumId: 'drive',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Burn%20it%20up.mp3',
+    },
+    {
+      id: 'drive-5',
+      number: '05',
+      title: 'Chainbreaker',
+      duration: '02:31',
+      genreTag: '드라이브',
+      albumId: 'drive',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Chainbreaker.mp3',
+    },
+    {
+      id: 'drive-6',
+      number: '06',
+      title: 'Chrome Veil',
+      duration: '02:58',
+      genreTag: '드라이브',
+      albumId: 'drive',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Chrome%20Veil.mp3',
+    },
+  ],
+  
   // 2. 칠 알앤비 앨범 트랙 (양식 및 예시 1곡)
   chillrnb: [
     {
