@@ -442,7 +442,7 @@ export const ALBUM_TRACKS: Record<string, PopTrackItem[]> = {
       duration: '02:32',
       genreTag: '클럽 드라이브',
       albumId: 'drive',
-      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Power's%20game.mp3',
+      audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/drive/Powers%20game.mp3',
     },
     {
       id: 'drive-28',
