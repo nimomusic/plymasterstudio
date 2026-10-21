@@ -104,7 +104,7 @@ export const GENRE_ALBUMS: AlbumCategory[] = [
   },
   {
     id: 'drive',
-    title: '드라이브뮤직',
+    title: '클럽&드라이브',
     subtitle: '심장뛰는 감각적인 하우스 & 펑크팝',
     badge: '하우스&펑크팝',
     iconType: 'drive',
