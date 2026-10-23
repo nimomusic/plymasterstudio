@@ -73,7 +73,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'Emotional trap',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/3705bdad-3386-4f5f-b04c-057a868f2f11_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_01.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/%EB%AF%B8%EB%A0%A8%EC%9D%98%20%ED%9D%94%EC%A0%81.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_01.mp3' */
         // =========================================================
       },
       {
@@ -87,21 +87,21 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'Dark Trap R&B',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/34c49a87-8f59-42b0-8af9-8d4c0a0e7a68_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_02.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/%ED%99%98%EC%83%81%ED%86%B5.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_02.mp3' */
         // =========================================================
       },
       {
         id: 'hiphop-3',
-        title: 'Zero Zone',
+        title: '그냥 누워 있을께',
         artist: 'Plymaster AI Producer',
-        duration: '02:04',
-        genreTag: '청량 R&B Hip-Hop',
-        description: '드라이브 가고싶은 청량하고 신나는 무드의 알앤비 힙합',
+        duration: '02:18',
+        genreTag: '인스타 느좋 R&B Hip-Hop',
+        description: '아무것도 하기 싫은 날 그냥 쉬고 싶은 마음을 노래하는 그루비한 알앤비 힙합',
         bpm: 110,
-        key: 'Tropical Hip-hop',
+        key: 'Emo Hip-hop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/138c893f-5f59-4397-9add-931caecd0e56_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_03.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/instarnb/%EA%B7%B8%EB%83%A5%20%EB%88%84%EC%9B%8C%EC%9E%88%EC%9D%84%EA%BB%98.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/hiphop_03.mp3' */
         // =========================================================
       },
     ],
@@ -127,7 +127,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'meditative',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/1c11a04f-ceff-4160-a47e-e457c1b7a7d2.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_01.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/sleep/Subaquatic%20Rest.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_01.mp3' */
         // =========================================================
       },
       {
@@ -141,7 +141,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'purely dry sound',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/3bb7f34b-dbf0-42fe-a531-0f0c60308533.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_02.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/sleep/Coil%20Dream.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_02.mp3' */
         // =========================================================
       },
       {
@@ -155,7 +155,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'cozy ambiance',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/cd273de6-f3a3-4ccb-8f83-de423475bb29.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/sleep/Quietude%20Cadence.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
         // =========================================================
       },
       {
@@ -169,7 +169,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'deeply introspective',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/354a3dfd-4ff3-4044-8b43-77420e282d9b.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/sleep/Misty%20Veil.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/sleep_03.mp3' */
         // =========================================================
       },
     ],
@@ -195,7 +195,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'Dance-pop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 1 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/ec05ee6f-b59b-4bb3-8fe8-ea9ca64cbf3a_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Lose%20My%20Number.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_01.mp3' */
         // =========================================================
       },
       {
@@ -209,7 +209,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'Indie-pop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 2 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/009ce87e-aea8-45a8-b47b-aae9496c88f4_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Sweet%20Tide.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_02.mp3' */
         // =========================================================
       },
       {
@@ -223,7 +223,7 @@ export const THEME_PACKS: ThemeCategory[] = [
         key: 'Alt-Pop',
         // =========================================================
         // [하이퍼링크넣는 곳] 곡 3 링크를 아래 따옴표 안에 입력하세요:
-        audioUrl: 'https://cdn1.suno.ai/994ade1c-43c4-45d3-85ef-4fcfba3e0625_lyrics.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
+        audioUrl: 'https://pub-bc94af244b17445b87f52262786affae.r2.dev/trendypop/Same%20Script.mp3', /* 하이퍼링크넣는 곳: 예) 'https://your-domain.com/tracks/pop_03.mp3' */
         // =========================================================
       },
     ],
